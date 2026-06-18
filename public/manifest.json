@@ -1,0 +1,11 @@
+{
+  "name": "Casa Nova — Lista",
+  "short_name": "Casa Nova",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#E9EDE5",
+  "theme_color": "#E9EDE5",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
