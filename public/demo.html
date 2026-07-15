@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#E9EDE5" />
+<meta name="theme-color" content="#E9EDE5" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#161C18" media="(prefers-color-scheme: dark)" />
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icon.svg" />
 <title>Casa Nova — Demonstração</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,9 +13,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#E9EDE5; --surface:#FBFAF5; --surfaceAlt:#F1F0E8; --ink:#1E3A2B;
-  --inkSoft:#5C6B5E; --line:#D6DBCF; --accent:#BC6A38; --accentSoft:#EBD7C6;
-  --done:#3E7A4F; --doneBg:#E2EDE2; --warn:#9A4A2E;
+  --bg:#E9EDE5;--surface:#FBFAF5;--surfaceAlt:#F1F0E8;--ink:#1E3A2B;
+  --inkSoft:#5C6B5E;--line:#D6DBCF;--accent:#BC6A38;--accentSoft:#EBD7C6;
+  --done:#3E7A4F;--doneBg:#E2EDE2;--warn:#9A4A2E;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161C18;--surface:#1E2820;--surfaceAlt:#273029;--ink:#E8EDE5;
+    --inkSoft:#8A9E8C;--line:#2E3D31;--accent:#D4845A;--accentSoft:rgba(212,132,90,.18);
+    --done:#5CB87A;--doneBg:#1C3024;--warn:#E07070;
+  }
+}
+[data-theme="dark"]{
+  --bg:#161C18;--surface:#1E2820;--surfaceAlt:#273029;--ink:#E8EDE5;
+  --inkSoft:#8A9E8C;--line:#2E3D31;--accent:#D4845A;--accentSoft:rgba(212,132,90,.18);
+  --done:#5CB87A;--doneBg:#1C3024;--warn:#E07070;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--ink);
@@ -22,31 +36,53 @@ body{margin:0;background:var(--bg);color:var(--ink);
 .wrap{max-width:760px;margin:0 auto;padding:32px 18px 48px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* tela de entrada */
+/* gate */
 #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.gate-wrap{display:flex;flex-direction:column;gap:36px;max-width:820px;width:100%;align-items:center}
+@media(min-width:680px){.gate-wrap{flex-direction:row;align-items:center;gap:56px}}
+.gate-hero{flex:1;text-align:center}
+@media(min-width:680px){.gate-hero{text-align:left}}
+.gate-logo{margin-bottom:6px;display:flex;color:var(--accent)}
+.gate-hero h1{font-family:'Fraunces',serif;font-weight:700;font-size:38px;
+  line-height:1.08;margin:0 0 14px;color:var(--ink)}
+@media(min-width:680px){.gate-hero h1{font-size:46px}}
+.gate-hero p{color:var(--inkSoft);font-size:15px;margin:0 0 28px;line-height:1.65}
+.gate-features{display:flex;flex-direction:column;gap:12px;text-align:left}
+.gate-feature{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--inkSoft)}
+.gate-feature-icon{width:36px;height:36px;border-radius:10px;background:var(--accentSoft);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
 .gate-card{background:var(--surface);border:1px solid var(--line);border-radius:24px;
-  padding:32px;max-width:360px;width:100%;text-align:center}
-.gate-card h1{font-family:'Fraunces',serif;font-weight:600;font-size:30px;margin:8px 0 4px}
-.gate-card p.desc{color:var(--inkSoft);font-size:14px;margin:0 0 20px}
+  padding:32px;width:100%;max-width:360px;flex:none}
+.gate-card h2{font-family:'Fraunces',serif;font-weight:600;font-size:26px;margin:0 0 6px;text-align:left}
+.gate-card p.desc{color:var(--inkSoft);font-size:14px;margin:0 0 20px;text-align:left}
 .gate-card input+input{margin-top:8px}
 
 /* header */
 .eyebrow{font-size:12px;letter-spacing:.18em;font-weight:600;color:var(--accent)}
 h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:44px;line-height:1.05;margin:4px 0 0}
 .progress-card{margin-top:20px;background:var(--surface);border:1px solid var(--line);
-  border-radius:18px;padding:16px}
-.bar{height:10px;border-radius:99px;background:var(--surfaceAlt);overflow:hidden;margin-top:6px}
-.bar>div{height:100%;border-radius:99px;background:var(--done);transition:width .5s}
+  border-radius:20px;padding:20px}
+.progress-main{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.progress-count{font-family:'Fraunces',serif;font-size:40px;font-weight:700;line-height:1;color:var(--ink)}
+.progress-count-sub{font-size:14px;color:var(--inkSoft);margin-top:3px}
+.progress-pct{font-family:'Fraunces',serif;font-size:30px;font-weight:600;color:var(--done);line-height:1}
+.bar{height:7px;border-radius:99px;background:var(--surfaceAlt);overflow:hidden;margin-bottom:16px}
+.bar>div{height:100%;border-radius:99px;background:var(--done);transition:width .6s cubic-bezier(.4,0,.2,1)}
+.progress-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pstat{background:var(--surfaceAlt);border-radius:12px;padding:10px 12px}
+.pstat-label{font-size:10px;letter-spacing:.08em;color:var(--inkSoft);font-weight:600;margin-bottom:3px}
+.pstat-value{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink)}
 .muted{color:var(--inkSoft)}
 
 /* inputs */
-input,select{font-family:inherit;font-size:15px;color:var(--ink);background:var(--surfaceAlt);
-  border:1px solid var(--line);border-radius:12px;padding:11px 12px;outline:none;width:100%}
-input::placeholder{color:var(--inkSoft);opacity:.7}
-input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
+input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink);background:var(--surfaceAlt);
+  border:1px solid var(--line);border-radius:12px;padding:11px 12px;outline:none;width:100%;resize:none}
+input::placeholder,textarea::placeholder{color:var(--inkSoft);opacity:.7}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
 button{font-family:inherit;cursor:pointer;border:none}
 .btn-primary{background:var(--ink);color:var(--surface);border-radius:12px;
   padding:11px 16px;font-weight:600;font-size:15px}
+.btn-danger{background:var(--warn);color:#fff;border-radius:12px;padding:11px 16px;font-weight:600;font-size:15px}
 
 .add-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;
   padding:14px;margin:24px 0 20px}
@@ -61,329 +97,2208 @@ button{font-family:inherit;cursor:pointer;border:none}
 .chip{background:var(--surface);color:var(--inkSoft);border:1px solid var(--line);
   border-radius:99px;padding:7px 14px;font-size:14px;font-weight:500}
 .chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.search{position:relative;margin-left:auto}
-.search input{padding-left:32px;width:170px}
-.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--inkSoft)}
+.chip-danger{background:none;color:var(--warn);border:1px solid currentColor;
+  border-radius:99px;padding:7px 14px;font-size:14px;font-weight:500}
+.search{position:relative;display:flex;align-items:center;margin-bottom:14px}
+.search input{padding-left:34px;padding-right:36px;width:100%;font-size:15px}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--inkSoft);pointer-events:none}
+.search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;
+  color:var(--inkSoft);font-size:13px;padding:4px 6px;line-height:1;border-radius:6px}
+.search-clear:hover{color:var(--ink)}
 
 /* grupos e cards */
-.group-head{display:flex;align-items:center;gap:8px;margin:24px 0 10px}
-.group-head h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin:0}
+.group-head{display:flex;align-items:center;gap:8px;margin:28px 0 10px}
+.group-head h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin:0;font-weight:700}
 .group-head .rule{flex:1;height:1px;background:var(--line)}
+.group-emoji{display:flex;align-items:center;color:var(--accent)}
+@keyframes fade-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;
-  padding:12px;display:flex;gap:12px;margin-bottom:10px}
-.card.done{background:var(--doneBg);opacity:.85}
+  padding:12px;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;
+  transition:border-color .15s,background .3s,opacity .3s;
+  animation:fade-in .22s ease both}
+.card.done{background:var(--doneBg);opacity:.75}
+/* all done */
+@keyframes bounce-in{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.all-done{text-align:center;padding:48px 24px 40px;background:var(--doneBg);
+  border:1px solid var(--done);border-radius:20px}
+.all-done-icon{margin-bottom:12px;display:flex;justify-content:center;color:var(--accent);animation:bounce-in .5s cubic-bezier(.34,1.56,.64,1)}
+.all-done h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;margin:0 0 8px;color:var(--done)}
+.all-done p{color:var(--inkSoft);margin:0 0 20px;font-size:15px}
+.card.priority{border-color:var(--accent)}
+.card.dragging{opacity:.4}
+.card.drag-over{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft);border-style:dashed}
+.drag-handle{cursor:grab;color:var(--line);flex:none;display:flex;align-items:center;padding:0 2px;
+  touch-action:none}
+.drag-handle:active{cursor:grabbing;color:var(--inkSoft)}
 .check{width:26px;height:26px;border-radius:8px;border:2px solid var(--inkSoft);
   background:transparent;flex:none;margin-top:2px;display:flex;align-items:center;justify-content:center}
 .check.on{background:var(--done);border-color:var(--done)}
-.thumb{width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid var(--line);flex:none}
-.thumb.ph{background:var(--surfaceAlt);display:flex;align-items:center;justify-content:center;color:var(--inkSoft)}
+.thumb{width:76px;height:76px;border-radius:14px;object-fit:cover;border:1px solid var(--line);flex:none}
+.thumb.ph{background:var(--surfaceAlt);display:flex;align-items:center;justify-content:center;
+  color:var(--inkSoft);font-size:28px}
 .body{flex:1;min-width:0}
 .name{font-weight:600;font-size:15px;line-height:1.3;word-break:break-word}
 .name.done{text-decoration:line-through;color:var(--inkSoft)}
-.meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;font-size:14px;color:var(--inkSoft)}
+.item-notes{font-size:12px;color:var(--inkSoft);margin-top:3px;font-style:italic;word-break:break-word}
+.meta{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:4px;font-size:13px;color:var(--inkSoft)}
 .meta .price{color:var(--ink);font-weight:500}
+.meta .qty{background:var(--surfaceAlt);border:1px solid var(--line);border-radius:6px;
+  padding:1px 6px;font-size:12px;font-weight:600}
 .meta a{color:var(--accent);font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.ml-btn{background:none;border:1px solid var(--line);border-radius:6px;padding:2px 7px;
+  font-size:12px;font-weight:500;color:var(--inkSoft);cursor:pointer;display:inline-flex;align-items:center;gap:3px}
+.ml-btn:hover{border-color:var(--accent);color:var(--accent)}
+.ml-err{color:var(--warn)}
+.preco-lista{flex-basis:100%;display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
+.preco-linha{display:grid;grid-template-columns:60px 1fr;gap:0 12px;padding:10px 12px;border-radius:12px;background:var(--surfaceAlt);border:1px solid transparent;align-items:center}
+.preco-melhor{border-color:var(--done)}
+.preco-img-link{display:block}
+.preco-img{width:60px;height:60px;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
+.preco-img-vazio{width:60px;height:60px;border-radius:10px;background:var(--surfaceAlt);border:1px solid var(--line)}
+.preco-info{display:flex;flex-direction:column;gap:5px;min-width:0}
+.preco-row1{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;min-width:0}
+.preco-nome-loja{font-weight:600;color:var(--ink);font-size:13px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preco-valor{font-weight:700;font-size:15px;color:var(--ink);white-space:nowrap;flex:none}
+.preco-valor-ok{color:var(--done)}
+.preco-selo{background:var(--done);color:#fff;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700;white-space:nowrap;flex:none}
+.preco-row2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.preco-tend{font-size:11px;color:var(--inkSoft);white-space:nowrap}
+.preco-tend-ok{color:var(--done)}
+.preco-tend-warn{color:var(--warn)}
+.preco-link{font-size:12px;color:var(--accent);font-weight:500;text-decoration:none;white-space:nowrap}
+.preco-data{font-size:11px;color:var(--inkSoft);padding:2px 0;opacity:.8}
+.preco-aviso{font-size:11px;color:var(--inkSoft);opacity:.75}
+.preco-usar-foto{background:var(--surfaceAlt);border:1px solid var(--line);border-radius:6px;
+  padding:4px 10px;font-size:12px;cursor:pointer;color:var(--inkSoft)}
+.preco-usar-foto:active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* animação check */
+@keyframes check-pop{0%{transform:scale(1)}40%{transform:scale(1.35)}70%{transform:scale(.9)}100%{transform:scale(1)}}
+.check.popping{animation:check-pop .3s ease}
+
+/* modo compras — calculadora de mercado */
+.shop-overlay{position:fixed;inset:0;background:var(--bg);z-index:45;display:flex;
+  flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+.shop-top{flex:none;background:var(--surface);border-bottom:1px solid var(--line)}
+.shop-header{padding:14px 16px 10px;display:flex;align-items:center;gap:12px}
+.shop-back{background:none;color:var(--accent);font-size:15px;font-weight:600;padding:4px 0;flex:none}
+.shop-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;flex:1}
+.shop-total-bar{padding:10px 16px 14px;display:flex;align-items:baseline;gap:6px}
+.shop-total-label{font-size:13px;color:var(--inkSoft)}
+.shop-total-value{font-family:'Fraunces',serif;font-size:36px;font-weight:700;color:var(--done);line-height:1}
+.shop-total-items{font-size:13px;color:var(--inkSoft)}
+.shop-add-form{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px}
+.shop-add-name{flex:1;font-size:16px}
+.shop-add-price{width:110px;font-size:16px;flex:none}
+.shop-add-btn{background:var(--ink);color:var(--surface);border-radius:12px;
+  padding:11px 16px;font-weight:700;font-size:18px;flex:none}
+.shop-list{flex:1;overflow-y:auto;padding:8px 0}
+.shop-row{display:flex;align-items:center;gap:10px;padding:12px 16px;
+  border-bottom:1px solid var(--line)}
+.shop-row.flagged{background:rgba(154,74,46,.07)}
+.shop-row-name{flex:1;font-size:16px;font-weight:500;min-width:0;word-break:break-word}
+.shop-row-price{font-size:16px;font-weight:700;color:var(--ink);flex:none}
+.shop-row.flagged .shop-row-price{color:var(--warn)}
+.shop-flag{background:none;border:1px solid var(--line);border-radius:8px;
+  padding:4px 8px;font-size:13px;color:var(--inkSoft);flex:none}
+.shop-flag.on{background:var(--warn);border-color:var(--warn);color:#fff}
+.shop-del{background:none;color:var(--inkSoft);font-size:18px;line-height:1;
+  padding:4px 6px;flex:none}
+.shop-stepper{display:flex;align-items:center;flex:none}
+.shop-step{width:34px;height:34px;background:var(--surfaceAlt);border:1px solid var(--line);
+  font-size:20px;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:center;flex:none}
+.shop-step:first-child{border-radius:8px 0 0 8px}
+.shop-step:last-child{border-radius:0 8px 8px 0}
+.shop-step-qty{min-width:32px;height:34px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;
+  background:var(--surface);padding:0 4px}
+.shop-empty{text-align:center;padding:48px 24px;color:var(--inkSoft)}
+.shop-empty-icon{font-size:40px;margin-bottom:8px}
+.shop-footer{flex:none;border-top:2px solid var(--line);padding:12px 16px;
+  display:flex;align-items:center;gap:10px;background:var(--surface)}
+.shop-flagged-summary{flex:1;font-size:13px;color:var(--warn)}
+.shop-fabs{position:fixed;right:18px;bottom:calc(22px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;gap:10px;align-items:flex-end;z-index:46}
+.conferir-sub{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.conferir-sub-item{width:44px;height:44px;border-radius:50%;padding:0;justify-content:center;cursor:pointer}
+
+/* FAB modo compras */
+.fab-group{position:fixed;right:18px;bottom:calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;align-items:flex-end;z-index:40}
+.fab{position:relative;
+  background:var(--accent);color:#fff;border-radius:20px;padding:14px 20px;
+  display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;
+  box-shadow:0 4px 24px rgba(0,0,0,.22);transition:opacity .2s}
+.fab svg{flex:none}
+.fab-add{background:var(--accent);color:#fff;padding:0;width:52px;height:52px;border-radius:50%;justify-content:center}
+.fab-shop{font-size:13px;padding:10px 18px;border-radius:16px}
+
 .acts{display:flex;flex-direction:column;gap:6px;flex:none}
 .ico{width:32px;height:32px;border-radius:10px;background:var(--surfaceAlt);
   border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--inkSoft)}
 .ico.danger{color:var(--warn)}
+.ico.confirm{background:var(--warn);border-color:var(--warn);color:#fff;font-size:11px;font-weight:700}
+.ico.star-on{color:var(--accent);background:var(--accentSoft);border-color:var(--accent)}
 
 /* vazio */
 .empty{text-align:center;padding:56px 16px;background:var(--surface);
-  border:1px dashed var(--line);border-radius:18px}
+  border:1px dashed var(--line);border-radius:20px}
+.empty-icon{margin-bottom:12px;display:flex;justify-content:center;color:var(--inkSoft)}
+.empty h3{font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin:0 0 8px}
+.empty p{color:var(--inkSoft);margin:0;font-size:14px}
 
 /* modal */
-.overlay{position:fixed;inset:0;background:rgba(30,58,43,.4);display:flex;
-  align-items:flex-end;justify-content:center;padding:12px;z-index:50}
+@keyframes slide-up{from{transform:translateY(32px);opacity:0}to{transform:none;opacity:1}}
+@media(min-width:640px){@keyframes slide-up{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}}
+.overlay{position:fixed;inset:0;background:rgba(30,58,43,.45);display:flex;
+  align-items:flex-end;justify-content:center;padding:12px;z-index:50;backdrop-filter:blur(2px)}
 @media(min-width:640px){.overlay{align-items:center}}
-.modal{background:var(--surface);border-radius:20px;padding:18px;width:100%;max-width:420px}
-.modal h3{margin:0 0 14px;font-size:18px}
-.modal .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modal{background:var(--surface);border-radius:22px;padding:20px;width:100%;max-width:440px;
+  animation:slide-up .22s cubic-bezier(.34,1.2,.64,1)}
+.modal h3{margin:0 0 14px;font-size:18px;font-family:'Fraunces',serif;font-weight:600}
 .modal>*+*{margin-top:8px}
+.modal .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modal .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+/* settings drawer */
+.settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:59}
+.settings-drawer{position:fixed;top:0;right:0;bottom:0;width:100%;max-width:380px;
+  background:var(--surface);z-index:60;overflow-y:auto;padding:20px 20px 40px;
+  box-shadow:-4px 0 32px rgba(0,0,0,.18);transform:translateX(100%);transition:transform .3s}
+.settings-drawer.open{transform:translateX(0)}
+.section-label{font-size:11px;letter-spacing:.12em;font-weight:700;color:var(--inkSoft);margin:0 0 8px}
+.settings-section{margin-bottom:22px}
+.member-row{padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;display:flex;
+  align-items:center;gap:6px}
+.room-row{padding:8px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.house-row{padding:10px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.house-row-info{flex:1;min-width:0}
+.house-row-name{font-weight:600;font-size:14px;display:block}
+.house-row-meta{font-size:12px;color:var(--inkSoft)}
+.house-active-badge{background:var(--doneBg);color:var(--done);border:1px solid var(--done);
+  border-radius:8px;font-size:12px;font-weight:600;padding:4px 10px;flex:none}
+.house-switch-btn{background:var(--ink);color:var(--surface);border-radius:10px;
+  font-size:13px;font-weight:600;padding:6px 14px;flex:none}
+.btn-foto{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;
+  background:var(--surfaceAlt);border:1px solid var(--line);cursor:pointer;font-size:18px;flex:none;transition:opacity .15s}
+.btn-foto:active{opacity:.6}
+
+/* Stats modal */
+.stats-section{margin-bottom:20px}
+.stats-title{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--inkSoft);margin:0 0 10px}
+.stat-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:13px}
+.stat-bar-bg{flex:1;height:6px;border-radius:99px;background:var(--surfaceAlt);overflow:hidden}
+.stat-bar-fill{height:100%;border-radius:99px;background:var(--accent)}
+.stat-bar-label{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat-bar-val{color:var(--inkSoft);font-size:12px;flex:none}
+.stats-highlight{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.stats-hl-card{background:var(--surfaceAlt);border-radius:12px;padding:12px}
+.stats-hl-val{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink)}
+.stats-hl-label{font-size:11px;color:var(--inkSoft);margin-top:2px}
+
+/* Activity timeline */
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.activity-item:last-child{border-bottom:none}
+.activity-avatar{width:28px;height:28px;border-radius:50%;background:var(--accentSoft);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent);flex:none}
+.activity-text{flex:1;line-height:1.4}
+.activity-time{font-size:11px;color:var(--inkSoft);flex:none}
+
+.offline-banner{display:flex;align-items:center;gap:8px;background:#b91c1c18;border:1px solid #b91c1c44;
+  border-radius:12px;padding:9px 14px;margin-bottom:12px;font-size:13px;color:#b91c1c;font-weight:500}
+[data-theme="dark"] .offline-banner,.offline-banner{background:#ef444420;border-color:#ef444440;color:#fca5a5}
+.beta-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:#7c3aed18;border:1px solid #7c3aed44;border-radius:12px;
+  padding:9px 14px;margin-bottom:16px;font-size:13px;color:#7c3aed}
+[data-theme="dark"] .beta-banner{background:#a78bfa18;border-color:#a78bfa44;color:#c4b5fd}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .beta-banner{background:#a78bfa18;border-color:#a78bfa44;color:#c4b5fd}}
+.beta-banner.hide{display:none}
+.beta-close{background:none;border:none;cursor:pointer;color:inherit;opacity:.6;font-size:14px;padding:0 0 0 8px;flex:none}
+.beta-close:hover{opacity:1}
+.menu-header{display:flex;align-items:center;justify-content:space-between;padding:0 0 16px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.menu-header-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--ink)}
+.menu-back{display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--inkSoft);font-size:13px;padding:0}
+.menu-back:hover{color:var(--ink)}
+.menu-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:opacity .15s}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{opacity:.6}
+.menu-item-icon{width:36px;height:36px;border-radius:10px;background:var(--surfaceAlt);display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink)}
+.menu-item-text{flex:1}
+.menu-item-label{font-size:14px;font-weight:600;color:var(--ink);display:block}
+.menu-item-desc{font-size:12px;color:var(--inkSoft);display:block;margin-top:1px}
+.account-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer;
+  transition:opacity .15s}
+.account-row:last-child{border-bottom:none}
+.account-row:active{opacity:.6}
+.account-row-info{flex:1;min-width:0}
+.account-row-label{font-size:11px;color:var(--inkSoft);font-weight:600;letter-spacing:.06em;display:block;margin-bottom:2px}
+.account-row-value{font-size:13px;color:var(--ink);font-weight:500;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.account-row-warn{color:var(--warn)!important}
+.invite-code{font-size:26px;letter-spacing:.25em;font-family:monospace;color:var(--accent);font-weight:700}
+
 .hide{display:none!important}
-.foot{text-align:center;font-size:12px;color:var(--inkSoft);margin-top:36px;display:flex;align-items:center;justify-content:center;gap:12px}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);
-  color:var(--surface);padding:10px 18px;border-radius:99px;font-size:14px;z-index:60;opacity:0;
-  transition:opacity .25s;pointer-events:none}
+.foot{text-align:center;font-size:12px;color:var(--inkSoft);margin-top:36px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);
+  color:var(--surface);padding:10px 20px;border-radius:99px;font-size:14px;z-index:70;opacity:0;
+  transition:opacity .25s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
+.toast.err{background:var(--warn)}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--inkSoft)}
+
+/* ---- Animações e feedback tátil ---- */
+@keyframes _slideUp   {from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes _slideUpFull{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes _fadeIn    {from{opacity:0}to{opacity:1}}
+@keyframes _popIn     {from{transform:scale(.35);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* Overlay e modal */
+.overlay:not(.hide){animation:_fadeIn .2s ease both}
+.overlay:not(.hide) .modal{animation:_slideUp .28s cubic-bezier(.32,.72,0,1) both}
+.settings-overlay:not(.hide){animation:_fadeIn .22s ease both}
+
+/* Shop mode sobe da parte de baixo */
+.shop-overlay:not(.hide){animation:_slideUpFull .32s cubic-bezier(.32,.72,0,1) both}
+
+/* Submenu conferir: itens entram em pop escalonado */
+.conferir-sub:not(.hide) .conferir-sub-item:nth-child(2){animation:_popIn .2s cubic-bezier(.34,1.56,.64,1) 0s both}
+.conferir-sub:not(.hide) .conferir-sub-item:nth-child(1){animation:_popIn .2s cubic-bezier(.34,1.56,.64,1) .06s both}
+
+/* FAB — spring ao soltar */
+.fab{transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .15s,opacity .2s}
+.fab:active{transform:scale(.86);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+
+/* Botões primários */
+.btn-primary,.btn-danger,.house-switch-btn{transition:transform .12s cubic-bezier(.34,1.56,.64,1),opacity .15s}
+.btn-primary:active,.btn-danger:active,.house-switch-btn:active{transform:scale(.94)}
+
+/* Ícone-botões */
+.ico{transition:transform .12s cubic-bezier(.34,1.56,.64,1),opacity .15s}
+.ico:active{transform:scale(.8)}
+
+/* Botões de foto */
+.btn-foto{transition:transform .12s cubic-bezier(.34,1.56,.64,1),opacity .15s}
+.btn-foto:active{transform:scale(.83)}
+
+/* Itens do menu do settings */
+.menu-item{transition:background .15s,transform .1s cubic-bezier(.34,1.56,.64,1)}
+.menu-item:active{transform:scale(.97);background:var(--surfaceAlt)}
+
+/* Stepper e botão + do compras */
+.shop-add-btn,.shop-step{transition:transform .12s cubic-bezier(.34,1.56,.64,1)}
+.shop-add-btn:active,.shop-step:active{transform:scale(.84)}
+
+/* Links e botões menores */
+.link-toggle:active,.shop-back:active,.menu-back:active{opacity:.5;transition:opacity .1s}
+
+/* Troca de view no settings */
+@keyframes _viewEnter{from{transform:translateX(14px);opacity:0}to{transform:translateX(0);opacity:1}}
+.settings-view-enter{animation:_viewEnter .22s cubic-bezier(.32,.72,0,1) both}
 </style>
 </head>
 <body>
 
-<!-- TELA DE ENTRADA -->
+<!-- GATE -->
 <div id="gate">
-  <div class="gate-card">
-    <div class="eyebrow">CASA NOVA</div>
-    <h1 id="gateTitle">Entrar</h1>
-    <p class="desc" id="gateDesc">Acesse a lista da sua casa.</p>
-    <input id="userInput" type="text" placeholder="Usuário" autocomplete="username" />
-    <input id="passInput" type="password" placeholder="Senha" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitGate()" />
-    <button class="btn-primary" style="width:100%;margin-top:12px" onclick="submitGate()" id="gateBtn">Entrar</button>
-    <button class="link-toggle" style="margin-top:10px;width:100%" onclick="toggleMode()" id="modeToggle">Não tem conta? Criar conta</button>
-    <p id="gateErr" style="color:var(--warn);margin:12px 0 0;min-height:18px;font-size:13px"></p>
+  <div class="gate-wrap">
+    <div class="gate-hero">
+      <span class="gate-logo"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+      <h1>Organize o que sua casa precisa</h1>
+      <p>Lista compartilhada com a família, comparação de preços em lojas e calculadora de mercado. Tudo em um só lugar.</p>
+      <div class="gate-features">
+        <div class="gate-feature"><div class="gate-feature-icon">👥</div><span>Compartilhe com toda a família em tempo real</span></div>
+        <div class="gate-feature"><div class="gate-feature-icon">🏷️</div><span>Compare preços em Magalu, Shopee, ML e mais</span></div>
+        <div class="gate-feature"><div class="gate-feature-icon">🛒</div><span>Calculadora de mercado com total na hora</span></div>
+        <div class="gate-feature"><div class="gate-feature-icon">📱</div><span>Instale no celular, funciona sem internet</span></div>
+      </div>
+    </div>
+    <div class="gate-card">
+      <h2 id="gateTitle">Entrar</h2>
+      <p class="desc" id="gateDesc">Acesse a lista da sua casa.</p>
+      <!-- Login / Registro -->
+      <div id="gateLoginForm">
+        <input id="userInput" type="text" placeholder="Usuário" autocomplete="username" />
+        <input id="passInput" type="password" placeholder="Senha" autocomplete="current-password" onkeydown="if(event.key==='Enter'&&S.mode==='login')submitGate()" />
+        <input id="passConfirmInput" type="password" placeholder="Confirmar senha" autocomplete="new-password" class="hide" onkeydown="if(event.key==='Enter')submitGate()" />
+        <input id="emailRegInput" type="email" placeholder="Email (opcional, para recuperar senha)" autocomplete="email" class="hide" onkeydown="if(event.key==='Enter')submitGate()" />
+        <button class="btn-primary" style="width:100%;margin-top:12px" onclick="submitGate()" id="gateBtn">Entrar</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+          <button class="link-toggle" onclick="toggleMode()" id="modeToggle">Não tem conta? Criar conta</button>
+          <button class="link-toggle" id="forgotBtn" onclick="showForgot()" style="font-size:12px;color:var(--inkSoft)">Esqueci a senha</button>
+        </div>
+      </div>
+      <!-- Esqueci a senha -->
+      <div id="gateForgotForm" class="hide">
+        <p style="font-size:13px;color:var(--inkSoft);margin:0 0 14px">Digite seu email para receber o link de recuperação.</p>
+        <input id="forgotEmailInput" type="email" placeholder="Seu email" autocomplete="email" onkeydown="if(event.key==='Enter')submitForgot()" />
+        <button class="btn-primary" style="width:100%;margin-top:12px" onclick="submitForgot()">Enviar link</button>
+        <button class="link-toggle" style="margin-top:10px;width:100%" onclick="showLogin()">← Voltar</button>
+      </div>
+      <!-- Redefinir senha (via link do email) -->
+      <div id="gateResetForm" class="hide">
+        <p style="font-size:13px;color:var(--inkSoft);margin:0 0 14px">Digite sua nova senha.</p>
+        <input id="resetPassInput" type="password" placeholder="Nova senha" autocomplete="new-password" onkeydown="if(event.key==='Enter')submitReset()" />
+        <input id="resetPassConfirmInput" type="password" placeholder="Confirmar nova senha" autocomplete="new-password" onkeydown="if(event.key==='Enter')submitReset()" />
+        <button class="btn-primary" style="width:100%;margin-top:12px" onclick="submitReset()">Salvar nova senha</button>
+      </div>
+      <p id="gateErr" style="color:var(--warn);margin:12px 0 0;min-height:18px;font-size:13px"></p>
+    </div>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app" class="wrap hide">
+  <div id="offlineBanner" class="offline-banner hide">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+    Sem internet — você está offline
+  </div>
+  <div id="betaBanner" class="beta-banner">
+    <span style="display:flex;align-items:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Versão beta — recursos em desenvolvimento, pode haver instabilidades.</span>
+    <button class="beta-close" onclick="dismissBeta()" aria-label="Fechar">✕</button>
+  </div>
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
-      <div class="eyebrow">INVENTÁRIO · casa nova</div>
+      <div class="eyebrow" id="houseEyebrow">INVENTÁRIO · casa nova</div>
       <h1 class="title">O que falta comprar</h1>
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
       <span id="userLabel" style="font-size:13px;color:var(--inkSoft)"></span>
-      <button class="ico" onclick="logout()" title="Sair" aria-label="sair">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <button class="ico" onclick="openSettings()" title="Menu" aria-label="menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
   </div>
 
   <div class="progress-card">
-    <div style="display:flex;justify-content:space-between;align-items:flex-end">
-      <span class="muted"><strong id="pBought" style="color:var(--ink)">0</strong> de <span id="pTotal">0</span> comprados</span>
-      <strong id="pPct" style="color:var(--done)">0%</strong>
+    <div class="progress-main">
+      <div>
+        <div class="progress-count" id="pBought">0 <span style="font-size:20px;color:var(--inkSoft);font-family:'Inter',sans-serif;font-weight:400">de <span id="pTotal">0</span></span></div>
+        <div class="progress-count-sub">itens comprados</div>
+      </div>
+      <div class="progress-pct" id="pPct">0%</div>
     </div>
     <div class="bar"><div id="pBar" style="width:0%"></div></div>
-    <div style="display:flex;gap:20px;margin-top:12px;font-size:14px">
-      <div><span class="muted">Falta gastar </span><strong id="pRemaining">—</strong></div>
-      <div><span class="muted">Já gasto </span><strong id="pSpent">—</strong></div>
+    <div class="progress-stats">
+      <div class="pstat"><div class="pstat-label">FALTA</div><div class="pstat-value" id="pRemaining">—</div></div>
+      <div class="pstat"><div class="pstat-label">GASTO</div><div class="pstat-value" id="pSpent">—</div></div>
+      <div class="pstat"><div class="pstat-label">TOTAL</div><div class="pstat-value" id="pTotal2">—</div></div>
     </div>
   </div>
+
 
   <div class="add-card">
     <div class="row">
-      <input id="addName" placeholder="Adicionar item (ex: mesa de jantar)" onkeydown="if(event.key==='Enter')addItem()" />
+      <input id="addName" placeholder="Adicionar item (ex: mesa de jantar)" onkeydown="if(event.key==='Enter')addItem()" autocomplete="off" />
       <button class="btn-primary" style="flex:none" onclick="addItem()">+ Add</button>
     </div>
-    <button class="link-toggle" onclick="toggleExtras()" id="extrasBtn">+ cômodo, preço, link e imagem</button>
+    <button class="link-toggle" onclick="toggleExtras()" id="extrasBtn">+ cômodo, preço, qtd, notas...</button>
     <div class="extras hide" id="extras">
       <select id="addRoom"></select>
-      <input id="addPrice" placeholder="Preço estimado (ex: 299,90)" />
+      <input id="addPrice" placeholder="Preço unitário (ex: 299,90)" />
+      <input id="addQty" type="number" min="1" value="1" placeholder="Qtd" style="width:100%" />
+      <div style="display:flex;align-items:center;gap:8px" class="full">
+        <label style="font-size:13px;color:var(--inkSoft);white-space:nowrap">Urgente</label>
+        <button id="addPriorityBtn" class="ico" onclick="toggleAddPriority()" style="width:32px;height:32px" title="marcar como urgente">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </button>
+      </div>
       <input id="addUrl" class="full" placeholder="Link da loja" />
-      <input id="addImage" class="full" placeholder="URL da imagem (botão direito na foto › copiar endereço)" />
+      <div class="full" style="display:flex;align-items:center;gap:8px">
+        <input id="addImage" style="flex:1" placeholder="URL da imagem" />
+        <label class="btn-foto" title="Câmera">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <input type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFotoAdd(this)" />
+        </label>
+        <label class="btn-foto" title="Escolher da galeria">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <input type="file" accept="image/*" style="display:none" onchange="handleFotoAdd(this)" />
+        </label>
+      </div>
+      <div id="addImagePreview" style="display:none;margin-top:6px">
+        <img id="addImageThumb" style="width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--line)" />
+        <button class="link-toggle" style="font-size:12px;margin-left:8px" onclick="clearFotoAdd()">remover</button>
+      </div>
+      <textarea id="addNotes" class="full" rows="2" placeholder="Notas (cor, tamanho, obs...)"></textarea>
     </div>
   </div>
 
+  <div class="search">
+    <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="searchInput" placeholder="Buscar na lista…" autocomplete="off" oninput="setSearch(this.value)" />
+    <button class="search-clear hide" id="searchClear" onclick="clearSearch()">✕</button>
+  </div>
   <div class="filters">
     <button class="chip on" data-f="todos" onclick="setFilter('todos')">Tudo</button>
     <button class="chip" data-f="abertos" onclick="setFilter('abertos')">A comprar</button>
     <button class="chip" data-f="comprados" onclick="setFilter('comprados')">Comprados</button>
-    <div class="search">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="search" placeholder="Buscar" oninput="render()" />
+    <button class="chip" data-f="urgentes" onclick="setFilter('urgentes')">⭐ Urgentes</button>
+    <div style="display:flex;gap:8px;margin-left:auto;align-items:center">
+      <button id="clearBtn" class="chip-danger hide" onclick="clearBought()">Limpar comprados</button>
+      <button class="ico" onclick="abrirHistorico()" title="Histórico de compras" style="width:32px;height:32px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </button>
+      <button class="ico" onclick="compartilharWhatsApp()" title="Enviar por WhatsApp" style="width:32px;height:32px;color:#25D366">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 20l1.3-3.9C2.5 14.6 2 12.9 2 11.1 2 6.1 6.5 2 12 2s10 4.1 10 9.1-4.5 9.1-10 9.1c-1.7 0-3.4-.4-4.8-1.2L3 20z"/>
+          <path d="M9 11c0 .6.2 1.1.5 1.5l1.5 1.5c.8.8 2 .8 2.8 0l.7-.7c.2-.2.2-.5 0-.7l-1.5-1.5c-.2-.2-.5-.2-.7 0l-.3.3c-.6-.4-1.2-1-1.6-1.6l.3-.3c.2-.2.2-.5 0-.7L9 7.5c-.2-.2-.5-.2-.7 0l-.7.7C7.2 8.8 7 9.4 7 10"/>
+        </svg>
+      </button>
+      <button class="ico" onclick="exportList()" title="Exportar lista" style="width:32px;height:32px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" placeholder="Buscar" oninput="render()" />
+      </div>
     </div>
   </div>
 
   <div id="list"></div>
-  <p class="foot">Lista compartilhada · salva no servidor</p>
+  <p class="foot" id="houseFoot">Lista compartilhada · salva no servidor</p>
+
+  <div class="fab-group">
+    <button class="fab fab-add" onclick="focusAddItem()" title="Adicionar item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button class="fab fab-shop" onclick="entrarModoCompras()" title="Calculadora de compras">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Mercado
+    </button>
+  </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODO COMPRAS -->
+<div id="shopMode" class="shop-overlay hide">
+  <div class="shop-top">
+    <div class="shop-header">
+      <button class="shop-back" onclick="sairModoCompras()">← Sair</button>
+      <div class="shop-title">Calculadora</div>
+    </div>
+    <div class="shop-total-bar">
+      <span class="shop-total-label">Total</span>
+      <span class="shop-total-value" id="shopTotal">R$ 0,00</span>
+      <span class="shop-total-items" id="shopTotalItems"></span>
+    </div>
+    <div class="shop-add-form">
+      <input id="shopItemName" class="shop-add-name" placeholder="Item..."
+        autocomplete="off" onkeydown="if(event.key==='Enter'){$('shopItemPrice').focus()}" />
+      <input id="shopItemPrice" class="shop-add-price" placeholder="R$ 0,00" type="text" inputmode="decimal"
+        onkeydown="if(event.key==='Enter')shopAddItem()" />
+      <button class="shop-add-btn" onclick="shopAddItem()">+</button>
+    </div>
+  </div>
+  <div id="shopList" class="shop-list"></div>
+  <div class="shop-footer">
+    <span class="shop-flagged-summary" id="shopFlagSummary"></span>
+  </div>
+  <div class="shop-fabs">
+    <div class="conferir-sub hide" id="conferirSub">
+      <label class="fab fab-add conferir-sub-item" title="Câmera">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <input type="file" accept="image/*" capture="environment" style="display:none" onchange="conferirComprovante(this)" />
+      </label>
+      <label class="fab fab-add conferir-sub-item" title="Galeria">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <input type="file" accept="image/*" style="display:none" onchange="conferirComprovante(this)" />
+      </label>
+    </div>
+    <button class="fab fab-shop" id="conferirBtn" onclick="toggleConferirMenu(event)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+      Conferir
+    </button>
+    <button class="fab fab-shop" onclick="shopClear()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M9 6V4h6v2"/></svg>
+      Limpar tudo
+    </button>
+  </div>
+</div>
+
+<!-- MODAL COMPROVANTE -->
+<div id="comprovanteModal" class="overlay hide" onclick="if(event.target===this)closeComprovanteModal()" style="z-index:55">
+  <div class="modal" style="max-height:80vh;overflow-y:auto;width:calc(100% - 32px);max-width:420px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="margin:0">Conferência de comprovante</h3>
+      <button class="ico" onclick="closeComprovanteModal()" style="width:28px;height:28px;flex:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="comprovanteBody"></div>
+  </div>
+</div>
+
+<!-- MODAL CONTA -->
+<div id="accountModal" class="overlay hide" onclick="if(event.target===this)closeAccountModal()">
+  <div class="modal" style="max-width:360px;width:calc(100% - 32px)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 id="accountModalTitle" style="margin:0"></h3>
+      <button class="ico" onclick="closeAccountModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="accountModalBody"></div>
+    <p id="accountModalErr" style="color:var(--warn);font-size:13px;margin:10px 0 0;min-height:18px"></p>
+  </div>
+</div>
+
+<!-- MODAL HISTÓRICO -->
+<div id="histModal" class="overlay hide" onclick="if(event.target===this)closeHistModal()">
+  <div class="modal" style="max-height:80vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="margin:0">Histórico de compras</h3>
+      <button class="ico" onclick="closeHistModal()" style="width:28px;height:28px;flex:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="histContent"></div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR -->
 <div id="modal" class="overlay hide" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h3>Editar item</h3>
     <input id="eName" placeholder="Nome" />
     <div class="grid2">
       <select id="eRoom"></select>
-      <input id="ePrice" placeholder="Preço" />
+      <input id="eQty" type="number" min="1" placeholder="Qtd" />
     </div>
+    <input id="ePrice" placeholder="Preço unitário" />
     <input id="eUrl" placeholder="Link da loja" />
-    <input id="eImage" placeholder="URL da imagem" />
-    <button class="btn-primary" style="width:100%;margin-top:14px" onclick="saveEdit()">Salvar</button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input id="eImage" style="flex:1" placeholder="URL da imagem" onblur="atualizarPreviewImagem()" />
+      <label class="btn-foto" title="Câmera">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <input type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFotoEdit(this)" />
+      </label>
+      <label class="btn-foto" title="Escolher da galeria">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <input type="file" accept="image/*" style="display:none" onchange="handleFotoEdit(this)" />
+      </label>
+    </div>
+    <div id="eImagePreview" style="display:none;margin-top:-4px">
+      <img id="eImagePreviewImg" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--line)" alt=""
+        onerror="this.parentElement.style.display='none'">
+    </div>
+    <textarea id="eNotes" rows="2" placeholder="Notas"></textarea>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+      <label style="font-size:13px;color:var(--inkSoft)">Urgente:</label>
+      <button id="ePriorityBtn" class="ico" onclick="toggleEditPriority()" style="width:32px;height:32px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </button>
+    </div>
+    <button class="btn-primary" style="width:100%;margin-top:6px" onclick="saveEdit()">Salvar</button>
   </div>
+</div>
+
+<!-- MODAL ESTATÍSTICAS -->
+<div id="statsModal" class="overlay hide" onclick="if(event.target===this)closeStats()">
+  <div class="modal" style="max-height:85vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0">Estatísticas</h3>
+      <button class="ico" onclick="closeStats()" style="width:28px;height:28px;flex:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="statsContent"><p style="color:var(--inkSoft);text-align:center;padding:24px 0">Carregando...</p></div>
+  </div>
+</div>
+
+<!-- MODAL ATIVIDADE -->
+<div id="activityModal" class="overlay hide" onclick="if(event.target===this)closeActivity()">
+  <div class="modal" style="max-height:80vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="margin:0">Atividade da casa</h3>
+      <button class="ico" onclick="closeActivity()" style="width:28px;height:28px;flex:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="activityContent"><p style="color:var(--inkSoft);text-align:center;padding:24px 0">Carregando...</p></div>
+  </div>
+</div>
+
+<!-- SETTINGS DRAWER -->
+<div id="settingsOverlay" class="settings-overlay hide" onclick="closeSettings()"></div>
+<div id="settingsDrawer" class="settings-drawer">
+  <div id="settingsContent"></div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <script>
-const ROOMS=["Sala","Cozinha","Quarto","Banheiro","Escritório","Área externa","Geral"];
-const roomOrder=r=>{const i=ROOMS.indexOf(r);return i===-1?50:i};
-const DEMO_ITEMS=[
-  {id:"d1",name:"Sofá retrátil 3 lugares",room:"Sala",price:2499.90,url:"https://exemplo.com/sofa",image:"",bought:false},
-  {id:"d2",name:"Smart TV 55\" 4K",room:"Sala",price:2899.00,url:"https://exemplo.com/tv",image:"",bought:true},
-  {id:"d3",name:"Rack para TV",room:"Sala",price:649.00,url:"",image:"",bought:false},
-  {id:"d4",name:"Mesa de jantar 6 lugares",room:"Cozinha",price:1299.00,url:"https://exemplo.com/mesa",image:"",bought:false},
-  {id:"d5",name:"Jogo de panelas antiaderente",room:"Cozinha",price:459.90,url:"",image:"",bought:true},
-  {id:"d6",name:"Geladeira frost free",room:"Cozinha",price:3199.00,url:"https://exemplo.com/geladeira",image:"",bought:false},
-  {id:"d7",name:"Cama box casal",room:"Quarto",price:1899.00,url:"",image:"",bought:false},
-  {id:"d8",name:"Guarda-roupa 6 portas",room:"Quarto",price:1650.00,url:"https://exemplo.com/guarda-roupa",image:"",bought:true},
-  {id:"d9",name:"Kit 4 toalhas de banho",room:"Banheiro",price:189.90,url:"",image:"",bought:true},
-  {id:"d10",name:"Espelho com moldura",room:"Banheiro",price:249.00,url:"",image:"",bought:false},
-  {id:"d11",name:"Cadeira de escritório ergonômica",room:"Escritório",price:799.00,url:"https://exemplo.com/cadeira",image:"",bought:false},
-  {id:"d12",name:"Churrasqueira a carvão",room:"Área externa",price:349.90,url:"",image:"",bought:false}
+// ---- State ----
+const S = {
+  items: [], rooms: [], house: null,
+  token: localStorage.getItem("casaToken") || "",
+  username: localStorage.getItem("casaUser") || "",
+  userId: localStorage.getItem("casaUserId") || "",
+  me: null, settingsView: "menu",
+  filter: "todos", search: "", editId: null, confirmId: null,
+  mode: "login", addPriority: false, editPriority: false,
+  drag: { id: null, room: null }, shopMode: false, houses: [],
+};
+
+// ---- Utils ----
+const $= id => document.getElementById(id);
+const esc = s => (s||"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const parseBRL = s => { if(s==null||s==="")return null; const n=parseFloat(String(s).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".")); return isNaN(n)?null:n; };
+const fmtBRL = n => n==null?"":n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const fmtTotal = (price, qty) => price == null ? null : price * (qty || 1);
+const STAR_ON  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+const STAR_OFF = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+const DRAG_ICON = `<svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="3" cy="2.5" r="1.3"/><circle cx="3" cy="7" r="1.3"/><circle cx="3" cy="11.5" r="1.3"/><circle cx="7" cy="2.5" r="1.3"/><circle cx="7" cy="7" r="1.3"/><circle cx="7" cy="11.5" r="1.3"/></svg>`;
+
+// Estado de busca de preço ML por item: id -> { status:'idle'|'loading'|'ok'|'err', resultado, erro }
+const mlPrecos = new Map();
+
+async function verificarPreco(id, nome) {
+  mlPrecos.set(id, { status: "loading" });
+  render();
+  try {
+    const data = await api("GET", `/preco?q=${encodeURIComponent(nome)}&item_id=${encodeURIComponent(id)}`);
+    mlPrecos.set(id, { status: "ok", ofertas: data.ofertas || [], historico: data.historico || [] });
+  } catch (e) {
+    mlPrecos.set(id, { status: "err", erro: e.message });
+  }
+  render();
+}
+
+let toastTimer;
+function toast(m, type = "ok") {
+  clearTimeout(toastTimer);
+  const t = $("toast");
+  t.textContent = m;
+  t.className = `toast show${type === "err" ? " err" : ""}`;
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+// ---- API ----
+// ===== DEMO: sem backend — dados de exemplo, nada é salvo no servidor. =====
+const DEMO_ROOMS = [
+  {name:"Sala"},{name:"Cozinha"},{name:"Quarto"},{name:"Banheiro"},{name:"Escritório"},{name:"Área externa"}
 ];
-let _demoSeq=100;
-let state={items:JSON.parse(JSON.stringify(DEMO_ITEMS)),token:"demo",username:"você",filter:"todos",editId:null,mode:"login"};
-
-const parseBRL=s=>{if(s==null||s==="")return null;const n=parseFloat(String(s).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",","."));return isNaN(n)?null:n};
-const fmtBRL=n=>n==null?"":n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-const esc=s=>(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-
-function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
-
-[document.getElementById("addRoom"),document.getElementById("eRoom")].forEach(sel=>{
-  sel.innerHTML=ROOMS.map(r=>`<option value="${r}">${r}</option>`).join("");
-});
-
-// DEMO: sem backend — tudo funciona localmente, nada é salvo no servidor.
-async function api(method,path,body){
-  if(method==="POST"&&path==="/items"){return {id:"d"+(_demoSeq++),bought:false,...body}}
+const DEMO_HOUSE = { name:"Casa Nova", members:[{username:"você"},{username:"par"}] };
+const DEMO_ITEMS = [
+  {id:"d1",name:"Sofá retrátil 3 lugares",room:"Sala",qty:1,price:2499.90,url:"https://exemplo.com/sofa",image:"",notes:"cor cinza grafite",priority:true,bought:false,flagged:false},
+  {id:"d2",name:"Smart TV 55\" 4K",room:"Sala",qty:1,price:2899.00,url:"https://exemplo.com/tv",image:"",notes:"",priority:false,bought:true,flagged:false},
+  {id:"d3",name:"Rack para TV",room:"Sala",qty:1,price:649.00,url:"",image:"",notes:"",priority:false,bought:false,flagged:false},
+  {id:"d4",name:"Mesa de jantar 6 lugares",room:"Cozinha",qty:1,price:1299.00,url:"https://exemplo.com/mesa",image:"",notes:"madeira",priority:true,bought:false,flagged:false},
+  {id:"d5",name:"Jogo de panelas antiaderente",room:"Cozinha",qty:1,price:459.90,url:"",image:"",notes:"",priority:false,bought:true,flagged:false},
+  {id:"d6",name:"Geladeira frost free",room:"Cozinha",qty:1,price:3199.00,url:"https://exemplo.com/geladeira",image:"",notes:"",priority:false,bought:false,flagged:true},
+  {id:"d7",name:"Cama box casal",room:"Quarto",qty:1,price:1899.00,url:"",image:"",notes:"",priority:false,bought:false,flagged:false},
+  {id:"d8",name:"Guarda-roupa 6 portas",room:"Quarto",qty:1,price:1650.00,url:"https://exemplo.com/guarda-roupa",image:"",notes:"",priority:false,bought:true,flagged:false},
+  {id:"d9",name:"Kit 4 toalhas de banho",room:"Banheiro",qty:2,price:189.90,url:"",image:"",notes:"",priority:false,bought:true,flagged:false},
+  {id:"d10",name:"Espelho com moldura",room:"Banheiro",qty:1,price:249.00,url:"",image:"",notes:"",priority:false,bought:false,flagged:false},
+  {id:"d11",name:"Cadeira de escritório ergonômica",room:"Escritório",qty:1,price:799.00,url:"https://exemplo.com/cadeira",image:"",notes:"",priority:false,bought:false,flagged:false},
+  {id:"d12",name:"Churrasqueira a carvão",room:"Área externa",qty:1,price:349.90,url:"",image:"",notes:"",priority:false,bought:false,flagged:false}
+];
+let _demoSeq = 100;
+async function api(method, path, body) {
+  const p = path.split("?")[0];
+  if (method === "GET" && p === "/items")  return JSON.parse(JSON.stringify(DEMO_ITEMS));
+  if (method === "GET" && p === "/rooms")  return JSON.parse(JSON.stringify(DEMO_ROOMS));
+  if (method === "GET" && p === "/house")  return JSON.parse(JSON.stringify(DEMO_HOUSE));
+  if (method === "GET" && p === "/preco")  return { ofertas: [], historico: [] };
+  if (method === "POST" && p === "/items") return { id:"d"+(_demoSeq++), qty:1, bought:false, flagged:false, priority:false, ...body };
   return {};
 }
 
-// ---- gate ----
-function toggleMode(){
-  state.mode=state.mode==="login"?"register":"login";
-  const isReg=state.mode==="register";
-  document.getElementById("gateTitle").textContent=isReg?"Criar conta":"Entrar";
-  document.getElementById("gateDesc").textContent=isReg?"Crie sua conta para começar.":"Acesse a lista da sua casa.";
-  document.getElementById("gateBtn").textContent=isReg?"Criar conta":"Entrar";
-  document.getElementById("modeToggle").textContent=isReg?"Já tem conta? Entrar":"Não tem conta? Criar conta";
-  document.getElementById("passInput").autocomplete=isReg?"new-password":"current-password";
-  document.getElementById("gateErr").textContent="";
+// ---- Gate ----
+function showLogin() {
+  $("gateForgotForm").classList.add("hide");
+  $("gateResetForm").classList.add("hide");
+  $("gateLoginForm").classList.remove("hide");
+  $("gateTitle").textContent = S.mode === "register" ? "Criar conta" : "Entrar";
+  $("gateDesc").textContent = S.mode === "register" ? "Crie sua conta para começar." : "Acesse a lista da sua casa.";
+  $("gateErr").textContent = "";
+}
+function showForgot() {
+  $("gateLoginForm").classList.add("hide");
+  $("gateResetForm").classList.add("hide");
+  $("gateForgotForm").classList.remove("hide");
+  $("gateTitle").textContent = "Recuperar senha";
+  $("gateDesc").textContent = "";
+  $("gateErr").textContent = "";
+}
+function showReset() {
+  $("gateLoginForm").classList.add("hide");
+  $("gateForgotForm").classList.add("hide");
+  $("gateResetForm").classList.remove("hide");
+  $("gateTitle").textContent = "Nova senha";
+  $("gateDesc").textContent = "";
+  $("gateErr").textContent = "";
 }
 
-async function submitGate(){
-  const username=document.getElementById("userInput").value.trim();
-  const password=document.getElementById("passInput").value;
-  const err=document.getElementById("gateErr");
-  err.textContent="";
-  if(!username||!password){err.textContent="Preencha usuário e senha.";return}
-  const endpoint=state.mode==="register"?"/register":"/login";
-  try{
-    const res=await fetch("/api"+endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
-    const data=await res.json();
-    if(!res.ok){err.textContent=data.erro||"Erro ao entrar.";return}
-    state.token=data.token;
-    state.username=data.username;
-    localStorage.setItem("casaToken",data.token);
-    localStorage.setItem("casaUser",data.username);
+function toggleMode() {
+  S.mode = S.mode === "login" ? "register" : "login";
+  const r = S.mode === "register";
+  $("gateTitle").textContent = r ? "Criar conta" : "Entrar";
+  $("gateDesc").textContent = r ? "Crie sua conta para começar." : "Acesse a lista da sua casa.";
+  $("gateBtn").textContent = r ? "Criar conta" : "Entrar";
+  $("modeToggle").textContent = r ? "Já tem conta? Entrar" : "Não tem conta? Criar conta";
+  $("passInput").autocomplete = r ? "new-password" : "current-password";
+  $("passConfirmInput").classList.toggle("hide", !r);
+  $("emailRegInput").classList.toggle("hide", !r);
+  $("forgotBtn").classList.toggle("hide", r);
+  $("gateErr").textContent = "";
+}
+
+async function submitGate() {
+  const username = $("userInput").value.trim();
+  const password = $("passInput").value;
+  const err = $("gateErr");
+  err.textContent = "";
+  if (!username || !password) { err.textContent = "Preencha usuário e senha."; return; }
+  const body = { username, password };
+  if (S.mode === "register") {
+    const confirm = $("passConfirmInput").value;
+    if (!confirm) { err.textContent = "Confirme sua senha."; return; }
+    if (password !== confirm) { err.textContent = "As senhas não coincidem."; return; }
+    if (password.length < 6) { err.textContent = "A senha precisa ter ao menos 6 caracteres."; return; }
+    const email = $("emailRegInput").value.trim();
+    if (email) body.email = email;
+  }
+  const endpoint = S.mode === "register" ? "/register" : "/login";
+  try {
+    const res = await fetch("/api" + endpoint, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.erro || "Erro ao entrar."; return; }
+    S.token = data.token; S.username = data.username; S.userId = data.userId || "";
+    localStorage.setItem("casaToken", data.token);
+    localStorage.setItem("casaUser", data.username);
+    localStorage.setItem("casaUserId", data.userId || "");
     showApp();
-  }catch{err.textContent="Erro de conexão."}
+  } catch { err.textContent = "Erro de conexão."; }
 }
 
-function logout(){
-  localStorage.removeItem("casaToken");
-  localStorage.removeItem("casaUser");
-  state.token="";state.username="";state.items=[];
-  document.getElementById("app").classList.add("hide");
-  document.getElementById("gate").classList.remove("hide");
-  document.getElementById("userInput").value="";
-  document.getElementById("passInput").value="";
-  document.getElementById("gateErr").textContent="";
+async function submitForgot() {
+  const email = $("forgotEmailInput").value.trim();
+  const err = $("gateErr");
+  err.textContent = "";
+  if (!email) { err.textContent = "Digite seu email."; return; }
+  try {
+    const res = await fetch("/api/auth/forgot", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.erro || "Erro ao enviar."; return; }
+    $("gateDesc").textContent = "";
+    $("gateForgotForm").innerHTML = `<div style="text-align:center;padding:16px 0">
+      <div style="font-size:36px;margin-bottom:12px">📬</div>
+      <p style="font-weight:600;margin:0 0 6px">Email enviado!</p>
+      <p style="font-size:13px;color:var(--inkSoft);margin:0 0 20px">Verifique sua caixa de entrada e clique no link.</p>
+      <button class="link-toggle" onclick="showLogin()">← Voltar para o login</button>
+    </div>`;
+  } catch { err.textContent = "Erro de conexão."; }
 }
 
-function showApp(){
-  document.getElementById("gate").classList.add("hide");
-  document.getElementById("app").classList.remove("hide");
-  document.getElementById("userLabel").textContent=state.username;
-  load();
+async function submitReset() {
+  const password = $("resetPassInput").value;
+  const confirm  = $("resetPassConfirmInput").value;
+  const err = $("gateErr");
+  err.textContent = "";
+  if (!password) { err.textContent = "Digite a nova senha."; return; }
+  if (password.length < 6) { err.textContent = "A senha precisa ter ao menos 6 caracteres."; return; }
+  if (password !== confirm) { err.textContent = "As senhas não coincidem."; return; }
+  const token = new URLSearchParams(location.search).get("reset");
+  try {
+    const res = await fetch("/api/auth/reset", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.erro || "Erro ao redefinir."; return; }
+    history.replaceState({}, "", "/");
+    $("gateResetForm").innerHTML = `<div style="text-align:center;padding:16px 0">
+      <div style="margin-bottom:12px;color:var(--accent)">${ico(I.check,40)}</div>
+      <p style="font-weight:600;margin:0 0 6px">Senha redefinida!</p>
+      <p style="font-size:13px;color:var(--inkSoft);margin:0 0 20px">Agora faça login com a nova senha.</p>
+      <button class="btn-primary" onclick="S.mode='login';showLogin()">Ir para o login</button>
+    </div>`;
+  } catch { err.textContent = "Erro de conexão."; }
 }
 
-async function load(){render()}
+function logout() {
+  if (_sse) { _sse.close(); _sse = null; }
+  localStorage.removeItem("casaToken"); localStorage.removeItem("casaUser"); localStorage.removeItem("casaUserId");
+  S.token = ""; S.username = ""; S.userId = ""; S.items = []; S.rooms = []; S.house = null;
+  $("app").classList.add("hide"); $("gate").classList.remove("hide");
+  $("userInput").value = ""; $("passInput").value = ""; $("passConfirmInput").value = ""; $("gateErr").textContent = "";
+  closeSettings();
+}
 
-// ---- ações ----
-async function addItem(){
-  const name=document.getElementById("addName").value.trim();
-  if(!name)return;
-  const body={name,room:document.getElementById("addRoom").value,
-    price:parseBRL(document.getElementById("addPrice").value),
-    url:document.getElementById("addUrl").value.trim(),
-    image:document.getElementById("addImage").value.trim()};
-  const item=await api("POST","/items",body);
-  state.items.unshift(item);
-  ["addName","addPrice","addUrl","addImage"].forEach(id=>document.getElementById(id).value="");
-  document.getElementById("extras").classList.add("hide");
+function showApp() {
+  $("gate").classList.add("hide"); $("app").classList.remove("hide");
+  $("userLabel").textContent = S.username;
+  initBetaBanner();
+  loadAll();
+  connectSSE();
+}
+
+let _sse = null;
+function connectSSE() { /* DEMO: tempo real desativado (sem backend) */ }
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && S.token) connectSSE();
+});
+
+// ---- Load ----
+async function loadAll() {
+  try {
+    const [items, rooms, house] = await Promise.all([
+      api("GET", "/items"), api("GET", "/rooms"), api("GET", "/house"),
+    ]);
+    S.items = items; S.rooms = rooms; S.house = house;
+    populateRoomSelects();
+    render();
+    $("houseEyebrow").textContent = `INVENTÁRIO · ${house.name.toLowerCase()}`;
+    $("houseFoot").textContent = `${house.name} · ${house.members.length} membro(s)`;
+
+  } catch { toast("Erro ao carregar dados", "err"); }
+}
+
+function populateRoomSelects() {
+  const opts = S.rooms.map(r => `<option value="${esc(r.name)}">${esc(r.name)}</option>`).join("");
+  ["addRoom", "eRoom"].forEach(id => { const el = $(id); if (el) el.innerHTML = opts; });
+}
+
+// ---- Item actions ----
+async function addItem() {
+  const name = $("addName").value.trim();
+  if (!name) return;
+  const body = {
+    name, room: $("addRoom").value,
+    qty: parseInt($("addQty").value) || 1,
+    price: parseBRL($("addPrice").value),
+    url: $("addUrl").value.trim(),
+    image: $("addImage").value.trim(),
+    notes: $("addNotes").value.trim(),
+    priority: S.addPriority,
+  };
+  try {
+    const item = await api("POST", "/items", body);
+    S.items.unshift(item);
+    ["addName","addPrice","addQty","addUrl","addImage","addNotes"].forEach(id => $(id).value = id==="addQty"?"1":"");
+    clearFotoAdd();
+    $("extras").classList.add("hide");
+    S.addPriority = false;
+    $("addPriorityBtn").className = "ico";
+    $("addPriorityBtn").innerHTML = STAR_OFF;
+    render();
+  } catch (e) { toast(e.message, "err"); }
+}
+
+async function toggleBought(id) {
+  const it = S.items.find(i => i.id === id);
+  it.bought = !it.bought;
+  render();
+  if (S.shopMode) renderModoCompras();
+  requestAnimationFrame(() => {
+    const btn = document.querySelector(`.check[data-item="${id}"]`);
+    if (btn) { btn.classList.add('popping'); btn.addEventListener('animationend', () => btn.classList.remove('popping'), {once:true}); }
+  });
+  try { await api("PUT", "/items/" + id, { bought: it.bought }); }
+  catch { it.bought = !it.bought; render(); toast("Erro ao salvar", "err"); }
+}
+
+async function togglePriority(id) {
+  const it = S.items.find(i => i.id === id);
+  it.priority = !it.priority;
+  render();
+  try { await api("PUT", "/items/" + id, { priority: it.priority }); }
+  catch { it.priority = !it.priority; render(); toast("Erro ao salvar", "err"); }
+}
+
+function initiateDelete(id) {
+  if (S.confirmId === id) { removeItem(id); return; }
+  S.confirmId = id; render();
+  setTimeout(() => { if (S.confirmId === id) { S.confirmId = null; render(); } }, 3000);
+}
+
+async function removeItem(id) {
+  S.confirmId = null;
+  S.items = S.items.filter(i => i.id !== id); render();
+  try { await api("DELETE", "/items/" + id); }
+  catch { toast("Erro ao excluir", "err"); await loadAll(); }
+}
+
+function openEdit(id) {
+  const it = S.items.find(i => i.id === id);
+  S.editId = id; S.editPriority = !!it.priority;
+  $("eName").value = it.name;
+  $("eRoom").value = it.room;
+  $("eQty").value = it.qty || 1;
+  $("ePrice").value = it.price != null ? String(it.price).replace(".", ",") : "";
+  $("eUrl").value = it.url || "";
+  $("eImage").value = it.image || "";
+  $("eNotes").value = it.notes || "";
+  atualizarPreviewImagem();
+  $("ePriorityBtn").className = "ico" + (S.editPriority ? " star-on" : "");
+  $("ePriorityBtn").innerHTML = S.editPriority ? STAR_ON : STAR_OFF;
+  $("modal").classList.remove("hide");
+}
+
+function closeModal() {
+  $("modal").classList.add("hide");
+  S.editId = null;
+  $("eImagePreview").style.display = "none";
+}
+
+function atualizarPreviewImagem() {
+  const url = $("eImage").value.trim();
+  const preview = $("eImagePreview");
+  if (url) {
+    $("eImagePreviewImg").src = url;
+    preview.style.display = "flex";
+  } else {
+    preview.style.display = "none";
+  }
+}
+
+async function extrairImagemDoLink() {
+  const url = $("eUrl").value.trim();
+  if (!url) return;
+  // sobrescreve se já tiver imagem — usuário pediu buscar de novo
+  try {
+    toast("Buscando foto do produto...", "ok");
+    const { imagem } = await api("GET", `/extract-image?url=${encodeURIComponent(url)}`);
+    if (imagem) {
+      $("eImage").value = imagem;
+      atualizarPreviewImagem();
+      toast("Foto encontrada ✓");
+    } else {
+      toast("Foto não encontrada no link", "err");
+    }
+  } catch { toast("Não foi possível acessar o link", "err"); }
+}
+
+function usarFotoBtn(btn) {
+  usarFoto(btn.getAttribute("data-id"), btn.getAttribute("data-img"));
+}
+
+async function usarFoto(itemId, imageUrl) {
+  if (!imageUrl) return;
+  try {
+    await api("PUT", "/items/" + itemId, { image: imageUrl });
+    const idx = S.items.findIndex(i => i.id === itemId);
+    if (idx >= 0) S.items[idx].image = imageUrl;
+    toast("Foto salva no item ✓");
+    render();
+  } catch { toast("Erro ao salvar foto", "err"); }
+}
+
+async function saveEdit() {
+  const id = S.editId;
+  const it = S.items.find(i => i.id === id);
+  const body = {
+    name: $("eName").value.trim() || it.name,
+    room: $("eRoom").value,
+    qty: parseInt($("eQty").value) || 1,
+    price: parseBRL($("ePrice").value),
+    url: $("eUrl").value.trim(),
+    image: $("eImage").value.trim(),
+    notes: $("eNotes").value.trim(),
+    priority: S.editPriority,
+  };
+  Object.assign(it, body); render(); closeModal();
+  try { await api("PUT", "/items/" + id, body); }
+  catch (e) { toast(e.message, "err"); }
+}
+
+async function clearBought() {
+  if (!confirm(`Excluir todos os ${S.items.filter(i=>i.bought).length} itens comprados?`)) return;
+  try {
+    await api("DELETE", "/items/bought");
+    S.items = S.items.filter(i => !i.bought);
+    render(); toast("Comprados removidos");
+  } catch (e) { toast(e.message, "err"); }
+}
+
+function setFilter(f) {
+  S.filter = f;
+  document.querySelectorAll(".chip[data-f]").forEach(c => c.classList.toggle("on", c.dataset.f === f));
   render();
 }
-async function toggleBought(id){
-  const it=state.items.find(i=>i.id===id);it.bought=!it.bought;render();
-  await api("PUT","/items/"+id,{bought:it.bought});
-}
-async function removeItem(id){
-  state.items=state.items.filter(i=>i.id!==id);render();
-  await api("DELETE","/items/"+id);
-}
-function openEdit(id){
-  const it=state.items.find(i=>i.id===id);state.editId=id;
-  document.getElementById("eName").value=it.name;
-  document.getElementById("eRoom").value=it.room;
-  document.getElementById("ePrice").value=it.price!=null?String(it.price).replace(".",","):"";
-  document.getElementById("eUrl").value=it.url||"";
-  document.getElementById("eImage").value=it.image||"";
-  document.getElementById("modal").classList.remove("hide");
-}
-function closeModal(){document.getElementById("modal").classList.add("hide");state.editId=null}
-async function saveEdit(){
-  const id=state.editId;const it=state.items.find(i=>i.id===id);
-  const body={name:document.getElementById("eName").value.trim()||it.name,
-    room:document.getElementById("eRoom").value,
-    price:parseBRL(document.getElementById("ePrice").value),
-    url:document.getElementById("eUrl").value.trim(),
-    image:document.getElementById("eImage").value.trim()};
-  Object.assign(it,body);render();closeModal();
-  await api("PUT","/items/"+id,body);
-}
-function setFilter(f){state.filter=f;document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.dataset.f===f));render()}
-function toggleExtras(){document.getElementById("extras").classList.toggle("hide")}
 
-// ---- render ----
-function render(){
-  const q=document.getElementById("search").value.trim().toLowerCase();
-  const all=state.items;
-  const total=all.length, bought=all.filter(i=>i.bought).length;
-  const remaining=all.filter(i=>!i.bought).reduce((s,i)=>s+(i.price||0),0);
-  const spent=all.filter(i=>i.bought).reduce((s,i)=>s+(i.price||0),0);
-  const pct=total?Math.round(bought/total*100):0;
-  document.getElementById("pBought").textContent=bought;
-  document.getElementById("pTotal").textContent=total;
-  document.getElementById("pPct").textContent=pct+"%";
-  document.getElementById("pBar").style.width=pct+"%";
-  document.getElementById("pRemaining").textContent=fmtBRL(remaining)||"—";
-  document.getElementById("pSpent").textContent=fmtBRL(spent)||"—";
-
-  let items=all.filter(i=>state.filter==="todos"?true:state.filter==="comprados"?i.bought:!i.bought)
-    .filter(i=>q?(i.name+" "+i.room).toLowerCase().includes(q):true);
-
-  const list=document.getElementById("list");
-  if(all.length===0){list.innerHTML=`<div class="empty"><div style="font-size:26px">🛒</div><p style="font-weight:600;margin:8px 0 2px">Lista vazia</p><p class="muted" style="margin:0;font-size:14px">Adicione o primeiro item lá em cima.</p></div>`;return}
-  if(items.length===0){list.innerHTML=`<p class="muted" style="text-align:center;padding:32px;font-size:14px">Nada por aqui com esse filtro.</p>`;return}
-
-  const groups={};items.forEach(i=>{(groups[i.room]=groups[i.room]||[]).push(i)});
-  const ordered=Object.entries(groups).sort((a,b)=>roomOrder(a[0])-roomOrder(b[0]));
-
-  list.innerHTML=ordered.map(([room,arr])=>`
-    <div class="group-head"><h2>${room}</h2><span class="muted" style="font-size:12px">${arr.length}</span><div class="rule"></div></div>
-    ${arr.map(it=>cardHTML(it)).join("")}
-  `).join("");
+function setSearch(q) {
+  S.search = q;
+  $("searchClear").classList.toggle("hide", !q);
+  render();
 }
 
-function cardHTML(it){
-  const thumb=it.image
-    ? `<img class="thumb" src="${esc(it.image)}" alt="" onerror="this.outerHTML='<div class=&quot;thumb ph&quot;>📦</div>'">`
-    : `<div class="thumb ph">📦</div>`;
-  return `
-  <div class="card ${it.bought?"done":""}">
-    <button class="check ${it.bought?"on":""}" onclick="toggleBought('${it.id}')" aria-label="comprado">
-      ${it.bought?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>':""}
+function clearSearch() {
+  S.search = "";
+  $("searchInput").value = "";
+  $("searchClear").classList.add("hide");
+  render();
+}
+
+function toggleExtras() { $("extras").classList.toggle("hide"); }
+
+function toggleAddPriority() {
+  S.addPriority = !S.addPriority;
+  $("addPriorityBtn").className = "ico" + (S.addPriority ? " star-on" : "");
+  $("addPriorityBtn").innerHTML = S.addPriority ? STAR_ON : STAR_OFF;
+}
+function toggleEditPriority() {
+  S.editPriority = !S.editPriority;
+  $("ePriorityBtn").className = "ico" + (S.editPriority ? " star-on" : "");
+  $("ePriorityBtn").innerHTML = S.editPriority ? STAR_ON : STAR_OFF;
+}
+
+// ---- Export ----
+function exportList() {
+  const h = S.house;
+  const date = new Date().toLocaleDateString("pt-BR");
+  const lines = [`Lista ${h?.name || "Casa"} — ${date}`, "=".repeat(42), ""];
+  const groups = {};
+  S.items.forEach(i => (groups[i.room] = groups[i.room] || []).push(i));
+  for (const [room, arr] of Object.entries(groups)) {
+    lines.push(`📍 ${room} (${arr.length})`);
+    arr.forEach(i => {
+      const check = i.bought ? "[x]" : "[ ]";
+      const star = i.priority ? "⭐ " : "";
+      const qty = i.qty > 1 ? ` ×${i.qty}` : "";
+      const total = fmtTotal(i.price, i.qty);
+      const price = total != null ? ` — ${fmtBRL(total)}` : "";
+      const notes = i.notes ? `\n      📝 ${i.notes}` : "";
+      lines.push(`  ${check} ${star}${i.name}${qty}${price}${notes}`);
+    });
+    lines.push("");
+  }
+  const totalGasto = S.items.filter(i=>i.bought).reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);
+  const totalFalta = S.items.filter(i=>!i.bought).reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);
+  lines.push("=".repeat(42));
+  lines.push(`Gasto:   ${fmtBRL(totalGasto)}`);
+  lines.push(`Falta:   ${fmtBRL(totalFalta)}`);
+  lines.push(`Total:   ${fmtBRL(totalGasto + totalFalta)}`);
+  const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url;
+  a.download = `lista-${date.replace(/\//g, "-")}.txt`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ---- Drag & drop ----
+function onDragStart(e, id, room) {
+  S.drag = { id, room };
+  e.dataTransfer.effectAllowed = "move";
+  e.currentTarget.classList.add("dragging");
+}
+function onDragOver(e, id, room) {
+  if (S.drag.room !== room || S.drag.id === id) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+  document.querySelectorAll(".card.drag-over").forEach(c => c.classList.remove("drag-over"));
+  e.currentTarget.classList.add("drag-over");
+}
+function onDragLeave(e) { e.currentTarget.classList.remove("drag-over"); }
+function onDragEnd(e) {
+  e.currentTarget.classList.remove("dragging");
+  document.querySelectorAll(".card.drag-over").forEach(c => c.classList.remove("drag-over"));
+  S.drag = { id: null, room: null };
+}
+async function onDrop(e, id, room) {
+  e.currentTarget.classList.remove("drag-over");
+  if (!S.drag.id || S.drag.id === id || S.drag.room !== room) return;
+  const roomItems = S.items.filter(i => i.room === room);
+  const fromIdx = roomItems.findIndex(i => i.id === S.drag.id);
+  const toIdx = roomItems.findIndex(i => i.id === id);
+  if (fromIdx === -1 || toIdx === -1) return;
+  const [moved] = roomItems.splice(fromIdx, 1);
+  roomItems.splice(toIdx, 0, moved);
+  roomItems.forEach((item, i) => { item.sort_order = i; });
+  S.items = S.items.map(i => roomItems.find(r => r.id === i.id) || i);
+  render();
+  try { await api("PUT", "/items/reorder", { room, ids: roomItems.map(i => i.id) }); }
+  catch { toast("Erro ao salvar ordem", "err"); }
+}
+
+// ---- Settings ----
+async function openSettings(view) {
+  S.settingsView = view || "menu";
+  $("settingsOverlay").classList.remove("hide");
+  $("settingsDrawer").classList.add("open");
+  renderSettings();
+  try {
+    [S.houses, S.me] = await Promise.all([api("GET", "/houses"), api("GET", "/me")]);
+    if (S.me?.id) { S.userId = S.me.id; localStorage.setItem("casaUserId", S.me.id); }
+    renderSettings();
+  } catch {}
+}
+
+function openSettingsView(view) {
+  S.settingsView = view;
+  renderSettings();
+}
+
+function openAccountModal(type) {
+  const titles = { username: "Alterar usuário", password: "Alterar senha", email: "Alterar email" };
+  $("accountModalTitle").textContent = titles[type];
+  $("accountModalErr").textContent = "";
+
+  if (type === "username") {
+    $("accountModalBody").innerHTML = `
+      <p style="font-size:13px;color:var(--inkSoft);margin:0 0 14px">Usuário atual: <strong>${esc(S.me?.username || S.username)}</strong></p>
+      <input id="amUsername" type="text" placeholder="Novo nome de usuário" autocomplete="off" onkeydown="if(event.key==='Enter')saveAccountField('username')" />
+      <button class="btn-primary" style="width:100%;margin-top:12px" onclick="saveAccountField('username')">Salvar</button>`;
+  } else if (type === "password") {
+    $("accountModalBody").innerHTML = `
+      <input id="amCurPass" type="password" placeholder="Senha atual" autocomplete="current-password" />
+      <input id="amNewPass" type="password" placeholder="Nova senha" autocomplete="new-password" style="margin-top:10px" />
+      <input id="amNewPass2" type="password" placeholder="Confirmar nova senha" autocomplete="new-password" style="margin-top:10px" onkeydown="if(event.key==='Enter')saveAccountField('password')" />
+      <button class="btn-primary" style="width:100%;margin-top:12px" onclick="saveAccountField('password')">Salvar</button>`;
+  } else if (type === "email") {
+    const cur = S.me?.email ? `<p style="font-size:13px;color:var(--inkSoft);margin:0 0 14px">Email atual: <strong>${esc(S.me.email)}</strong></p>` : "";
+    const pending = S.me?.email_pending ? `<p style="font-size:12px;color:var(--warn);margin:0 0 14px">⏳ Confirmação pendente para: <strong>${esc(S.me.email_pending)}</strong></p>` : "";
+    $("accountModalBody").innerHTML = `
+      ${cur}${pending}
+      <input id="amEmail" type="email" placeholder="Novo email" autocomplete="email" onkeydown="if(event.key==='Enter')saveAccountField('email')" />
+      <p style="font-size:12px;color:var(--inkSoft);margin:8px 0 0">Você receberá um email de confirmação antes de salvar.</p>
+      <button class="btn-primary" style="width:100%;margin-top:12px" onclick="saveAccountField('email')">Enviar confirmação</button>`;
+  }
+
+  $("accountModal").classList.remove("hide");
+}
+
+function closeAccountModal() {
+  $("accountModal").classList.add("hide");
+}
+
+// ---- Offline ----
+function updateOnlineStatus() {
+  $("offlineBanner").classList.toggle("hide", navigator.onLine);
+}
+window.addEventListener("online",  updateOnlineStatus);
+window.addEventListener("offline", updateOnlineStatus);
+
+// ---- Foto de item ----
+function resizeImage(file, maxPx = 600) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+      const c = document.createElement("canvas"); c.width = w; c.height = h;
+      c.getContext("2d").drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/jpeg", 0.75));
+    };
+    img.src = url;
+  });
+}
+async function handleFotoEdit(input) {
+  if (!input.files[0]) return;
+  const b64 = await resizeImage(input.files[0]);
+  $("eImage").value = b64;
+  $("eImagePreviewImg").src = b64;
+  $("eImagePreview").style.display = "block";
+}
+async function handleFotoAdd(input) {
+  if (!input.files[0]) return;
+  const b64 = await resizeImage(input.files[0]);
+  $("addImage").value = b64;
+  $("addImageThumb").src = b64;
+  $("addImagePreview").style.display = "flex";
+  $("addImagePreview").style.alignItems = "center";
+}
+function clearFotoAdd() {
+  $("addImage").value = "";
+  $("addImageThumb").src = "";
+  $("addImagePreview").style.display = "none";
+}
+
+// ---- FAB "+" ----
+function focusAddItem() {
+  const card = document.querySelector(".add-card");
+  card.scrollIntoView({ behavior: "smooth", block: "center" });
+  setTimeout(() => $("addName").focus(), 350);
+}
+
+function dismissBeta() {
+  $("betaBanner").classList.add("hide");
+  sessionStorage.setItem("betaDismissed", "1");
+}
+function initBetaBanner() {
+  if (sessionStorage.getItem("betaDismissed")) $("betaBanner").classList.add("hide");
+}
+
+async function saveAccountField(type) {
+  const err = $("accountModalErr");
+  err.textContent = "";
+  try {
+    if (type === "username") {
+      const username = $("amUsername").value.trim();
+      if (!username) { err.textContent = "Digite o novo usuário."; return; }
+      const data = await api("PUT", "/me/username", { username });
+      S.username = data.username;
+      localStorage.setItem("casaUser", data.username);
+      S.me = await api("GET", "/me");
+      closeAccountModal();
+      renderSettings();
+      toast("Usuário alterado!");
+    } else if (type === "password") {
+      const current = $("amCurPass").value;
+      const password = $("amNewPass").value;
+      const confirm  = $("amNewPass2").value;
+      if (!current || !password) { err.textContent = "Preencha todos os campos."; return; }
+      if (password.length < 6) { err.textContent = "Mínimo 6 caracteres."; return; }
+      if (password !== confirm) { err.textContent = "As senhas não coincidem."; return; }
+      await api("PUT", "/me/password", { current, password });
+      closeAccountModal();
+      toast("Senha alterada!");
+    } else if (type === "email") {
+      const email = $("amEmail").value.trim();
+      if (!email) { err.textContent = "Digite o email."; return; }
+      await api("PUT", "/me/email", { email });
+      S.me = await api("GET", "/me");
+      $("accountModalBody").innerHTML = `<div style="text-align:center;padding:12px 0">
+        <div style="font-size:36px;margin-bottom:10px">📬</div>
+        <p style="font-weight:600;margin:0 0 6px">Confirmação enviada!</p>
+        <p style="font-size:13px;color:var(--inkSoft);margin:0">Verifique sua caixa de entrada e clique no link para confirmar o email.</p>
+      </div>`;
+      renderSettings();
+    }
+  } catch (e) { err.textContent = e.message; }
+}
+function closeSettings() {
+  $("settingsOverlay").classList.add("hide");
+  $("settingsDrawer").classList.remove("open");
+  S.settingsView = "menu";
+}
+async function saveHouseName() {
+  const name = $("houseNameInput")?.value.trim();
+  if (!name) return;
+  try {
+    await api("PUT", "/house", { name });
+    S.house.name = name;
+    $("houseEyebrow").textContent = `INVENTÁRIO · ${name.toLowerCase()}`;
+    $("houseFoot").textContent = `${name} · ${S.house.members.length} membro(s)`;
+    renderSettings(); toast("Nome atualizado");
+  } catch (e) { toast(e.message, "err"); }
+}
+async function removeMember(userId, username) {
+  if (!confirm(`Remover "${username}" da casa?`)) return;
+  try {
+    await api("DELETE", "/house/member/" + userId);
+    S.house.members = S.house.members.filter(m => m.id !== userId);
+    renderSettings();
+    toast(`${username} removido`);
+  } catch (e) { toast(e.message, "err"); }
+}
+
+async function leaveHouse(houseId, houseName) {
+  if (!confirm(`Sair de "${houseName}"? Você precisará de um novo convite para voltar.`)) return;
+  try {
+    const data = await api("DELETE", "/house/leave", { houseId });
+    if (data.token) {
+      S.token = data.token;
+      localStorage.setItem("casaToken", data.token);
+      mlPrecos.clear();
+    }
+    S.houses = S.houses.filter(h => h.id !== houseId);
+    closeSettings();
+    toast(`Você saiu de "${houseName}"`);
+    await loadAll();
+  } catch (e) { toast(e.message, "err"); }
+}
+
+async function switchHouse(houseId, houseName) {
+  try {
+    const data = await api("POST", "/house/switch", { houseId });
+    S.token = data.token;
+    localStorage.setItem("casaToken", data.token);
+    closeSettings();
+    mlPrecos.clear();
+    toast(`Entrando em: ${data.houseName}`);
+    await loadAll();
+  } catch (e) { toast(e.message, "err"); }
+}
+
+async function joinHouseWithCode() {
+  const code = $("joinCodeInput")?.value.trim();
+  if (!code) return;
+  try {
+    const data = await api("POST", "/house/join", { code });
+    S.token = data.token;
+    localStorage.setItem("casaToken", data.token);
+    closeSettings();
+    toast(`Bem-vindo à casa: ${data.houseName}!`);
+    await loadAll();
+  } catch (e) { toast(e.message, "err"); }
+}
+async function addRoomSubmit() {
+  const name = $("newRoomInput")?.value.trim();
+  if (!name) return;
+  try {
+    const room = await api("POST", "/rooms", { name });
+    S.rooms.push(room);
+    populateRoomSelects();
+    renderSettings(); toast(`Cômodo "${name}" criado`);
+  } catch (e) { toast(e.message, "err"); }
+}
+async function removeRoom(id) {
+  const room = S.rooms.find(r => r.id === id);
+  if (!room) return;
+  if (!confirm(`Excluir cômodo "${room.name}"? Os itens mantêm o nome do cômodo.`)) return;
+  try {
+    await api("DELETE", "/rooms/" + id);
+    S.rooms = S.rooms.filter(r => r.id !== id);
+    populateRoomSelects(); renderSettings(); toast("Cômodo removido");
+  } catch (e) { toast(e.message, "err"); }
+}
+function copyCode(code) {
+  navigator.clipboard?.writeText(code).then(() => toast("Código copiado!")).catch(() => toast("Copie: " + code));
+}
+
+const CHEVRON_R = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>`;
+
+function _menuHeader(title, backView) {
+  return `<div class="menu-header">
+    ${backView
+      ? `<button class="menu-back" onclick="openSettingsView('${backView}')">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+           Voltar
+         </button>`
+      : `<span class="menu-header-title">Menu</span>`}
+    <button class="ico" onclick="closeSettings()" style="margin-left:auto">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
-    ${thumb}
-    <div class="body">
-      <div class="name ${it.bought?"done":""}">${esc(it.name)}</div>
-      <div class="meta">
-        ${it.price!=null?`<span class="price">${fmtBRL(it.price)}</span>`:""}
-        ${it.url?`<a href="${esc(it.url)}" target="_blank" rel="noreferrer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>loja</a>`:""}
-      </div>
-    </div>
-    <div class="acts">
-      <button class="ico" onclick="openEdit('${it.id}')" aria-label="editar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
-      <button class="ico danger" onclick="removeItem('${it.id}')" aria-label="excluir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
-    </div>
   </div>`;
 }
 
+function renderSettings() {
+  const h = S.house;
+  if (!h) return;
+  const v = S.settingsView;
+  let html = "";
+
+  if (v === "menu") {
+    const emailWarn = S.me && !S.me.email;
+    html = _menuHeader("Menu", null) + `
+      <div class="menu-item" onclick="openSettingsView('casa')">
+        <div class="menu-item-icon">${ico(I.home)}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Casa</span>
+          <span class="menu-item-desc">${esc(h.name)} · ${h.members.length} membro(s)</span>
+        </div>${CHEVRON_R}
+      </div>
+      <div class="menu-item" onclick="openSettingsView('minhas-casas')">
+        <div class="menu-item-icon">${ico(I.houses)}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Minhas casas</span>
+          <span class="menu-item-desc">${S.houses.length} casa(s) vinculada(s)</span>
+        </div>${CHEVRON_R}
+      </div>
+      <div class="menu-item" onclick="openSettingsView('comodos')">
+        <div class="menu-item-icon">${ico(I.grid)}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Cômodos</span>
+          <span class="menu-item-desc">${S.rooms.length} cômodo(s) configurado(s)</span>
+        </div>${CHEVRON_R}
+      </div>
+      <div class="menu-item" onclick="openSettingsView('tema')">
+        <div class="menu-item-icon">${ico(I.sliders)}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Tema</span>
+          <span class="menu-item-desc">${{auto:'Automático (sistema)',light:'Claro',dark:'Escuro'}[currentTheme()]}</span>
+        </div>${CHEVRON_R}
+      </div>
+      <div class="menu-item" onclick="openSettingsView('conta')">
+        <div class="menu-item-icon">${ico(emailWarn ? I.warn : I.user)}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Minha conta</span>
+          <span class="menu-item-desc ${emailWarn ? 'account-row-warn' : ''}">${emailWarn ? 'Sem email — sem recuperação de senha' : esc(S.me?.username || S.username)}</span>
+        </div>${CHEVRON_R}
+      </div>
+      <div class="menu-item" onclick="openStats()">
+        <div class="menu-item-icon">${ico(I.chart)}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Estatísticas</span>
+          <span class="menu-item-desc">Gastos e itens mais comprados</span>
+        </div>${CHEVRON_R}
+      </div>
+      <div class="menu-item" onclick="openActivity()">
+        <div class="menu-item-icon">${ico(I.activity)}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Atividade</span>
+          <span class="menu-item-desc">Histórico de ações da casa</span>
+        </div>${CHEVRON_R}
+      </div>
+      <div style="margin-top:16px">
+        <button class="btn-danger" style="width:100%" onclick="logout()">Sair da conta</button>
+      </div>`;
+
+  } else if (v === "casa") {
+    const memberRows = h.members.map(m => {
+      const isMe = m.username === S.username;
+      const isCreator = m.id === h.created_by;
+      const canRemove = h.is_admin && !isMe && !isCreator;
+      return `<div class="member-row">
+        <span style="flex:1;display:flex;align-items:center;gap:6px">
+          ${isCreator ? `<span style="color:var(--accent)">${ico(I.crown,12)}</span>` : `<svg width="7" height="7" viewBox="0 0 7 7" fill="${isMe?'var(--accent)':'var(--line)'}" stroke="${isMe?'none':'var(--inkSoft)'}"><circle cx="3.5" cy="3.5" r="3.5"/></svg>`}
+          ${esc(m.username)}${isMe ? ' <span style="font-size:11px;color:var(--inkSoft)">(você)</span>' : ''}${isCreator ? ' <span style="font-size:11px;color:var(--inkSoft)">(criador)</span>' : ''}
+        </span>
+        ${canRemove ? `<button class="ico danger" onclick="removeMember('${esc(m.id)}','${esc(m.username)}')" style="width:26px;height:26px" title="Remover membro">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>` : ''}
+      </div>`;
+    }).join("");
+
+    if (h.is_admin) {
+      html = _menuHeader(h.name, "menu") + `
+        <div class="settings-section">
+          <p class="section-label">NOME DA CASA</p>
+          <div class="row">
+            <input id="houseNameInput" value="${esc(h.name)}" />
+            <button class="btn-primary" style="flex:none;font-size:13px" onclick="saveHouseName()">OK</button>
+          </div>
+        </div>
+        <div class="settings-section">
+          <p class="section-label">CÓDIGO DE CONVITE</p>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="invite-code">${h.invite_code}</span>
+            <button class="ico" onclick="copyCode('${h.invite_code}')" title="Copiar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+          <p style="font-size:12px;color:var(--inkSoft);margin:6px 0 0">Compartilhe para convidar alguém.</p>
+        </div>
+        <div class="settings-section">
+          <p class="section-label">MEMBROS (${h.members.length})</p>
+          ${memberRows}
+        </div>
+`;
+    } else {
+      html = _menuHeader(h.name, "menu") + `
+        <div class="settings-section">
+          <p class="section-label">CÓDIGO DE CONVITE</p>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="invite-code">${h.invite_code}</span>
+            <button class="ico" onclick="copyCode('${h.invite_code}')" title="Copiar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+          <p style="font-size:12px;color:var(--inkSoft);margin:6px 0 0">Compartilhe para convidar alguém.</p>
+        </div>
+        <div class="settings-section">
+          <p class="section-label">MEMBROS (${h.members.length})</p>
+          ${memberRows}
+        </div>
+        <div style="margin-top:8px">
+          <button class="btn-danger" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px"
+            onclick="leaveHouse('${h.id}','${esc(h.name)}')">
+            ${ico(I.logout,15)} Sair desta casa
+          </button>
+        </div>`;
+    }
+
+  } else if (v === "minhas-casas") {
+    const housesHtml = S.houses.map(hx => {
+      const isMeCreator = hx.created_by === (S.me?.id || S.userId);
+      return `<div class="house-row">
+        <div class="house-row-info">
+          <span class="house-row-name">${esc(hx.name)}</span>
+          <span class="house-row-meta">${hx.member_count} membro(s) · ${hx.pending_count} pendente(s)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          ${hx.active
+            ? `<span class="house-active-badge">Ativa</span>`
+            : `<button class="house-switch-btn" onclick="switchHouse('${esc(hx.id)}','${esc(hx.name)}')">Entrar</button>`}
+          ${!isMeCreator ? `<button class="ico danger" onclick="leaveHouse('${esc(hx.id)}','${esc(hx.name)}')" style="width:28px;height:28px" title="Sair desta casa">
+            ${ico(I.logout,13)}
+          </button>` : ''}
+        </div>
+      </div>`;
+    }).join("");
+
+    html = _menuHeader("Minhas casas", "menu") + `
+      <div class="settings-section">
+        ${housesHtml}
+      </div>
+      <div class="settings-section">
+        <p class="section-label">ENTRAR EM NOVA CASA</p>
+        <div class="row">
+          <input id="joinCodeInput" placeholder="Código (ex: AB12CD)" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')joinHouseWithCode()" />
+          <button class="btn-primary" style="flex:none;font-size:13px" onclick="joinHouseWithCode()">Entrar</button>
+        </div>
+        <p style="font-size:12px;color:var(--inkSoft);margin:6px 0 0">Peça o código para quem criou a casa.</p>
+      </div>`;
+
+  } else if (v === "comodos") {
+    html = _menuHeader("Cômodos", "menu") + `
+      <div class="settings-section">
+        ${S.rooms.map(r => `
+          <div class="room-row">
+            <span style="font-size:14px">${esc(r.name)}</span>
+            <button class="ico danger" onclick="removeRoom('${r.id}')" style="width:26px;height:26px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>`).join("")}
+        <div class="row" style="margin-top:10px">
+          <input id="newRoomInput" placeholder="Novo cômodo..." onkeydown="if(event.key==='Enter')addRoomSubmit()" />
+          <button class="btn-primary" style="flex:none;font-size:13px" onclick="addRoomSubmit()">+ Add</button>
+        </div>
+      </div>`;
+
+  } else if (v === "tema") {
+    html = _menuHeader("Tema", "menu") + `
+      <div class="settings-section">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          ${[['auto','🌗','Automático','Segue o sistema do dispositivo'],['light','☀️','Claro','Fundo branco'],['dark','🌙','Escuro','Fundo escuro']].map(([t, icon, label, desc]) => {
+            const active = currentTheme() === t;
+            return `<button onclick="setTheme('${t}');openSettingsView('tema')"
+              style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;text-align:left;width:100%;
+              background:${active ? 'var(--ink)' : 'var(--surfaceAlt)'};
+              color:${active ? 'var(--surface)' : 'var(--ink)'};
+              border:1px solid ${active ? 'var(--ink)' : 'var(--line)'}">
+              <span style="font-size:20px">${icon}</span>
+              <span style="flex:1"><span style="display:block;font-weight:600;font-size:14px">${label}</span><span style="display:block;font-size:12px;opacity:.7">${desc}</span></span>
+              ${active ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+            </button>`;
+          }).join('')}
+        </div>
+      </div>`;
+
+  } else if (v === "conta") {
+    html = _menuHeader("Minha conta", "menu") + `
+      <div class="settings-section">
+        <div class="account-row" onclick="openAccountModal('username')">
+          <div class="account-row-info">
+            <span class="account-row-label">Usuário</span>
+            <span class="account-row-value">${esc(S.me?.username || S.username)}</span>
+          </div>${CHEVRON_R}
+        </div>
+        <div class="account-row" onclick="openAccountModal('password')">
+          <div class="account-row-info">
+            <span class="account-row-label">Senha</span>
+            <span class="account-row-value">••••••••</span>
+          </div>${CHEVRON_R}
+        </div>
+        <div class="account-row" onclick="openAccountModal('email')">
+          <div class="account-row-info">
+            <span class="account-row-label">Email</span>
+            <span class="account-row-value ${!S.me?.email ? 'account-row-warn' : ''}">
+              ${S.me?.email ? esc(S.me.email)
+                : S.me?.email_pending ? `⏳ ${esc(S.me.email_pending)} <span style="font-size:11px">(pendente)</span>`
+                : `<span style="display:inline-flex;align-items:center;gap:4px">${ico(I.warn,12)} Nenhum</span>`}
+            </span>
+          </div>${CHEVRON_R}
+        </div>
+      </div>`;
+  }
+
+  const sc = $("settingsContent");
+  sc.classList.remove("settings-view-enter");
+  void sc.offsetWidth; // força reflow para reiniciar animação
+  sc.innerHTML = html;
+  sc.classList.add("settings-view-enter");
+}
+
+
+// ---- Estatísticas ----
+async function openStats() {
+  closeSettings();
+  $("statsModal").classList.remove("hide");
+  $("statsContent").innerHTML = '<p style="text-align:center;color:var(--inkSoft);padding:24px 0">Carregando...</p>';
+  try { renderStats(await api("GET", "/stats")); }
+  catch (e) { $("statsContent").innerHTML = `<p style="color:var(--warn);text-align:center;padding:16px">Erro: ${esc(e.message)}</p>`; }
+}
+function closeStats() { $("statsModal").classList.add("hide"); }
+
+function renderStats(d) {
+  const fmt = v => v > 0 ? fmtBRL(v) : "—";
+  const bar = (arr, keyLabel, keyVal, isPrice) => {
+    if (!arr.length) return `<p style="color:var(--inkSoft);font-size:13px;padding:4px 0">Nenhum dado ainda.</p>`;
+    const max = Math.max(...arr.map(r => r[keyVal]));
+    return arr.map(r => `
+      <div class="stat-bar-row">
+        <span class="stat-bar-label">${esc(r[keyLabel])}</span>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${max > 0 ? Math.round(r[keyVal]/max*100) : 0}%"></div></div>
+        <span class="stat-bar-val">${isPrice ? fmt(r[keyVal]) : r[keyVal] + 'x'}</span>
+      </div>`).join("");
+  };
+  $("statsContent").innerHTML = `
+    <div class="stats-highlight">
+      <div class="stats-hl-card">
+        <div class="stats-hl-val">${fmt(d.thisMonthTotal)}</div>
+        <div class="stats-hl-label">Gasto este mês</div>
+      </div>
+      <div class="stats-hl-card">
+        <div class="stats-hl-val">${fmt(d.lastMonthTotal)}</div>
+        <div class="stats-hl-label">Mês anterior</div>
+      </div>
+    </div>
+    <div class="stats-section">
+      <p class="stats-title">MAIS COMPRADOS</p>
+      ${bar(d.topItems, 'nome', 'vezes', false)}
+    </div>
+    <div class="stats-section">
+      <p class="stats-title">GASTO POR CÔMODO</p>
+      ${bar(d.byRoom, 'room', 'total', true)}
+    </div>
+    <div class="stats-section">
+      <p class="stats-title">HISTÓRICO MENSAL</p>
+      ${bar([...d.byMonth].reverse(), 'mes', 'total', true)}
+    </div>`;
+}
+
+// ---- Atividade ----
+async function openActivity() {
+  closeSettings();
+  $("activityModal").classList.remove("hide");
+  $("activityContent").innerHTML = '<p style="text-align:center;color:var(--inkSoft);padding:24px 0">Carregando...</p>';
+  try {
+    const rows = await api("GET", "/activity");
+    if (!rows.length) {
+      $("activityContent").innerHTML = '<p style="text-align:center;color:var(--inkSoft);padding:24px 0">Nenhuma atividade ainda.</p>';
+      return;
+    }
+    const ACT = { add:'adicionou', delete:'removeu', bought:'comprou', unbought:'desmarcou', clear:'limpou a lista' };
+    $("activityContent").innerHTML = rows.map(r => {
+      const init  = r.username.slice(0,2).toUpperCase();
+      const label = ACT[r.action] || r.action;
+      const item  = r.item_name ? ` <strong>${esc(r.item_name)}</strong>` : '';
+      return `<div class="activity-item">
+        <div class="activity-avatar">${init}</div>
+        <div class="activity-text"><strong>${esc(r.username)}</strong> ${label}${item}</div>
+        <div class="activity-time">${timeAgo(r.created_at)}</div>
+      </div>`;
+    }).join("");
+  } catch (e) { $("activityContent").innerHTML = `<p style="color:var(--warn);padding:16px">${esc(e.message)}</p>`; }
+}
+function closeActivity() { $("activityModal").classList.add("hide"); }
+
+function timeAgo(ts) {
+  const s = (Date.now() - ts) / 1000;
+  if (s < 60)     return 'agora';
+  if (s < 3600)   return `${Math.floor(s/60)}min`;
+  if (s < 86400)  return `${Math.floor(s/3600)}h`;
+  if (s < 604800) return `${Math.floor(s/86400)}d`;
+  return new Date(ts).toLocaleDateString('pt-BR', { day:'2-digit', month:'short' });
+}
+
+// ---- Render ----
+const roomOrder = name => { const i = S.rooms.findIndex(r => r.name === name); return i === -1 ? 99 : i; };
+
+function ico(paths, sz=18) {
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+}
+const I = {
+  home:     `<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>`,
+  grid:     `<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>`,
+  sliders:  `<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>`,
+  user:     `<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>`,
+  warn:     `<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>`,
+  chart:    `<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>`,
+  activity: `<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>`,
+  monitor:  `<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>`,
+  utensils: `<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>`,
+  bed:      `<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>`,
+  drop:     `<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>`,
+  brief:    `<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>`,
+  leaf:     `<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>`,
+  shirt:    `<path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/>`,
+  car:      `<path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>`,
+  sun:      `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`,
+  sprout:   `<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2 2 3.2-2.6.4-5.2-.7-6.5-2.8 1.2-.6 2.6-.8 4.5-.4z"/><path d="M14.1 6a7 7 0 0 1 1.4 4c-1.3.1-2.5-.7-3.5-1.8.7-1 1.4-1.8 2.1-2.2z"/>`,
+  cart:     `<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>`,
+  box:      `<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>`,
+  crown:    `<path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>`,
+  sparkle:  `<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>`,
+  houses:   `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/><path d="M21 9l-3-2.5"/>`,
+  logout:   `<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>`,
+  image:    `<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>`,
+  check:    `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`,
+  search:   `<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>`,
+  camera:   `<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>`,
+};
+const ROOM_ICON = {
+  'sala':         I.monitor,
+  'cozinha':      I.utensils,
+  'quarto':       I.bed,
+  'banheiro':     I.drop,
+  'escritório':   I.brief,
+  'escritorio':   I.brief,
+  'área externa': I.leaf,
+  'area externa': I.leaf,
+  'lavanderia':   I.shirt,
+  'garagem':      I.car,
+  'varanda':      I.sun,
+  'quintal':      I.sprout,
+  'geral':        I.cart,
+};
+function roomEmoji(name) {
+  return ico(ROOM_ICON[name.toLowerCase()] || I.box);
+}
+
+let _cardSeq = 0;
+
+function render() {
+  const q = (S.search || "").normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  const all = S.items;
+  const boughtCount = all.filter(i => i.bought).length;
+  const total = all.length;
+  const pct = total ? Math.round(boughtCount / total * 100) : 0;
+  const spent     = all.filter(i => i.bought).reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+  const remaining = all.filter(i => !i.bought).reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+
+  // Progress card
+  $("pBought").innerHTML = `${boughtCount} <span style="font-size:20px;color:var(--inkSoft);font-family:'Inter',sans-serif;font-weight:400">de <span id="pTotal">${total}</span></span>`;
+  $("pPct").textContent = pct + "%";
+  $("pBar").style.width = pct + "%";
+  $("pRemaining").textContent = fmtBRL(remaining) || "—";
+  $("pSpent").textContent = fmtBRL(spent) || "—";
+  $("pTotal2").textContent = fmtBRL(remaining + spent) || "—";
+  $("clearBtn").classList.toggle("hide", boughtCount === 0);
+  atualizarBadge();
+
+  const list = $("list");
+
+  // Empty state (novo usuário)
+  if (all.length === 0) {
+    list.innerHTML = `<div class="empty">
+      <div class="empty-icon">${ico(I.home,40)}</div>
+      <h3>Sua lista está vazia</h3>
+      <p>Adicione o primeiro item acima e comece a organizar sua casa.</p>
+    </div>`;
+    return;
+  }
+
+  // All done celebration
+  if (S.filter === "todos" && !q && boughtCount === total && total > 0) {
+    list.innerHTML = `<div class="all-done">
+      <span class="all-done-icon">${ico(I.sparkle,52)}</span>
+      <h2>Tudo comprado!</h2>
+      <p>Todos os ${total} itens foram marcados. Ótimo trabalho!</p>
+      <button class="btn-primary" onclick="clearBought()" style="display:inline-block;padding:10px 28px">Limpar lista</button>
+    </div>`;
+    return;
+  }
+
+  let items = all
+    .filter(i => {
+      if (S.filter === "comprados") return i.bought;
+      if (S.filter === "abertos")   return !i.bought;
+      if (S.filter === "urgentes")  return i.priority && !i.bought;
+      return true;
+    })
+    .filter(i => !q || (i.name + " " + (i.notes || "")).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().includes(q));
+
+  if (items.length === 0) {
+    list.innerHTML = q
+      ? `<p style="text-align:center;padding:32px;font-size:14px;color:var(--inkSoft)">Nenhum item encontrado para "<strong>${esc(S.search)}</strong>"</p>`
+      : `<p style="text-align:center;padding:32px;font-size:14px;color:var(--inkSoft)">Nada por aqui com esse filtro.</p>`;
+    return;
+  }
+
+  const groups = {};
+  items.forEach(i => (groups[i.room] = groups[i.room] || []).push(i));
+  const ordered = Object.entries(groups).sort((a, b) => roomOrder(a[0]) - roomOrder(b[0]));
+
+  _cardSeq = 0;
+  list.innerHTML = ordered.map(([room, arr]) => {
+    arr.sort((a, b) => (b.priority ? 1 : 0) - (a.priority ? 1 : 0) || a.sort_order - b.sort_order);
+    return `
+      <div class="group-head">
+        <span class="group-emoji">${roomEmoji(room)}</span>
+        <h2>${esc(room)}</h2>
+        <span class="muted" style="font-size:12px">${arr.length}</span>
+        <div class="rule"></div>
+      </div>
+      ${arr.map(it => cardHTML(it, room, _cardSeq++)).join("")}
+    `;
+  }).join("");
+}
+
+function mlResultHTML(id) {
+  const ml = mlPrecos.get(id);
+  if (!ml || ml.status === "idle") return "";
+  if (ml.status === "loading") return `<div class="preco-lista"><span style="color:var(--inkSoft);display:inline-flex;align-items:center;gap:5px">${ico(I.search,13)} buscando preços...</span></div>`;
+  if (ml.status === "err")     return `<div class="preco-lista"><span class="ml-err" style="display:inline-flex;align-items:center;gap:5px">${ico(I.warn,13)} ${esc(ml.erro)}</span></div>`;
+  const ofertas = ml.ofertas || [];
+  if (ofertas.length === 0)    return `<div class="preco-lista"><span style="color:var(--inkSoft)">Sem resultados encontrados</span></div>`;
+
+  // Agrupa histórico por loja
+  const hist = ml.historico || [];
+  const histLoja = {};
+  for (const h of hist) {
+    if (!histLoja[h.loja]) histLoja[h.loja] = [];
+    histLoja[h.loja].push(h);
+  }
+
+  const linhas = ofertas.map((o, i) => {
+    const melhor = i === 0 && o.preco;
+    let tend = "";
+    const hL = histLoja[o.loja] || [];
+    if (hL.length >= 2 && hL[0].preco && hL[1].preco) {
+      const diff = hL[0].preco - hL[1].preco;
+      const dia  = new Date(hL[1].data).toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" });
+      const abs  = Math.abs(diff).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+      if (diff < -0.01)     tend = `<span class="preco-tend preco-tend-ok">↓ R$ ${abs} desde ${dia}</span>`;
+      else if (diff > 0.01) tend = `<span class="preco-tend preco-tend-warn">↑ R$ ${abs} desde ${dia}</span>`;
+      else                  tend = `<span class="preco-tend">= mesmo preço</span>`;
+    }
+    return `<div class="preco-linha${melhor ? " preco-melhor" : ""}">
+      <a class="preco-img-link" href="${esc(o.link)}" target="_blank" rel="noreferrer">
+        ${o.imagem
+          ? `<img class="preco-img" src="${esc(o.imagem)}" alt="" onerror="this.classList.add('preco-img-vazio');this.outerHTML='<div class=&quot;preco-img preco-img-vazio&quot;></div>'">`
+          : `<div class="preco-img preco-img-vazio"></div>`}
+      </a>
+      <div class="preco-info">
+        <div class="preco-row1">
+          <span class="preco-nome-loja">${esc(o.loja)}</span>
+          ${o.preco
+            ? `<span class="preco-valor${melhor ? " preco-valor-ok" : ""}">${esc(o.precoTexto)}</span>`
+            : `<span class="preco-tend">sem preço</span>`}
+          ${melhor ? `<span class="preco-selo">menor</span>` : ""}
+        </div>
+        <div class="preco-row2">
+          ${tend}
+          <a class="preco-link" href="${esc(o.link)}" target="_blank" rel="noreferrer">abrir →</a>
+          ${o.imagem ? `<button class="preco-usar-foto" data-id="${esc(id)}" data-img="${esc(o.imagem)}" onclick="usarFotoBtn(this)" style="display:inline-flex;align-items:center;gap:4px">${ico(I.camera,12)} usar foto</button>` : ""}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  const hora = new Date().toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" });
+  return `<div class="preco-lista">${linhas}
+    <div class="preco-data">atualizado ${hora}</div>
+    <div class="preco-aviso" style="display:flex;align-items:center;gap:6px">${ico(I.warn,12)} Preços do Google Shopping podem estar desatualizados. Confirme no site antes de comprar.</div>
+  </div>`;
+}
+
+function cardHTML(it, room, idx = 0) {
+  const thumb = it.image
+    ? `<img class="thumb" src="${esc(it.image)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=&quot;thumb ph&quot;>📦</div>'">`
+    : `<div class="thumb ph">📦</div>`;
+  const total = fmtTotal(it.price, it.qty);
+  const isConfirm = S.confirmId === it.id;
+  const erId = esc(it.id), erRoom = esc(room);
+  const mlSt = mlPrecos.get(it.id);
+  const mlLoading = mlSt?.status === "loading";
+  return `
+  <div class="card ${it.bought ? "done" : ""} ${it.priority ? "priority" : ""}"
+    style="animation-delay:${Math.min(idx,8)*28}ms"
+    draggable="true"
+    ondragstart="onDragStart(event,'${erId}','${erRoom}')"
+    ondragover="onDragOver(event,'${erId}','${erRoom}')"
+    ondragleave="onDragLeave(event)"
+    ondragend="onDragEnd(event)"
+    ondrop="onDrop(event,'${erId}','${erRoom}')">
+    <div class="drag-handle">${DRAG_ICON}</div>
+    <button class="check ${it.bought ? "on" : ""}" data-item="${erId}" onclick="toggleBought('${erId}')" aria-label="comprado">
+      ${it.bought ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>' : ""}
+    </button>
+    ${thumb}
+    <div class="body">
+      <div class="name ${it.bought ? "done" : ""}">${esc(it.name)}</div>
+      ${it.notes ? `<div class="item-notes">${esc(it.notes)}</div>` : ""}
+      <div class="meta">
+        ${total != null ? `<span class="price">${fmtBRL(total)}${it.qty > 1 ? ` <span style="font-weight:400;font-size:12px">(${fmtBRL(it.price)} × ${it.qty})</span>` : ""}</span>` : ""}
+        ${it.qty > 1 && total == null ? `<span class="qty">×${it.qty}</span>` : ""}
+        ${it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noreferrer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>loja</a>` : ""}
+        <button class="ml-btn" onclick="verificarPreco('${erId}','${esc(it.name)}')" ${mlLoading ? "disabled" : ""}>🏷️ preço</button>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="ico ${it.priority ? "star-on" : ""}" onclick="togglePriority('${erId}')" aria-label="urgente" title="urgente">
+        ${it.priority ? STAR_ON : STAR_OFF}
+      </button>
+      <button class="ico" onclick="openEdit('${erId}')" aria-label="editar">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </button>
+      <button class="ico ${isConfirm ? "confirm" : "danger"}" onclick="initiateDelete('${erId}')" aria-label="${isConfirm ? "confirmar" : "excluir"}" title="${isConfirm ? "clique para confirmar" : "excluir"}">
+        ${isConfirm ? "Sim?" : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>'}
+      </button>
+    </div>
+    ${mlResultHTML(it.id)}
+  </div>`;
+}
+
+// ---- Tema ----
+function setTheme(t) {
+  if (t === 'auto') { document.documentElement.removeAttribute('data-theme'); localStorage.removeItem('casaTheme'); }
+  else { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('casaTheme', t); }
+  renderSettings();
+}
+function currentTheme() { return localStorage.getItem('casaTheme') || 'auto'; }
+
+// ---- Badge PWA ----
+function atualizarBadge() {
+  if (!('setAppBadge' in navigator)) return;
+  const n = S.items.filter(i => !i.bought).length;
+  n > 0 ? navigator.setAppBadge(n) : navigator.clearAppBadge();
+}
+
+
+// ---- WhatsApp ----
+function compartilharWhatsApp() {
+  const pending = S.items.filter(i => !i.bought);
+  if (pending.length === 0) { toast("Nenhum item a comprar", "err"); return; }
+  const lines = [`🛒 *Lista ${S.house?.name || "Casa"}*\n`];
+  const groups = {};
+  pending.forEach(i => (groups[i.room] = groups[i.room] || []).push(i));
+  for (const [room, arr] of Object.entries(groups)) {
+    lines.push(`*${room}*`);
+    arr.forEach(i => {
+      const star = i.priority ? "⭐ " : "";
+      const qty  = i.qty > 1 ? ` ×${i.qty}` : "";
+      const tot  = i.price ? ` — ${fmtBRL(fmtTotal(i.price, i.qty))}` : "";
+      lines.push(`• ${star}${i.name}${qty}${tot}`);
+    });
+    lines.push("");
+  }
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(lines.join("\n"))}`, "_blank");
+}
+
+// ---- Modo compras (calculadora de mercado) ----
+const SHOP_KEY = "casaShopItems";
+let shopItems = JSON.parse(localStorage.getItem(SHOP_KEY) || "[]");
+
+function shopSave() { localStorage.setItem(SHOP_KEY, JSON.stringify(shopItems)); }
+
+function entrarModoCompras() {
+  S.shopMode = true;
+  $("shopMode").classList.remove("hide");
+  renderModoCompras();
+  setTimeout(() => $("shopItemName").focus(), 120);
+}
+function sairModoCompras() {
+  S.shopMode = false;
+  $("shopMode").classList.add("hide");
+}
+
+function shopAddItem() {
+  const name  = $("shopItemName").value.trim();
+  const price = parseBRL($("shopItemPrice").value);
+  if (!name) { $("shopItemName").focus(); return; }
+  shopItems.unshift({ id: Date.now().toString(36), name, price, qty: 1, flagged: false });
+  shopSave();
+  $("shopItemName").value = "";
+  $("shopItemPrice").value = "";
+  $("shopItemName").focus();
+  renderModoCompras();
+}
+
+function shopSetQty(id, delta) {
+  const it = shopItems.find(i => i.id === id);
+  if (!it) return;
+  it.qty = Math.max(1, (it.qty || 1) + delta);
+  shopSave(); renderModoCompras();
+}
+
+function shopToggleFlag(id) {
+  const it = shopItems.find(i => i.id === id);
+  if (it) { it.flagged = !it.flagged; shopSave(); renderModoCompras(); }
+}
+
+function shopRemove(id) {
+  shopItems = shopItems.filter(i => i.id !== id);
+  shopSave(); renderModoCompras();
+}
+
+function shopClear() {
+  if (shopItems.length === 0) return;
+  if (!confirm("Limpar toda a lista de compras?")) return;
+  shopItems = []; shopSave(); renderModoCompras();
+}
+
+function toggleConferirMenu(e) {
+  e.stopPropagation();
+  const sub = $("conferirSub");
+  const opening = sub.classList.contains("hide");
+  sub.classList.toggle("hide");
+  if (opening) {
+    const close = ev => {
+      if (!ev.target.closest("#conferirSub") && !ev.target.closest("#conferirBtn")) {
+        sub.classList.add("hide");
+      }
+      document.removeEventListener("click", close);
+    };
+    setTimeout(() => document.addEventListener("click", close), 0);
+  }
+}
+
+async function conferirComprovante(input) {
+  $("conferirSub")?.classList.add("hide");
+  const file = input.files[0];
+  input.value = ''; // limpa input, não armazena referência ao arquivo
+  if (!file) return;
+
+  $("comprovanteModal").classList.remove("hide");
+  $("comprovanteBody").innerHTML = `<div style="text-align:center;padding:32px 0"><p id="comprovanteStatus" style="font-size:13px;color:var(--inkSoft)">Carregando OCR…</p></div>`;
+
+  const url = URL.createObjectURL(file); // URL temporária, revogada abaixo
+  let worker;
+  try {
+    // Carrega Tesseract.js do CDN só quando necessário (não fica cacheado pelo SW)
+    if (!window.Tesseract) {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+        s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+    }
+    $("comprovanteStatus") && ($("comprovanteStatus").textContent = "Lendo comprovante…");
+    worker = await Tesseract.createWorker('eng', 1, { logger: () => {} });
+    const { data: { text } } = await worker.recognize(url);
+    renderComprovanteResults(text);
+  } catch {
+    $("comprovanteBody").innerHTML = `<p style="color:var(--warn);text-align:center;padding:16px 0">Não foi possível ler o comprovante.<br><span style="font-size:12px;color:var(--inkSoft)">Tente uma foto mais nítida e bem iluminada.</span></p>`;
+  } finally {
+    URL.revokeObjectURL(url); // libera memória da imagem imediatamente
+    if (worker) worker.terminate().catch(() => {}); // libera WebAssembly do worker
+  }
+}
+
+function renderComprovanteResults(ocrText) {
+  const lines = ocrText.split('\n').map(l => l.trim()).filter(l => l.length > 3);
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  const withPrice = shopItems.filter(i => i.price > 0);
+  if (!withPrice.length) {
+    $("comprovanteBody").innerHTML = `<p style="color:var(--inkSoft);text-align:center;padding:16px 0">Nenhum item com preço na calculadora.<br><span style="font-size:12px">Adicione preços antes de conferir.</span></p>`;
+    return;
+  }
+
+  const diff = [], ok = [], notFound = [];
+  for (const item of withPrice) {
+    const keyword = norm(item.name).split(/\s+/)[0];
+    if (keyword.length < 3) continue;
+    const line = lines.find(l => norm(l).includes(keyword));
+    if (!line) { notFound.push(item); continue; }
+    const prices = [...line.matchAll(/\b(\d{1,5})[,.](\d{2})\b/g)]
+      .map(m => parseFloat(m[1] + '.' + m[2]));
+    if (!prices.length) { notFound.push(item); continue; }
+    const receiptPrice = prices[prices.length - 1];
+    if (Math.abs(receiptPrice - item.price) <= 0.01) ok.push({ ...item, receiptPrice });
+    else diff.push({ ...item, receiptPrice });
+  }
+
+  let html = '';
+  if (!diff.length && ok.length) {
+    html += `<div style="text-align:center;padding:12px 0 20px">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--done)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <p style="font-weight:700;font-size:17px;margin:8px 0 4px">Tudo confere!</p>
+      <p style="font-size:13px;color:var(--inkSoft)">${ok.length} ${ok.length===1?'item':'itens'} com preço correto</p></div>`;
+  }
+  if (diff.length) {
+    html += `<p class="section-label" style="color:var(--warn)">PREÇO DIFERENTE (${diff.length})</p>`;
+    html += diff.map(i => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">
+        <span style="flex:1;font-weight:500">${esc(i.name)}</span>
+        <span style="white-space:nowrap">
+          <span style="text-decoration:line-through;color:var(--inkSoft);font-size:13px">${fmtBRL(i.price)}</span>
+          <span style="color:var(--warn);font-weight:700;margin-left:6px">→ ${fmtBRL(i.receiptPrice)}</span>
+        </span>
+      </div>`).join('');
+  }
+  if (ok.length && diff.length) {
+    html += `<p class="section-label" style="margin-top:16px">CONFERIDOS (${ok.length})</p>`;
+    html += ok.map(i => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
+        <span style="flex:1">${esc(i.name)}</span>
+        <span style="color:var(--done);font-weight:600">${fmtBRL(i.price)}</span>
+      </div>`).join('');
+  }
+  if (notFound.length) {
+    html += `<p class="section-label" style="margin-top:16px;color:var(--inkSoft)">NÃO ENCONTRADOS (${notFound.length})</p>
+    <p style="font-size:12px;color:var(--inkSoft);line-height:1.7">${notFound.map(i => esc(i.name)).join(' · ')}</p>`;
+  }
+  if (!diff.length && !ok.length && !notFound.length) {
+    html = `<p style="color:var(--inkSoft);text-align:center;padding:16px 0">Não foi possível identificar itens no comprovante.<br><span style="font-size:12px">Tente uma foto mais nítida.</span></p>`;
+  }
+  $("comprovanteBody").innerHTML = html;
+}
+
+function closeComprovanteModal() { $("comprovanteModal").classList.add("hide"); }
+
+function renderModoCompras() {
+  const total   = shopItems.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+  const flagged = shopItems.filter(i => i.flagged);
+  const totalItens = shopItems.reduce((s, i) => s + (i.qty || 1), 0);
+
+  $("shopTotal").textContent = fmtBRL(total) || "R$ 0,00";
+  $("shopTotalItems").textContent = totalItens ? `${totalItens} ${totalItens === 1 ? "item" : "itens"}` : "";
+  $("shopFlagSummary").textContent = flagged.length
+    ? `⚠ ${flagged.length} ${flagged.length === 1 ? "item" : "itens"} com preço diferente`
+    : "";
+
+  if (shopItems.length === 0) {
+    $("shopList").innerHTML = `<div class="shop-empty"><div class="shop-empty-icon">🛒</div><p>Adicione itens acima<br><span style="font-size:12px">O total aparece na hora</span></p></div>`;
+    return;
+  }
+
+  $("shopList").innerHTML = shopItems.map(it => {
+    const qty   = it.qty || 1;
+    const total = it.price != null ? fmtBRL(it.price * qty) : "—";
+    const unit  = qty > 1 && it.price != null ? `<span style="font-size:11px;color:var(--inkSoft)"> (${fmtBRL(it.price)} × ${qty})</span>` : "";
+    const sid   = esc(it.id);
+    return `
+    <div class="shop-row${it.flagged ? " flagged" : ""}">
+      <span class="shop-row-name">${esc(it.name)}</span>
+      <div class="shop-stepper">
+        <button class="shop-step" onclick="shopSetQty('${sid}',-1)">−</button>
+        <div class="shop-step-qty">${qty}</div>
+        <button class="shop-step" onclick="shopSetQty('${sid}',1)">+</button>
+      </div>
+      <span class="shop-row-price">${total}${unit}</span>
+      <button class="shop-flag${it.flagged ? " on" : ""}" onclick="shopToggleFlag('${sid}')" title="Preço diferente">⚠</button>
+      <button class="shop-del" onclick="shopRemove('${sid}')" aria-label="remover">✕</button>
+    </div>`;
+  }).join("");
+}
+
+// ---- Histórico ----
+async function abrirHistorico() {
+  $("histModal").classList.remove("hide");
+  $("histContent").innerHTML = `<p style="color:var(--inkSoft);text-align:center;padding:16px">Carregando...</p>`;
+  try {
+    renderHistorico(await api("GET", "/historico"));
+  } catch { $("histContent").innerHTML = `<p style="color:var(--warn)">Erro ao carregar</p>`; }
+}
+function closeHistModal() { $("histModal").classList.add("hide"); }
+function renderHistorico(data) {
+  if (data.length === 0) {
+    $("histContent").innerHTML = `<p style="color:var(--inkSoft);text-align:center;padding:24px 0">Nenhum item ainda.<br><span style="font-size:12px">Itens são salvos aqui quando você clica "Limpar comprados".</span></p>`;
+    return;
+  }
+  const byDate = {};
+  data.forEach(r => {
+    const d = new Date(r.data_compra).toLocaleDateString("pt-BR", {day:"2-digit",month:"2-digit",year:"numeric"});
+    (byDate[d] = byDate[d] || []).push(r);
+  });
+  $("histContent").innerHTML = Object.entries(byDate).map(([date, rows]) => `
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;letter-spacing:.1em;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:6px">${date}</div>
+      ${rows.map(r => `
+        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px">
+          <span>${esc(r.nome)}${r.qty > 1 ? ` ×${r.qty}` : ""} <span style="color:var(--inkSoft);font-size:12px">${esc(r.room)}</span></span>
+          <span style="color:var(--inkSoft);flex:none;padding-left:12px">${r.preco ? fmtBRL(r.preco * (r.qty || 1)) : "—"}</span>
+        </div>`).join("")}
+    </div>`).join("");
+}
+
+// ---- Boot ----
+// Populate star icons after DOM ready
+$("addPriorityBtn").innerHTML = STAR_OFF;
+$("ePriorityBtn").innerHTML = STAR_OFF;
+
+const _savedTheme = localStorage.getItem('casaTheme');
+if (_savedTheme) document.documentElement.setAttribute('data-theme', _savedTheme);
+
+// Detectar links especiais na URL
 // ---- boot (DEMO: entra direto no app, sem tela de login) ----
+S.token = "demo";
+S.username = "você";
 showApp();
 </script>
 </body>
