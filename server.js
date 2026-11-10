@@ -620,25 +620,63 @@ async function safeFetch(rawUrl, opts = {}, hops = 0) {
 }
 const UA = { "User-Agent": "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36", "Accept-Language": "pt-BR,pt;q=0.9" };
 
-app.get("/api/extract-image", auth, wrap(async (req, res) => {
-  const r = await safeFetch(String(req.query.url || ""), { headers: UA });
-  if (!r.ok) return res.json({ imagem: null });
+const { parsePreview } = require("./lib/preview");
+
+async function readHtml(r, max = 1_500_000) {
   const reader = r.body.getReader();
   let html = "";
-  while (html.length < 600_000) {
+  while (html.length < max) {
     const { done, value } = await reader.read();
     if (done) break;
     html += Buffer.from(value).toString("utf8");
   }
   reader.cancel().catch(() => {});
-  const pick = (re) => html.match(re)?.[1];
-  let img =
-    pick(/<meta[^>]+(?:property|name)=["'](?:og:image(?::secure_url)?|twitter:image)["'][^>]+content=["']([^"']+)["']/i) ||
-    pick(/<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["'](?:og:image|twitter:image)["']/i) ||
-    pick(/"image"\s*:\s*"(https?:[^"]+)"/i) ||
-    pick(/"image"\s*:\s*\[\s*"(https?:[^"]+)"/i);
-  if (img) { img = img.replace(/&amp;/g, "&"); try { img = new URL(img, r.url || req.query.url).toString(); } catch { img = null; } }
-  res.json({ imagem: img || null });
+  return html;
+}
+
+// lê a página do link (seguindo redirecionamentos de link curto) e extrai nome, foto e preço
+async function linkPreview(rawUrl) {
+  let url = String(rawUrl || "").trim();
+  let out = { nome: null, imagem: null, preco: null, url };
+  for (let hop = 0; hop < 3; hop++) {
+    const r = await safeFetch(url, { headers: { ...UA, Accept: "text/html,application/xhtml+xml" } });
+    if (!r.ok) break;
+    const finalUrl = r.url || url;
+    const p = parsePreview(await readHtml(r), finalUrl);
+    out = { nome: p.nome, imagem: p.imagem, preco: p.preco, url: finalUrl };
+    if (p.nome && (p.imagem || p.preco != null)) break;
+    if (!p.refresh) break;
+    try { url = new URL(p.refresh, finalUrl).toString(); } catch { break; }
+  }
+  return out;
+}
+
+app.get("/api/link-preview", auth, wrap(async (req, res) => {
+  const raw = String(req.query.url || "");
+  let out = { nome: null, imagem: null, preco: null, url: raw };
+  try { out = await linkPreview(raw); } catch (e) { if (e.status === 400) throw e; }
+  // Mercado Livre: se a página não abriu e houver credenciais, usa a API pelo código do anúncio
+  const mlb = (raw.match(/\bwid=(MLB\d+)/i) || raw.match(/\b(MLB)-?(\d{6,})/i) || []);
+  const mlId = mlb[2] ? mlb[1] + mlb[2] : mlb[1];
+  if (!out.nome && mlId) {
+    try {
+      const token = await getMlToken();
+      if (token) {
+        const r = await fetch(`https://api.mercadolibre.com/items/${mlId.toUpperCase()}`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
+        if (r.ok) {
+          const j = await r.json();
+          out = { nome: j.title, preco: j.price, url: j.permalink || out.url,
+            imagem: (j.pictures?.[0]?.secure_url || j.thumbnail || "").replace(/^http:/, "https:") || null };
+        }
+      }
+    } catch {}
+  }
+  res.json(out);
+}));
+
+app.get("/api/extract-image", auth, wrap(async (req, res) => {
+  const out = await linkPreview(req.query.url).catch(() => ({}));
+  res.json({ imagem: out.imagem || null });
 }));
 
 // Mercado Livre — exige credenciais (ML_CLIENT_ID/ML_CLIENT_SECRET) desde 2025

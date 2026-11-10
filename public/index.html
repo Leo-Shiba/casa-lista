@@ -655,7 +655,7 @@ button.group-head{margin:18px 0 6px;padding:4px 2px;gap:8px}
   <div class="modal">
     <div class="sheet-head"><h3>Novo item</h3><button class="text-btn" onclick="closeAddSheet()">Fechar</button></div>
     <div class="row">
-      <input id="addName" list="nameSuggest" placeholder="Ex: 2x cadeira R$150" onkeydown="if(event.key==='Enter')addItem()" oninput="onAddNameInput(this.value)" autocomplete="off" enterkeyhint="done" />
+      <input id="addName" list="nameSuggest" placeholder="Nome ou link da loja" onkeydown="if(event.key==='Enter')addItem()" oninput="onAddNameInput(this.value)" autocomplete="off" enterkeyhint="done" />
       <button class="btn-primary" style="flex:none" onclick="addItem()">Adicionar</button>
     </div>
     <datalist id="nameSuggest"></datalist>
@@ -1052,6 +1052,7 @@ async function loadAll() {
     if (S.roomFilter) $("addRoom").value = S.roomFilter;
     api("GET", "/historico").then(h => { S.historico = h; fillSuggestions(); }).catch(() => {});
     fillSuggestions();
+    consumeShare();
     render();
     $("houseTitle").textContent = house.name;
     if (S.tab === "resumo") openResumo();
@@ -1068,7 +1069,7 @@ function populateRoomSelects() {
 async function addItem() {
   const raw = $("addName").value.trim();
   if (!raw) return;
-  const pq = parseQuick(raw);
+  const pq = S.fromLink ? { name: raw, qty: null, price: null } : parseQuick(raw);
   let name = pq.name || raw;
   name = name.charAt(0).toLocaleUpperCase("pt-BR") + name.slice(1);
   const qtyField = parseInt($("addQty").value) || 1;
@@ -1085,6 +1086,7 @@ async function addItem() {
   try {
     const item = await api("POST", "/items", body);
     S.items.unshift(item);
+    if (S.fromLink) { S.fromLink = false; closeAddSheet(); }
     if (S.roomFilter && item.room !== S.roomFilter) S.roomFilter = "";
     toast(`"${item.name}" adicionado${item.qty > 1 ? ` (${item.qty}×)` : ""}${item.price != null ? " · " + fmtBRL(item.price) : ""}`);
     $("addName").focus();
@@ -1423,7 +1425,47 @@ function focusAddItem() {
   $("addSheet").classList.remove("hide");
   setTimeout(() => $("addName").focus(), 80);
 }
-function closeAddSheet() { $("addSheet").classList.add("hide"); }
+function closeAddSheet() { $("addSheet").classList.add("hide"); S.fromLink = false; }
+
+// ---- Link de loja: compartilhado de outro app ou colado no campo ----
+const URL_RE = /https?:\/\/[^\s<>"']+/i;
+function setAddImage(src) {
+  $("addImage").value = src; $("addImageThumb").src = src;
+  $("addImagePreview").style.display = "flex"; $("addImagePreview").style.alignItems = "center";
+}
+async function fillFromLink(url, fallbackName) {
+  if (S.tab !== "lista") setTab("lista");
+  focusAddItem();
+  S.fromLink = true;
+  $("addUrl").value = url.split("#")[0];
+  $("addName").value = fallbackName || "";
+  $("addName").placeholder = "Buscando dados do link…";
+  $("extras").classList.remove("hide");
+  try {
+    const d = await api("GET", "/link-preview?url=" + encodeURIComponent(url));
+    if (d.nome && (!$("addName").value || $("addName").value === (fallbackName || ""))) $("addName").value = d.nome;
+    if (d.imagem) setAddImage(d.imagem);
+    if (d.preco != null && !$("addPrice").value) $("addPrice").value = d.preco.toFixed(2).replace(".", ",");
+    if (d.url && /^https?:/.test(d.url)) $("addUrl").value = d.url.split("#")[0];
+    toast(d.nome || d.imagem ? "Confira os dados e toque em Adicionar" : "Não consegui ler a loja. Escreva o nome do item.", d.nome || d.imagem ? "ok" : "err");
+  } catch (e) { toast("Não consegui ler o link. Escreva o nome do item.", "err"); }
+  $("addName").placeholder = "Nome ou link da loja";
+  $("addName").focus();
+}
+function stashShare() {
+  const q = new URLSearchParams(location.search);
+  const parts = [q.get("url"), q.get("text"), q.get("title")].filter(Boolean);
+  if (!parts.length) return;
+  const m = parts.join(" ").match(URL_RE);
+  const name = (q.get("title") || q.get("text") || "").replace(URL_RE, "").replace(/\s+/g, " ").trim().slice(0, 120);
+  if (m) try { sessionStorage.setItem("casaShare", JSON.stringify({ url: m[0], name })); } catch {}
+  history.replaceState({}, "", "/");
+}
+function consumeShare() {
+  let sh = null;
+  try { sh = JSON.parse(sessionStorage.getItem("casaShare") || "null"); sessionStorage.removeItem("casaShare"); } catch {}
+  if (sh && sh.url) fillFromLink(sh.url, sh.name);
+}
 
 // ---- Abas ----
 function markTab(t) {
@@ -2353,6 +2395,8 @@ function parseQuick(text) {
   return { name: name.replace(/\s+/g, " ").trim(), qty, price };
 }
 function onAddNameInput(v) {
+  const link = v.trim().match(/^https?:\/\/\S+$/i);
+  if (link) return fillFromLink(link[0], "");
   // se já comprou/cadastrou esse item antes, sugere cômodo e preço
   const n = norm(v.trim());
   if (!n) return;
@@ -2642,6 +2686,7 @@ if (_savedTheme) document.documentElement.setAttribute('data-theme', _savedTheme
 // Detectar links especiais na URL (?reset=, ?confirm-email=)
 (async function boot() {
   const params = new URLSearchParams(location.search);
+  stashShare();
   if (params.get("reset")) { $("gate").classList.remove("hide"); showReset(); return; }
   const confirmTok = params.get("confirm-email");
   if (confirmTok) {
