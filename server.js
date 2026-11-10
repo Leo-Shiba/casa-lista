@@ -658,25 +658,42 @@ async function linkPreview(rawUrl) {
   return out;
 }
 
+// código do anúncio (MLB123...) dentro de um link do Mercado Livre
+function mlIdFrom(url) {
+  const m = String(url || "").match(/\bwid=(MLB\d+)/i) || String(url || "").match(/\b(MLB)-?(\d{6,})/i);
+  return m ? (m[2] ? m[1] + m[2] : m[1]).toUpperCase() : null;
+}
+const httpsImg = (u) => (u || "").replace(/^http:/, "https:") || null;
+// consulta a API oficial: primeiro como anúncio, depois como produto de catálogo
+async function mlLookup(id, log) {
+  const token = await getMlToken();
+  if (!token) { if (log) console.log("[ml] sem credenciais"); return null; }
+  const get = async (path) => {
+    const r = await fetch("https://api.mercadolibre.com" + path, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
+    if (log) console.log(`[ml] ${path} -> ${r.status}`);
+    return r.ok ? r.json() : null;
+  };
+  const it = await get(`/items/${id}`);
+  if (it && it.title) return { nome: it.title, preco: it.price ?? null, url: it.permalink || null, imagem: httpsImg(it.pictures?.[0]?.secure_url || it.pictures?.[0]?.url || it.thumbnail) };
+  const pr = await get(`/products/${id}`);
+  if (pr && pr.name) return { nome: pr.name, preco: pr.buy_box_winner?.price ?? null, url: pr.permalink || null, imagem: httpsImg(pr.pictures?.[0]?.url) };
+  return null;
+}
+// autoteste opcional ao iniciar: ML_SELFTEST=MLB123 escreve no log se a API respondeu (sem mostrar chaves)
+if (process.env.ML_SELFTEST) setTimeout(() => mlLookup(process.env.ML_SELFTEST, true)
+  .then((o) => console.log("[ml] autoteste:", o ? JSON.stringify({ nome: o.nome, preco: o.preco, foto: !!o.imagem }) : "sem dados"))
+  .catch((e) => console.log("[ml] autoteste falhou:", e.message)), 4000);
+
+
 app.get("/api/link-preview", auth, wrap(async (req, res) => {
   const raw = String(req.query.url || "");
   let out = { nome: null, imagem: null, preco: null, url: raw };
   try { out = await linkPreview(raw); } catch (e) { if (e.status === 400) throw e; }
-  // Mercado Livre: se a página não abriu e houver credenciais, usa a API pelo código do anúncio
-  const mlb = (raw.match(/\bwid=(MLB\d+)/i) || raw.match(/\b(MLB)-?(\d{6,})/i) || []);
-  const mlId = mlb[2] ? mlb[1] + mlb[2] : mlb[1];
+  // Mercado Livre: a página costuma ser barrada; com credenciais, usa a API pelo código do anúncio
+  const mlId = mlIdFrom(raw) || mlIdFrom(out.url);
   if (!out.nome && mlId) {
-    try {
-      const token = await getMlToken();
-      if (token) {
-        const r = await fetch(`https://api.mercadolibre.com/items/${mlId.toUpperCase()}`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
-        if (r.ok) {
-          const j = await r.json();
-          out = { nome: j.title, preco: j.price, url: j.permalink || out.url,
-            imagem: (j.pictures?.[0]?.secure_url || j.thumbnail || "").replace(/^http:/, "https:") || null };
-        }
-      }
-    } catch {}
+    const viaApi = await mlLookup(mlId).catch(() => null);
+    if (viaApi) out = { ...viaApi, url: viaApi.url || raw.split("#")[0] };
   }
   res.json(out);
 }));
