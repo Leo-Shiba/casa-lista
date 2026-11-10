@@ -634,20 +634,27 @@ async function readHtml(r, max = 1_500_000) {
   return html;
 }
 
-// lê a página do link (seguindo redirecionamentos de link curto) e extrai nome, foto e preço
+// páginas de login/verificação que algumas lojas devolvem para servidores
+const BLOCK_URL = /account-verification|\/gz\/|\/login|signin|captcha|challenge|\/blocked/i;
+const BLOCK_TITLE = /^(mercado ?li[bv]re( brasil)?|amazon(\.com\.br)?|shopee( brasil)?|magazine luiza|just a moment.*|access denied|acesso negado|attention required.*|are you a robot.*|verifica[cç][aã]o.*|login|entrar|error|erro)$/i;
+const PREVIEW_HEADERS = { "User-Agent": "CasaLista/1.0 (previa de link)", "Accept-Language": "pt-BR,pt;q=0.9", Accept: "text/html,application/xhtml+xml" };
+
+// lê a página do link e extrai nome, foto e preço; se a loja barrar, devolve vazio com o link original
 async function linkPreview(rawUrl) {
-  let url = String(rawUrl || "").trim();
-  let out = { nome: null, imagem: null, preco: null, url };
+  const original = String(rawUrl || "").trim();
+  const vazio = { nome: null, imagem: null, preco: null, url: original };
+  let url = original, out = null;
   for (let hop = 0; hop < 3; hop++) {
-    const r = await safeFetch(url, { headers: { ...UA, Accept: "text/html,application/xhtml+xml" } });
-    if (!r.ok) break;
+    const r = await safeFetch(url, { headers: PREVIEW_HEADERS });
     const finalUrl = r.url || url;
+    if (!r.ok || BLOCK_URL.test(finalUrl)) { console.log(`[preview] loja não liberou a página (${r.status})`); return vazio; }
     const p = parsePreview(await readHtml(r), finalUrl);
     out = { nome: p.nome, imagem: p.imagem, preco: p.preco, url: finalUrl };
     if (p.nome && (p.imagem || p.preco != null)) break;
     if (!p.refresh) break;
     try { url = new URL(p.refresh, finalUrl).toString(); } catch { break; }
   }
+  if (!out || !out.nome || BLOCK_TITLE.test(out.nome.trim())) return vazio;
   return out;
 }
 
