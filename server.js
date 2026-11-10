@@ -722,6 +722,12 @@ async function mlLookup(urls, log) {
     out.preco = prod.buy_box_winner?.price ?? null;
     if (!out.nome) out.nome = prod.name || null;
     if (!out.url) out.url = prod.permalink || null;
+    if (out.preco == null && prod.id) {
+      // sem oferta principal: pega o menor preço entre os anúncios do produto
+      const its = await mlApi(`/products/${prod.id}/items?limit=10`, log).catch(() => null);
+      const precos = (its?.results || []).map((i) => i.price).filter((x) => typeof x === "number" && x > 0);
+      if (precos.length) out.preco = Math.min(...precos);
+    }
   }
   return out.nome ? out : null;
 }
