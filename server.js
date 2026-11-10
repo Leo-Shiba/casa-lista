@@ -679,11 +679,21 @@ async function mlLookup(id, log) {
   if (pr && pr.name) return { nome: pr.name, preco: pr.buy_box_winner?.price ?? null, url: pr.permalink || null, imagem: httpsImg(pr.pictures?.[0]?.url) };
   return null;
 }
-// autoteste opcional ao iniciar: ML_SELFTEST=MLB123 escreve no log se a API respondeu (sem mostrar chaves)
-if (process.env.ML_SELFTEST) setTimeout(() => mlLookup(process.env.ML_SELFTEST, true)
-  .then((o) => console.log("[ml] autoteste:", o ? JSON.stringify({ nome: o.nome, preco: o.preco, foto: !!o.imagem }) : "sem dados"))
-  .catch((e) => console.log("[ml] autoteste falhou:", e.message)), 4000);
-
+// autoteste opcional ao iniciar: ML_SELFTEST=MLB123 escreve no log o que a API respondeu (sem mostrar chaves)
+if (process.env.ML_SELFTEST) setTimeout(async () => {
+  try {
+    const id = process.env.ML_SELFTEST;
+    const token = await getMlToken();
+    console.log("[ml] token:", token ? "ok" : "sem credenciais");
+    if (!token) return;
+    for (const path of [`/items/${id}`, `/items?ids=${id}`, `/sites/MLB/search?q=rede%20de%20descanso&limit=1`,
+      `/products/search?status=active&site_id=MLB&q=rede%20de%20descanso&limit=1`, `/users/me`]) {
+      const r = await fetch("https://api.mercadolibre.com" + path, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
+      const body = (await r.text()).replace(/\s+/g, " ").slice(0, 220);
+      console.log(`[ml] ${path.split("?")[0]} -> ${r.status} ${body}`);
+    }
+  } catch (e) { console.log("[ml] autoteste falhou:", e.message); }
+}, 4000);
 
 app.get("/api/link-preview", auth, wrap(async (req, res) => {
   const raw = String(req.query.url || "");
