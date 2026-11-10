@@ -1,39 +1,31 @@
 # Casa Nova — Lista compartilhada
 
-Lista de compras da casa pra vocês dois usarem no celular. Banco no servidor,
-acesso por um código da casa, e PWA (dá pra instalar na tela inicial).
+Lista do que falta comprar pra casa, compartilhada em tempo real entre quem mora junto.
+Funciona no celular como app (PWA, "Adicionar à tela inicial").
+
+## O que tem
+- **Contas** com usuário e senha (email opcional pra recuperar senha)
+- **Casas compartilhadas**: cada casa tem um código de convite; dá pra participar de várias e trocar entre elas
+- **Itens** com cômodo, quantidade, preço, link da loja, foto (câmera, galeria ou puxada do link), notas e ⭐ urgente
+- **Tempo real**: o que um marca, o outro vê na hora
+- Filtros, busca, arrastar pra reordenar, exportar `.txt`, enviar pelo WhatsApp
+- **Histórico** (itens limpos da lista), **estatísticas** de gasto e **atividade** da casa
+- **Modo Mercado**: calculadora de compras com conferência de cupom fiscal (OCR no aparelho)
+- Tema claro/escuro, `/demo` com dados de exemplo
 
 ## Stack
-- **Node + Express** (servidor)
-- **better-sqlite3** (banco, persiste em `casa.sqlite`)
-- **Front PWA** em HTML/CSS/JS puro (sem build, sem bundler)
+Node + Express, SQLite (`better-sqlite3`, arquivo `casa.sqlite`), front em HTML/CSS/JS puro.
 
 ## Rodar local
 ```bash
 npm install
-cp .env.example .env      # edite o CASA_CODE
-npm start
+cp .env.example .env   # defina pelo menos JWT_SECRET
+npm start              # http://localhost:3000
 ```
-Abra `http://localhost:3000`, digite o código, pronto.
 
-## Subir na Square Cloud
-1. Edite o `.env` e defina o `CASA_CODE` (o que vocês dois vão digitar).
-2. Zipe a pasta inteira (com `squarecloud.app`, `package.json`, `server.js`, `public/`).
-3. Suba o zip no painel da Square Cloud — ela instala e roda sozinha.
-4. Pegue a URL que a Square Cloud te der e abra no celular.
-5. No celular: menu do navegador › **"Adicionar à tela inicial"** → vira app.
+## Square Cloud
+`squarecloud.app` já está configurado (512 MB, subdomínio `leocasalista`).
+Variáveis de ambiente: defina `JWT_SECRET` (obrigatório) e, se quiser, `APP_URL`, `SMTP_*` e `ML_*` — veja `.env.example`.
 
-> Os dois usam a **mesma URL** e o **mesmo código**. A lista é única e
-> sincroniza: o que um marca como comprado, o outro vê ao abrir/atualizar.
-
-## Variáveis de ambiente
-| Variável     | Pra quê                                            |
-|--------------|----------------------------------------------------|
-| `CASA_CODE`  | Código de entrada (vocês dois digitam o mesmo)     |
-| `PORT`       | Porta (a Square Cloud injeta sozinha)              |
-| `ML_*`       | Mercado Livre — Fase 2 (busca de preço)            |
-| `SHOPEE_*`   | Shopee — Fase 2 (busca de preço)                   |
-
-## Próximas fases
-- **Fase 2:** busca de preço no Mercado Livre e Shopee (botão por item).
-- Ideias: ordenar por prioridade, foto via upload, "quem comprou".
+> ⚠️ O banco é o arquivo `casa.sqlite` dentro do app. Se apagar o app, a lista vai junto —
+> mantenha os snapshots da Square Cloud em dia.

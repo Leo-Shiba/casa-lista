@@ -1,4 +1,5 @@
-const CACHE = "casa-v1";
+// v2 — rede primeiro (sempre pega a versão nova), cache só como reserva offline
+const CACHE = "casa-v2";
 const ASSETS = ["/", "/index.html", "/manifest.json", "/icon.svg"];
 
 self.addEventListener("install", (e) => {
@@ -8,18 +9,21 @@ self.addEventListener("install", (e) => {
 
 self.addEventListener("activate", (e) => {
   e.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
-    )
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
   );
   self.clients.claim();
 });
 
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
-  // chamadas de API sempre vão à rede (nunca cacheia a lista)
-  if (url.pathname.startsWith("/api/")) return;
+  if (e.request.method !== "GET" || url.origin !== location.origin) return;
+  if (url.pathname.startsWith("/api/")) return; // API nunca vai pro cache
   e.respondWith(
-    caches.match(e.request).then((hit) => hit || fetch(e.request))
+    fetch(e.request)
+      .then((res) => {
+        if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); }
+        return res;
+      })
+      .catch(() => caches.match(e.request).then((hit) => hit || caches.match("/")))
   );
 });
