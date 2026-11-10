@@ -24,6 +24,7 @@ npm start              # http://localhost:3000
 ```
 
 ## Square Cloud
+No ar em **https://leocasalista.squareweb.app** — deploy automático a cada push na `main`.
 `squarecloud.app` já está configurado (512 MB, subdomínio `leocasalista`).
 Variáveis de ambiente: defina `JWT_SECRET` (obrigatório) e, se quiser, `APP_URL`, `SMTP_*` e `ML_*` — veja `.env.example`.
 
