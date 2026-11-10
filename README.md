@@ -14,7 +14,7 @@ Funciona no celular como app (PWA, "Adicionar à tela inicial").
 - Tema claro/escuro, `/demo` com dados de exemplo
 
 ## Stack
-Node + Express, SQLite (`better-sqlite3`, arquivo `casa.sqlite`), front em HTML/CSS/JS puro.
+Node + Express, SQLite embutido do Node (`node:sqlite`, arquivo `casa.sqlite`) — sem dependência nativa, front em HTML/CSS/JS puro.
 
 ## Rodar local
 ```bash

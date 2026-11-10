@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const dns = require("dns").promises;
 const net = require("net");
 const express = require("express");
-const Database = require("better-sqlite3");
+const { DatabaseSync } = require("node:sqlite"); // SQLite embutido no Node (sem compilação)
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -20,9 +20,14 @@ if (!JWT_SECRET) {
 // =====================================================================
 // Banco
 // =====================================================================
-const db = new Database(process.env.DB_PATH || path.join(__dirname, "casa.sqlite"));
-db.pragma("journal_mode = WAL");
-db.pragma("foreign_keys = ON");
+const db = new DatabaseSync(process.env.DB_PATH || path.join(__dirname, "casa.sqlite"));
+db.exec("PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON; PRAGMA busy_timeout = 3000;");
+// transação: tx(fn) devolve uma função que roda fn dentro de BEGIN/COMMIT
+db.transaction = (fn) => (...args) => {
+  db.exec("BEGIN");
+  try { const r = fn(...args); db.exec("COMMIT"); return r; }
+  catch (e) { db.exec("ROLLBACK"); throw e; }
+};
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id              TEXT PRIMARY KEY,
