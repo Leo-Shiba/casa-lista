@@ -479,7 +479,9 @@ button.group-head{margin:18px 0 6px;padding:4px 2px;gap:8px}
 .card.priority{border-color:var(--line)}
 .check{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--inkSoft);background:none;flex:none;display:flex;align-items:center;justify-content:center;padding:0}
 .check.on{background:var(--done);border-color:var(--done)}
-.card .thumb{width:40px;height:40px;border-radius:8px}
+.card .thumb{width:72px;height:72px;border-radius:10px;object-fit:contain;background:#fff;padding:3px;cursor:zoom-in}
+.photo-view{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:16px}
+.photo-view img{max-width:100%;max-height:100%;border-radius:12px;background:#fff;object-fit:contain}
 .card .name{font-weight:500;font-size:15.5px}
 .name.done{color:var(--ink)}
 .item-notes{font-style:normal}
@@ -2270,7 +2272,7 @@ function mlResultHTML(id) {
 
 function cardHTML(it, room, idx = 0, showRoom = false, pq = null) {
   const thumb = it.image
-    ? `<img class="thumb" src="${esc(it.image)}" alt="" loading="lazy" onerror="this.remove()">`
+    ? `<img class="thumb" src="${esc(it.image)}" alt="" loading="lazy" onclick="event.stopPropagation();openPhoto(this.src)" onerror="this.remove()">`
     : "";
   const total = fmtTotal(it.price, it.qty);
   const erId = esc(it.id), erRoom = esc(room);
@@ -2310,6 +2312,13 @@ function cardHTML(it, room, idx = 0, showRoom = false, pq = null) {
 }
 
 // ---- Menu de ações do item ----
+function openPhoto(src) {
+  const d = document.createElement("div");
+  d.className = "photo-view";
+  d.innerHTML = `<img src="${esc(src)}" alt="">`;
+  d.onclick = () => d.remove();
+  document.body.appendChild(d);
+}
 function openItemMenu(id) {
   S.sheetId = id; S.sheetConfirm = false; S.sheetView = "main";
   renderItemMenu();
