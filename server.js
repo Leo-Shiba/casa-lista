@@ -607,15 +607,16 @@ function privateIp(ip) {
   const [a, b] = ip.split(".").map(Number);
   return a === 10 || a === 127 || a === 0 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127);
 }
-async function safeFetch(rawUrl, opts = {}, hops = 0) {
+async function safeFetch(rawUrl, opts = {}, hops = 0, trail = null) {
   let u;
   try { u = new URL(rawUrl); } catch { throw bad("Link inválido."); }
   if (!/^https?:$/.test(u.protocol)) throw bad("Link inválido.");
   const addrs = await dns.lookup(u.hostname, { all: true }).catch(() => []);
   if (!addrs.length || addrs.some((a) => privateIp(a.address))) throw bad("Endereço não permitido.");
+  if (trail) trail.push(u.toString());
   const r = await fetch(u, { ...opts, redirect: "manual", signal: AbortSignal.timeout(8000) });
   if (r.status >= 300 && r.status < 400 && r.headers.get("location") && hops < 4)
-    return safeFetch(new URL(r.headers.get("location"), u).toString(), opts, hops + 1);
+    return safeFetch(new URL(r.headers.get("location"), u).toString(), opts, hops + 1, trail);
   return r;
 }
 const UA = { "User-Agent": "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36", "Accept-Language": "pt-BR,pt;q=0.9" };
@@ -640,12 +641,12 @@ const BLOCK_TITLE = /^(mercado ?li[bv]re( brasil)?|amazon(\.com\.br)?|shopee( br
 const PREVIEW_HEADERS = { "User-Agent": "CasaLista/1.0 (previa de link)", "Accept-Language": "pt-BR,pt;q=0.9", Accept: "text/html,application/xhtml+xml" };
 
 // lê a página do link e extrai nome, foto e preço; se a loja barrar, devolve vazio com o link original
-async function linkPreview(rawUrl) {
+async function linkPreview(rawUrl, trail = null) {
   const original = String(rawUrl || "").trim();
   const vazio = { nome: null, imagem: null, preco: null, url: original };
   let url = original, out = null;
   for (let hop = 0; hop < 3; hop++) {
-    const r = await safeFetch(url, { headers: PREVIEW_HEADERS });
+    const r = await safeFetch(url, { headers: PREVIEW_HEADERS }, 0, trail);
     const finalUrl = r.url || url;
     if (!r.ok || BLOCK_URL.test(finalUrl)) { console.log(`[preview] loja não liberou a página (${r.status})`); return vazio; }
     const p = parsePreview(await readHtml(r), finalUrl);
@@ -658,53 +659,95 @@ async function linkPreview(rawUrl) {
   return out;
 }
 
-// código do anúncio (MLB123...) dentro de um link do Mercado Livre
-function mlIdFrom(url) {
-  const m = String(url || "").match(/\bwid=(MLB\d+)/i) || String(url || "").match(/\b(MLB)-?(\d{6,})/i);
-  return m ? (m[2] ? m[1] + m[2] : m[1]).toUpperCase() : null;
-}
+// ---- Mercado Livre ----
+// A API oficial não deixa apps consultarem anúncios de outros vendedores nem a busca geral (403),
+// mas libera o catálogo de produtos. Então: descobrimos o produto pelo endereço para onde o link
+// leva (ele traz o nome e, às vezes, o código de catálogo) e buscamos foto e preço no catálogo.
 const httpsImg = (u) => (u || "").replace(/^http:/, "https:") || null;
-// consulta a API oficial: primeiro como anúncio, depois como produto de catálogo
-async function mlLookup(id, log) {
-  const token = await getMlToken();
-  if (!token) { if (log) console.log("[ml] sem credenciais"); return null; }
-  const get = async (path) => {
-    const r = await fetch("https://api.mercadolibre.com" + path, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
-    if (log) console.log(`[ml] ${path} -> ${r.status}`);
-    return r.ok ? r.json() : null;
-  };
-  const it = await get(`/items/${id}`);
-  if (it && it.title) return { nome: it.title, preco: it.price ?? null, url: it.permalink || null, imagem: httpsImg(it.pictures?.[0]?.secure_url || it.pictures?.[0]?.url || it.thumbnail) };
-  const pr = await get(`/products/${id}`);
-  if (pr && pr.name) return { nome: pr.name, preco: pr.buy_box_winner?.price ?? null, url: pr.permalink || null, imagem: httpsImg(pr.pictures?.[0]?.url) };
-  return null;
+const words = (t) => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().match(/[a-z0-9]+/g) || [];
+
+function mlFromUrls(urls) {
+  const all = [];
+  for (const u of urls) {
+    if (!u) continue;
+    all.push(u);
+    try { for (const v of new URL(u).searchParams.values()) if (/^https?:\/\//.test(v)) all.push(v); } catch {}
+  }
+  let catalog = null, slug = null, link = null;
+  for (const u of all) {
+    let U; try { U = new URL(u); } catch { continue; }
+    if (!/mercadoli[vb]re\./i.test(U.hostname)) continue;
+    let path = U.pathname; try { path = decodeURIComponent(path); } catch {}
+    let m;
+    if ((m = path.match(/^\/([^/]+)\/p\/(MLB\d+)/i))) { catalog = catalog || m[2].toUpperCase(); slug = slug || m[1]; link = link || U.origin + U.pathname; }
+    else if ((m = path.match(/^\/p\/(MLB\d+)/i))) { catalog = catalog || m[1].toUpperCase(); link = link || U.origin + U.pathname; }
+    else if ((m = path.match(/^\/MLB-?\d+-(.+?)(?:-?_JM)?\/?$/i))) { slug = slug || m[1]; link = link || U.origin + U.pathname; }
+    else if ((m = path.match(/^\/([^/]+)\/up\/MLBU\d+/i))) { slug = slug || m[1]; link = link || U.origin + U.pathname; }
+  }
+  let nome = slug ? slug.replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim() : null;
+  if (nome) nome = nome.charAt(0).toUpperCase() + nome.slice(1);
+  return { catalog, nome, link };
 }
-// autoteste opcional ao iniciar: ML_SELFTEST=MLB123 escreve no log o que a API respondeu (sem mostrar chaves)
-if (process.env.ML_SELFTEST) setTimeout(async () => {
-  try {
-    const id = process.env.ML_SELFTEST;
-    const token = await getMlToken();
-    console.log("[ml] token:", token ? "ok" : "sem credenciais");
-    if (!token) return;
-    for (const path of [`/items/${id}`, `/items?ids=${id}`, `/sites/MLB/search?q=rede%20de%20descanso&limit=1`,
-      `/products/search?status=active&site_id=MLB&q=rede%20de%20descanso&limit=1`, `/users/me`]) {
-      const r = await fetch("https://api.mercadolibre.com" + path, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
-      const body = (await r.text()).replace(/\s+/g, " ").slice(0, 220);
-      console.log(`[ml] ${path.split("?")[0]} -> ${r.status} ${body}`);
+
+async function mlApi(path, log) {
+  const token = await getMlToken();
+  if (!token) return null;
+  const r = await fetch("https://api.mercadolibre.com" + path, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
+  if (log) console.log(`[ml] ${path.split("?")[0]} -> ${r.status}`);
+  return r.ok ? r.json() : null;
+}
+
+async function mlLookup(urls, log) {
+  const hint = mlFromUrls(urls);
+  if (log) console.log("[ml] pista:", JSON.stringify(hint));
+  if (!hint.catalog && !hint.nome) return null;
+  let out = { nome: hint.nome, imagem: null, preco: null, url: hint.link };
+  let prod = hint.catalog ? await mlApi(`/products/${hint.catalog}`, log).catch(() => null) : null;
+  if (!prod && hint.nome) {
+    // procura no catálogo um produto com nome bem parecido
+    const res = await mlApi(`/products/search?status=active&site_id=MLB&limit=5&q=${encodeURIComponent(hint.nome.slice(0, 100))}`, log).catch(() => null);
+    const alvo = new Set(words(hint.nome));
+    let best = null, bestScore = 0;
+    for (const c of res?.results || []) {
+      const w = words(c.name); if (!w.length) continue;
+      const comuns = w.filter((x) => alvo.has(x)).length;
+      const score = comuns / Math.max(w.length, alvo.size);
+      if (score > bestScore) { best = c; bestScore = score; }
     }
-  } catch (e) { console.log("[ml] autoteste falhou:", e.message); }
+    if (log) console.log("[ml] parecido:", best ? `${best.name} (${bestScore.toFixed(2)})` : "nenhum");
+    if (best && bestScore >= 0.6) prod = (await mlApi(`/products/${best.id}`, log).catch(() => null)) || best;
+  }
+  if (prod) {
+    out.imagem = httpsImg(prod.pictures?.[0]?.url);
+    out.preco = prod.buy_box_winner?.price ?? null;
+    if (!out.nome) out.nome = prod.name || null;
+    if (!out.url) out.url = prod.permalink || null;
+  }
+  return out.nome ? out : null;
+}
+
+// autoteste opcional ao iniciar: PREVIEW_SELFTEST=<link> escreve no log como o link foi lido
+if (process.env.PREVIEW_SELFTEST) setTimeout(async () => {
+  try {
+    const trail = [];
+    const o = await linkPreview(process.env.PREVIEW_SELFTEST, trail).catch((e) => ({ erro: e.message }));
+    console.log("[preview] caminho:", trail.map((u) => u.split("?")[0]).join(" > "));
+    console.log("[preview] página:", JSON.stringify({ nome: o.nome, foto: !!o.imagem, preco: o.preco, erro: o.erro }));
+    const ml = await mlLookup([process.env.PREVIEW_SELFTEST, ...trail], true);
+    console.log("[preview] mercado livre:", ml ? JSON.stringify({ nome: ml.nome, foto: !!ml.imagem, preco: ml.preco, url: ml.url }) : "sem dados");
+  } catch (e) { console.log("[preview] autoteste falhou:", e.message); }
 }, 4000);
 
 app.get("/api/link-preview", auth, wrap(async (req, res) => {
   const raw = String(req.query.url || "");
-  let out = { nome: null, imagem: null, preco: null, url: raw };
-  try { out = await linkPreview(raw); } catch (e) { if (e.status === 400) throw e; }
-  // Mercado Livre: a página costuma ser barrada; com credenciais, usa a API pelo código do anúncio
-  const mlId = mlIdFrom(raw) || mlIdFrom(out.url);
-  if (!out.nome && mlId) {
-    const viaApi = await mlLookup(mlId).catch(() => null);
-    if (viaApi) out = { ...viaApi, url: viaApi.url || raw.split("#")[0] };
+  const trail = [];
+  let out = { nome: null, imagem: null, preco: null, url: raw.split("#")[0] };
+  try { out = await linkPreview(raw, trail); } catch (e) { if (e.status === 400) throw e; }
+  if (!out.nome) {
+    const ml = await mlLookup([raw, ...trail]).catch(() => null);
+    if (ml) out = { ...ml, url: ml.url || raw.split("#")[0] };
   }
+  out.url = String(out.url || raw).split("#")[0];
   res.json(out);
 }));
 
