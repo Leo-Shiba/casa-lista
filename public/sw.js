@@ -1,5 +1,5 @@
-// v3 — rede primeiro (sempre pega a versão nova), cache só como reserva offline
-const CACHE = "casa-v3";
+// v4 — rede primeiro (sempre pega a versão nova), cache só como reserva offline
+const CACHE = "casa-v4";
 const ASSETS = ["/", "/index.html", "/manifest.json", "/icon.svg"];
 
 self.addEventListener("install", (e) => {

@@ -2,33 +2,33 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#E9EDE5" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#161C18" media="(prefers-color-scheme: dark)" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+<meta name="theme-color" content="#F5F5F2" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#101211" media="(prefers-color-scheme: dark)" />
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icon.svg" />
 <link rel="manifest" href="/manifest.json" />
 <title>Casa Nova — Lista</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#E9EDE5;--surface:#FBFAF5;--surfaceAlt:#F1F0E8;--ink:#1E3A2B;
-  --inkSoft:#5C6B5E;--line:#D6DBCF;--accent:#BC6A38;--accentSoft:#EBD7C6;
-  --done:#3E7A4F;--doneBg:#E2EDE2;--warn:#9A4A2E;
+  --bg:#F5F5F2;--surface:#FFFFFF;--surfaceAlt:#EEEEEA;--ink:#191A19;
+  --inkSoft:#6B6F6A;--line:#E3E4DF;--accent:#1F7A52;--accentSoft:#E1F0E8;--onAccent:#FFFFFF;
+  --done:#1F7A52;--doneBg:#E1F0E8;--warn:#C23B2E;--star:#D99A00;
 }
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#161C18;--surface:#1E2820;--surfaceAlt:#273029;--ink:#E8EDE5;
-    --inkSoft:#8A9E8C;--line:#2E3D31;--accent:#D4845A;--accentSoft:rgba(212,132,90,.18);
-    --done:#5CB87A;--doneBg:#1C3024;--warn:#E07070;
+    --bg:#101211;--surface:#191C1A;--surfaceAlt:#232725;--ink:#ECEEEB;
+    --inkSoft:#959A95;--line:#2A2F2C;--accent:#4CC38A;--accentSoft:rgba(76,195,138,.16);--onAccent:#06281A;
+    --done:#4CC38A;--doneBg:rgba(76,195,138,.12);--warn:#F0736A;--star:#F2B93B;
   }
 }
 [data-theme="dark"]{
-  --bg:#161C18;--surface:#1E2820;--surfaceAlt:#273029;--ink:#E8EDE5;
-  --inkSoft:#8A9E8C;--line:#2E3D31;--accent:#D4845A;--accentSoft:rgba(212,132,90,.18);
-  --done:#5CB87A;--doneBg:#1C3024;--warn:#E07070;
+  --bg:#101211;--surface:#191C1A;--surfaceAlt:#232725;--ink:#ECEEEB;
+  --inkSoft:#959A95;--line:#2A2F2C;--accent:#4CC38A;--accentSoft:rgba(76,195,138,.16);--onAccent:#06281A;
+  --done:#4CC38A;--doneBg:rgba(76,195,138,.12);--warn:#F0736A;--star:#F2B93B;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--ink);
@@ -44,7 +44,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
 .gate-hero{flex:1;text-align:center}
 @media(min-width:680px){.gate-hero{text-align:left}}
 .gate-logo{margin-bottom:6px;display:flex;color:var(--accent)}
-.gate-hero h1{font-family:'Fraunces',serif;font-weight:700;font-size:38px;
+.gate-hero h1{font-family:inherit;font-weight:700;font-size:38px;
   line-height:1.08;margin:0 0 14px;color:var(--ink)}
 @media(min-width:680px){.gate-hero h1{font-size:46px}}
 .gate-hero p{color:var(--inkSoft);font-size:15px;margin:0 0 28px;line-height:1.65}
@@ -54,25 +54,25 @@ body{margin:0;background:var(--bg);color:var(--ink);
   display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
 .gate-card{background:var(--surface);border:1px solid var(--line);border-radius:24px;
   padding:32px;width:100%;max-width:360px;flex:none}
-.gate-card h2{font-family:'Fraunces',serif;font-weight:600;font-size:26px;margin:0 0 6px;text-align:left}
+.gate-card h2{font-family:inherit;font-weight:600;font-size:26px;margin:0 0 6px;text-align:left}
 .gate-card p.desc{color:var(--inkSoft);font-size:14px;margin:0 0 20px;text-align:left}
 .gate-card input+input{margin-top:8px}
 
 /* header */
 .eyebrow{font-size:12px;letter-spacing:.18em;font-weight:600;color:var(--accent)}
-h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:44px;line-height:1.05;margin:4px 0 0}
+h1.title{font-family:inherit;font-weight:600;font-size:44px;line-height:1.05;margin:4px 0 0}
 .progress-card{margin-top:20px;background:var(--surface);border:1px solid var(--line);
   border-radius:20px;padding:20px}
 .progress-main{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
-.progress-count{font-family:'Fraunces',serif;font-size:40px;font-weight:700;line-height:1;color:var(--ink)}
+.progress-count{font-family:inherit;font-size:40px;font-weight:700;line-height:1;color:var(--ink)}
 .progress-count-sub{font-size:14px;color:var(--inkSoft);margin-top:3px}
-.progress-pct{font-family:'Fraunces',serif;font-size:30px;font-weight:600;color:var(--done);line-height:1}
+.progress-pct{font-family:inherit;font-size:30px;font-weight:600;color:var(--done);line-height:1}
 .bar{height:7px;border-radius:99px;background:var(--surfaceAlt);overflow:hidden;margin-bottom:16px}
 .bar>div{height:100%;border-radius:99px;background:var(--done);transition:width .6s cubic-bezier(.4,0,.2,1)}
 .progress-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .pstat{background:var(--surfaceAlt);border-radius:12px;padding:10px 12px}
 .pstat-label{font-size:10px;letter-spacing:.08em;color:var(--inkSoft);font-weight:600;margin-bottom:3px}
-.pstat-value{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink)}
+.pstat-value{font-family:inherit;font-size:17px;font-weight:600;color:var(--ink)}
 .muted{color:var(--inkSoft)}
 
 /* inputs */
@@ -123,7 +123,7 @@ button{font-family:inherit;cursor:pointer;border:none}
 .all-done{text-align:center;padding:48px 24px 40px;background:var(--doneBg);
   border:1px solid var(--done);border-radius:20px}
 .all-done-icon{margin-bottom:12px;display:flex;justify-content:center;color:var(--accent);animation:bounce-in .5s cubic-bezier(.34,1.56,.64,1)}
-.all-done h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;margin:0 0 8px;color:var(--done)}
+.all-done h2{font-family:inherit;font-size:26px;font-weight:700;margin:0 0 8px;color:var(--done)}
 .all-done p{color:var(--inkSoft);margin:0 0 20px;font-size:15px}
 .card.priority{border-color:var(--accent)}
 .card.dragging{opacity:.4}
@@ -183,10 +183,10 @@ button{font-family:inherit;cursor:pointer;border:none}
 .shop-top{flex:none;background:var(--surface);border-bottom:1px solid var(--line)}
 .shop-header{padding:14px 16px 10px;display:flex;align-items:center;gap:12px}
 .shop-back{background:none;color:var(--accent);font-size:15px;font-weight:600;padding:4px 0;flex:none}
-.shop-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;flex:1}
+.shop-title{font-family:inherit;font-size:18px;font-weight:600;flex:1}
 .shop-total-bar{padding:10px 16px 14px;display:flex;align-items:baseline;gap:6px}
 .shop-total-label{font-size:13px;color:var(--inkSoft)}
-.shop-total-value{font-family:'Fraunces',serif;font-size:36px;font-weight:700;color:var(--done);line-height:1}
+.shop-total-value{font-family:inherit;font-size:36px;font-weight:700;color:var(--done);line-height:1}
 .shop-total-items{font-size:13px;color:var(--inkSoft)}
 .shop-add-form{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px}
 .shop-add-name{flex:1;font-size:16px}
@@ -244,7 +244,7 @@ button{font-family:inherit;cursor:pointer;border:none}
 .empty{text-align:center;padding:56px 16px;background:var(--surface);
   border:1px dashed var(--line);border-radius:20px}
 .empty-icon{margin-bottom:12px;display:flex;justify-content:center;color:var(--inkSoft)}
-.empty h3{font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin:0 0 8px}
+.empty h3{font-family:inherit;font-size:20px;font-weight:600;margin:0 0 8px}
 .empty p{color:var(--inkSoft);margin:0;font-size:14px}
 
 /* modal */
@@ -255,7 +255,7 @@ button{font-family:inherit;cursor:pointer;border:none}
 @media(min-width:640px){.overlay{align-items:center}}
 .modal{background:var(--surface);border-radius:22px;padding:20px;width:100%;max-width:440px;
   animation:slide-up .22s cubic-bezier(.34,1.2,.64,1)}
-.modal h3{margin:0 0 14px;font-size:18px;font-family:'Fraunces',serif;font-weight:600}
+.modal h3{margin:0 0 14px;font-size:18px;font-family:inherit;font-weight:600}
 .modal>*+*{margin-top:8px}
 .modal .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .modal .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
@@ -293,7 +293,7 @@ button{font-family:inherit;cursor:pointer;border:none}
 .stat-bar-val{color:var(--inkSoft);font-size:12px;flex:none}
 .stats-highlight{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
 .stats-hl-card{background:var(--surfaceAlt);border-radius:12px;padding:12px}
-.stats-hl-val{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink)}
+.stats-hl-val{font-family:inherit;font-size:22px;font-weight:700;color:var(--ink)}
 .stats-hl-label{font-size:11px;color:var(--inkSoft);margin-top:2px}
 
 /* Activity timeline */
@@ -315,7 +315,7 @@ button{font-family:inherit;cursor:pointer;border:none}
 .beta-close{background:none;border:none;cursor:pointer;color:inherit;opacity:.6;font-size:14px;padding:0 0 0 8px;flex:none}
 .beta-close:hover{opacity:1}
 .menu-header{display:flex;align-items:center;justify-content:space-between;padding:0 0 16px;border-bottom:1px solid var(--line);margin-bottom:8px}
-.menu-header-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--ink)}
+.menu-header-title{font-family:inherit;font-size:20px;font-weight:600;color:var(--ink)}
 .menu-back{display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--inkSoft);font-size:13px;padding:0}
 .menu-back:hover{color:var(--ink)}
 .menu-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:opacity .15s}
@@ -433,7 +433,7 @@ button.group-head{width:100%;background:none;border:0;padding:0;color:inherit;te
 .room-tag{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:0 7px;line-height:18px}
 mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1px}
 @media(pointer:coarse){.drag-handle{display:none}}
-.sheet-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin:0 0 6px;word-break:break-word}
+.sheet-title{font-family:inherit;font-size:18px;font-weight:600;margin:0 0 6px;word-break:break-word}
 .sheet-sub{font-size:12px;color:var(--inkSoft);margin:0 0 8px}
 .sheet-list{margin-top:4px}
 .sheet-list button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 4px;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);font-size:15px;text-align:left;border-radius:0}
@@ -443,6 +443,107 @@ mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1
 .quick-hint{font-size:11px;color:var(--inkSoft);margin-top:6px;line-height:1.4}
 .empty-search{text-align:center;padding:28px 12px;font-size:14px;color:var(--inkSoft)}
 .empty-search button{margin-top:12px}
+
+/* ===== v4: redesign ===== */
+:root{--tabH:58px}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:680px;padding:14px 16px calc(var(--tabH) + 96px + env(safe-area-inset-bottom))}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0 12px}
+.topbar h1{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:0;line-height:1.15;word-break:break-word}
+.topbar-sub{font-size:14px;color:var(--inkSoft);margin-top:3px}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:none;color:var(--ink);display:flex;align-items:center;justify-content:center;flex:none}
+.icon-btn:active{background:var(--surfaceAlt)}
+.bar{height:4px;margin-bottom:6px;background:var(--line)}
+.bar>div{background:var(--accent)}
+input,select,textarea{background:var(--surface);border-radius:10px}
+.btn-primary{background:var(--accent);color:var(--onAccent);border-radius:10px}
+.btn-danger{background:none;color:var(--warn);border:1px solid var(--line);border-radius:10px}
+.link-toggle{font-size:14px;padding:6px 0}
+.sticky-bar{margin:0 -16px;padding:8px 16px 0}
+.search input,.sort-select{background:var(--surfaceAlt);border-color:transparent;border-radius:10px;height:40px;padding-top:0;padding-bottom:0}
+.chips-scroll{padding:10px 0 8px}
+.chip{background:none;border:1px solid var(--line);color:var(--ink);font-weight:500}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .n{opacity:.55}
+.list-summary{display:block;font-size:13px;color:var(--inkSoft);min-height:0;margin:4px 2px 0}
+.list-summary:empty{display:none}
+button.group-head{margin:18px 0 6px;padding:4px 2px;gap:8px}
+.group-head h2{font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600}
+.group-head .rule{background:none}
+.group-body{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+#list>.group-body:first-child{margin-top:12px}
+.card{background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;margin:0;padding:10px 6px 10px 14px;animation:none}
+.group-body .card:last-child{border-bottom:0}
+.card.done{background:none;opacity:1}
+.card.done .body,.card.done .thumb{opacity:.5}
+.card.priority{border-color:var(--line)}
+.check{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--inkSoft);background:none;flex:none;display:flex;align-items:center;justify-content:center;padding:0}
+.check.on{background:var(--accent);border-color:var(--accent)}
+.check.on svg{stroke:var(--onAccent)}
+.card .thumb{width:40px;height:40px;border-radius:8px}
+.card .name{font-weight:500;font-size:15.5px}
+.name.done{color:var(--ink)}
+.item-notes{font-style:normal}
+.meta .price{font-weight:500}
+.meta a{color:var(--inkSoft)}
+.ico{background:none}
+.ico.star-on{background:none!important;border-color:transparent;color:var(--star)}
+.overlay{background:rgba(0,0,0,.45);backdrop-filter:none;padding:0}
+.modal{border-radius:18px 18px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));max-width:560px;max-height:88vh;overflow-y:auto;width:100%!important}
+@media(min-width:640px){.overlay{padding:16px}.modal{border-radius:18px}}
+.modal h3{font-size:18px;font-weight:700}
+.sheet-title{font-weight:700}
+.sheet-head{display:flex;justify-content:space-between;align-items:center}
+.sheet-head h3{margin:0}
+.text-btn{background:none;color:var(--accent);font-size:15px;font-weight:600;padding:4px 0}
+.add-fields{display:grid;grid-template-columns:1.3fr 1fr .7fr;gap:8px}
+.add-fields .full{grid-column:1/-1}
+.tabbar{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabH) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:47}
+.tabbar button{flex:1;max-width:170px;background:none;color:var(--inkSoft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:500}
+.tabbar button.on{color:var(--accent)}
+.fab-plus{position:fixed;right:18px;bottom:calc(var(--tabH) + 16px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--onAccent);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.22);z-index:40}
+@media(min-width:720px){.fab-plus{right:calc(50% - 340px + 18px)}}
+.shop-overlay{bottom:calc(var(--tabH) + env(safe-area-inset-bottom));padding-bottom:0}
+.shop-top{background:var(--bg);border-bottom:0}
+.shop-header{padding:20px 16px 4px}
+.shop-title{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.shop-total-value{color:var(--ink);font-size:30px}
+.shop-add-form{border-top:0}
+.shop-add-btn{background:var(--accent);color:var(--onAccent);border-radius:10px}
+.shop-footer{border-top:0;background:none}
+.shop-fabs{bottom:calc(var(--tabH) + 14px + env(safe-area-inset-bottom))}
+.fab{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.12);border-radius:99px;font-weight:600;font-size:13px;padding:10px 16px}
+.settings-drawer{top:0;left:0;right:0;bottom:calc(var(--tabH) + env(safe-area-inset-bottom));max-width:none;box-shadow:none;transform:none;transition:none;display:none;background:var(--bg);z-index:44;padding:20px 16px 40px}
+.settings-drawer.open{display:block;transform:none}
+#settingsContent{max-width:680px;margin:0 auto}
+.menu-header{border-bottom:0;padding-bottom:10px;min-height:44px}
+.menu-header-title{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.menu-back{font-size:15px;color:var(--accent)}
+.menu-item{padding:14px 2px}
+.menu-item:active{transform:none}
+.menu-item-icon{background:none;width:28px;height:28px;color:var(--inkSoft)}
+.menu-item-label{font-size:15px;font-weight:500}
+.section-label,.stats-title{letter-spacing:.04em}
+.toast{bottom:calc(var(--tabH) + 20px + env(safe-area-inset-bottom));border-radius:10px;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis}
+.segmented{display:flex;background:var(--surfaceAlt);border-radius:10px;padding:3px;margin:14px 0 18px}
+.segmented button{flex:1;background:none;color:var(--inkSoft);font-size:14px;font-weight:500;padding:8px 0;border-radius:8px}
+.segmented button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.totals>div{padding:12px 14px;min-width:0}
+.totals>div+div{border-left:1px solid var(--line)}
+.totals .l{font-size:12px;color:var(--inkSoft)}
+.totals .v{font-size:17px;font-weight:600;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stats-hl-card{background:var(--surface);border:1px solid var(--line)}
+.empty{background:none;border:0;padding:64px 16px}
+.empty h3{font-size:18px;font-weight:600}
+.all-done{background:none;border:0}
+.all-done h2{color:var(--ink);font-size:22px}
+.all-done-icon{color:var(--accent);animation:none}
+.drag-handle{display:none!important}
+.gate-card{border-radius:16px;padding:24px}
+.gate-hero h1{font-size:30px;letter-spacing:-.02em;margin-bottom:8px}
+.gate-hero p{margin-bottom:0}
+@media(max-width:679px){.gate-logo{justify-content:center}}
 </style>
 </head>
 <body>
@@ -452,14 +553,8 @@ mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1
   <div class="gate-wrap">
     <div class="gate-hero">
       <span class="gate-logo"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
-      <h1>Organize o que sua casa precisa</h1>
-      <p>Lista compartilhada com a família, comparação de preços em lojas e calculadora de mercado. Tudo em um só lugar.</p>
-      <div class="gate-features">
-        <div class="gate-feature"><div class="gate-feature-icon">👥</div><span>Compartilhe com toda a família em tempo real</span></div>
-        <div class="gate-feature"><div class="gate-feature-icon">🏷️</div><span>Compare preços no Mercado Livre</span></div>
-        <div class="gate-feature"><div class="gate-feature-icon">🛒</div><span>Calculadora de mercado com total na hora</span></div>
-        <div class="gate-feature"><div class="gate-feature-icon">📱</div><span>Instale no celular, funciona sem internet</span></div>
-      </div>
+      <h1>Casa Lista</h1>
+      <p>A lista de compras da casa, compartilhada em tempo real com quem mora com você.</p>
     </div>
     <div class="gate-card">
       <h2 id="gateTitle">Entrar</h2>
@@ -496,52 +591,78 @@ mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1
 </div>
 
 <!-- APP -->
-<div id="app" class="wrap hide">
+<div id="app" class="hide">
+  <div id="viewLista" class="wrap">
   <div id="offlineBanner" class="offline-banner hide">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
     Sem internet — você está offline
   </div>
-  <div style="display:flex;justify-content:space-between;align-items:flex-start">
-    <div>
-      <div class="eyebrow" id="houseEyebrow">INVENTÁRIO · casa nova</div>
-      <h1 class="title">O que falta comprar</h1>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-      <span id="userLabel" style="font-size:13px;color:var(--inkSoft)"></span>
-      <button class="ico" onclick="openSettings()" title="Menu" aria-label="menu">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <div class="progress-card">
-    <div class="progress-main">
+    <header class="topbar">
       <div>
-        <div class="progress-count" id="pBought">0 <span style="font-size:20px;color:var(--inkSoft);font-family:'Inter',sans-serif;font-weight:400">de <span id="pTotal">0</span></span></div>
-        <div class="progress-count-sub">itens comprados</div>
+        <h1 id="houseTitle">Casa</h1>
+        <div class="topbar-sub" id="houseSub"></div>
       </div>
-      <div class="progress-pct" id="pPct">0%</div>
-    </div>
+      <button class="icon-btn" onclick="openListMenu()" aria-label="mais opções"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></button>
+    </header>
     <div class="bar"><div id="pBar" style="width:0%"></div></div>
-    <div class="progress-stats">
-      <div class="pstat"><div class="pstat-label">FALTA</div><div class="pstat-value" id="pRemaining">—</div></div>
-      <div class="pstat"><div class="pstat-label">GASTO</div><div class="pstat-value" id="pSpent">—</div></div>
-      <div class="pstat"><div class="pstat-label">TOTAL</div><div class="pstat-value" id="pTotal2">—</div></div>
+  <div class="sticky-bar" id="stickyBar">
+    <div class="toolbar">
+      <div class="search">
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="search" enterkeyhint="search" placeholder="Buscar… ex: sofá, &lt;500" autocomplete="off" oninput="setSearch(this.value)" />
+        <button class="search-clear hide" id="searchClear" onclick="clearSearch()" aria-label="limpar busca">✕</button>
+      </div>
+      <select id="sortSelect" class="sort-select" onchange="setSort(this.value)" aria-label="Ordenar">
+        <option value="lista">Por cômodo</option>
+        <option value="menor">Menor preço</option>
+        <option value="maior">Maior preço</option>
+        <option value="recentes">Mais recentes</option>
+        <option value="az">A–Z</option>
+      </select>
     </div>
+    <div class="chips-scroll" id="chips"></div>
+  </div>
+    <div class="list-summary" id="listSummary"></div>
+    <div id="list"></div>
   </div>
 
+  <div id="viewResumo" class="wrap hide">
+    <header class="topbar"><h1>Resumo</h1></header>
+    <div class="totals" id="resumoTotals"></div>
+    <div class="segmented" id="resumoSeg">
+      <button data-s="gastos" onclick="setResumo('gastos')">Gastos</button>
+      <button data-s="historico" onclick="setResumo('historico')">Histórico</button>
+      <button data-s="atividade" onclick="setResumo('atividade')">Atividade</button>
+    </div>
+    <div id="statsContent"></div>
+    <div id="histContent" class="hide"></div>
+    <div id="activityContent" class="hide"></div>
+  </div>
 
-  <div class="add-card">
+  <button class="fab-plus" id="fabAdd" onclick="focusAddItem()" aria-label="Adicionar item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <nav class="tabbar" id="tabbar">
+    <button data-tab="lista" onclick="setTab('lista')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>Lista</button>
+    <button data-tab="mercado" onclick="setTab('mercado')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>Mercado</button>
+    <button data-tab="resumo" onclick="setTab('resumo')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="18" y1="20" x2="18" y2="10"/></svg>Resumo</button>
+    <button data-tab="ajustes" onclick="setTab('ajustes')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>Ajustes</button>
+  </nav>
+</div>
+
+<!-- ADICIONAR -->
+<div id="addSheet" class="overlay hide" onclick="if(event.target===this)closeAddSheet()">
+  <div class="modal">
+    <div class="sheet-head"><h3>Novo item</h3><button class="text-btn" onclick="closeAddSheet()">Fechar</button></div>
     <div class="row">
-      <input id="addName" list="nameSuggest" placeholder="Adicionar item (ex: 2x cadeira R$150)" onkeydown="if(event.key==='Enter')addItem()" oninput="onAddNameInput(this.value)" autocomplete="off" enterkeyhint="done" />
-      <button class="btn-primary" style="flex:none" onclick="addItem()">+ Add</button>
+      <input id="addName" list="nameSuggest" placeholder="Ex: 2x cadeira R$150" onkeydown="if(event.key==='Enter')addItem()" oninput="onAddNameInput(this.value)" autocomplete="off" enterkeyhint="done" />
+      <button class="btn-primary" style="flex:none" onclick="addItem()">Adicionar</button>
     </div>
     <datalist id="nameSuggest"></datalist>
-    <button class="link-toggle" onclick="toggleExtras()" id="extrasBtn">+ cômodo, preço, qtd, notas...</button>
-    <div class="quick-hint" id="quickHint">Dica: escreva <b>2x cadeira R$150</b> que a quantidade e o preço já são preenchidos.</div>
-    <div class="extras hide" id="extras">
+    <div class="add-fields">
       <select id="addRoom"></select>
-      <input id="addPrice" placeholder="Preço unitário (ex: 299,90)" />
+      <input id="addPrice" placeholder="Preço" inputmode="decimal" />
       <input id="addQty" type="number" min="1" value="1" placeholder="Qtd" style="width:100%" />
       <div style="display:flex;align-items:center;gap:8px" class="full">
         <label style="font-size:13px;color:var(--inkSoft);white-space:nowrap">Urgente</label>
@@ -549,6 +670,9 @@ mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </button>
       </div>
+    </div>
+    <button class="link-toggle" onclick="toggleExtras()" id="extrasBtn">Link, foto e notas</button>
+    <div class="extras hide" id="extras">
       <input id="addUrl" class="full" placeholder="Link da loja" />
       <div class="full" style="display:flex;align-items:center;gap:8px">
         <input id="addImage" style="flex:1" placeholder="URL da imagem" />
@@ -568,60 +692,13 @@ mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1
       <textarea id="addNotes" class="full" rows="2" placeholder="Notas (cor, tamanho, obs...)"></textarea>
     </div>
   </div>
-
-  <div class="sticky-bar" id="stickyBar">
-    <div class="toolbar">
-      <div class="search">
-        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="searchInput" type="search" enterkeyhint="search" placeholder="Buscar… ex: sofá, &lt;500" autocomplete="off" oninput="setSearch(this.value)" />
-        <button class="search-clear hide" id="searchClear" onclick="clearSearch()" aria-label="limpar busca">✕</button>
-      </div>
-      <select id="sortSelect" class="sort-select" onchange="setSort(this.value)" aria-label="Ordenar">
-        <option value="lista">Por cômodo</option>
-        <option value="menor">Menor preço</option>
-        <option value="maior">Maior preço</option>
-        <option value="recentes">Mais recentes</option>
-        <option value="az">A–Z</option>
-      </select>
-    </div>
-    <div class="chips-scroll" id="chips"></div>
-  </div>
-  <div class="list-summary">
-    <span id="listSummary" class="summary-text"></span>
-    <div class="tools">
-      <button id="clearBtn" class="chip-danger hide" onclick="clearBought()" title="Limpar comprados (vão para o histórico)">Limpar ✓</button>
-      <button class="ico" onclick="abrirHistorico()" title="Histórico de compras" aria-label="histórico">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      </button>
-      <button class="ico" onclick="compartilharWhatsApp()" title="Enviar por WhatsApp" aria-label="WhatsApp" style="color:#25D366">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l1.3-3.9C2.5 14.6 2 12.9 2 11.1 2 6.1 6.5 2 12 2s10 4.1 10 9.1-4.5 9.1-10 9.1c-1.7 0-3.4-.4-4.8-1.2L3 20z"/></svg>
-      </button>
-      <button class="ico" onclick="exportList()" title="Exportar lista (.txt)" aria-label="exportar">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <div id="list"></div>
-  <p class="foot" id="houseFoot">Lista compartilhada · salva no servidor</p>
-
-  <div class="fab-group">
-    <button class="fab fab-add" onclick="focusAddItem()" title="Adicionar item">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    </button>
-    <button class="fab fab-shop" onclick="entrarModoCompras()" title="Calculadora de compras">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      Mercado
-    </button>
-  </div>
 </div>
 
 <!-- MODO COMPRAS -->
 <div id="shopMode" class="shop-overlay hide">
   <div class="shop-top">
     <div class="shop-header">
-      <button class="shop-back" onclick="sairModoCompras()">← Sair</button>
-      <div class="shop-title">Calculadora</div>
+      <div class="shop-title">Mercado</div>
     </div>
     <div class="shop-total-bar">
       <span class="shop-total-label">Total</span>
@@ -689,19 +766,6 @@ mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1
   </div>
 </div>
 
-<!-- MODAL HISTÓRICO -->
-<div id="histModal" class="overlay hide" onclick="if(event.target===this)closeHistModal()">
-  <div class="modal" style="max-height:80vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <h3 style="margin:0">Histórico de compras</h3>
-      <button class="ico" onclick="closeHistModal()" style="width:28px;height:28px;flex:none">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div id="histContent"></div>
-  </div>
-</div>
-
 <!-- MODAL EDITAR -->
 <div id="itemSheet" class="overlay hide" onclick="if(event.target===this)closeItemMenu()">
   <div class="modal">
@@ -747,34 +811,7 @@ mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1
   </div>
 </div>
 
-<!-- MODAL ESTATÍSTICAS -->
-<div id="statsModal" class="overlay hide" onclick="if(event.target===this)closeStats()">
-  <div class="modal" style="max-height:85vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <h3 style="margin:0">Estatísticas</h3>
-      <button class="ico" onclick="closeStats()" style="width:28px;height:28px;flex:none">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div id="statsContent"><p style="color:var(--inkSoft);text-align:center;padding:24px 0">Carregando...</p></div>
-  </div>
-</div>
-
-<!-- MODAL ATIVIDADE -->
-<div id="activityModal" class="overlay hide" onclick="if(event.target===this)closeActivity()">
-  <div class="modal" style="max-height:80vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <h3 style="margin:0">Atividade da casa</h3>
-      <button class="ico" onclick="closeActivity()" style="width:28px;height:28px;flex:none">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div id="activityContent"><p style="color:var(--inkSoft);text-align:center;padding:24px 0">Carregando...</p></div>
-  </div>
-</div>
-
 <!-- SETTINGS DRAWER -->
-<div id="settingsOverlay" class="settings-overlay hide" onclick="closeSettings()"></div>
 <div id="settingsDrawer" class="settings-drawer">
   <div id="settingsContent"></div>
 </div>
@@ -794,7 +831,7 @@ const S = {
   filter: "todos", search: "", editId: null, confirmId: null,
   mode: "login", addPriority: false, editPriority: false,
   drag: { id: null, room: null }, shopMode: false, houses: [],
-  sort: lsGet("casaSort") || "lista", roomFilter: "", collapsed: new Set(JSON.parse(lsGet("casaCollapsed") || "[]")),
+  tab: "lista", resumo: "gastos", sort: lsGet("casaSort") || "lista", roomFilter: "", collapsed: new Set(JSON.parse(lsGet("casaCollapsed") || "[]")),
   historico: [], sheetId: null, sheetConfirm: false,
 };
 
@@ -805,7 +842,7 @@ const parseBRL = s => { if(s==null||s==="")return null; const n=parseFloat(Strin
 const fmtBRL = n => n==null?"":n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const fmtShort = n => n == null || n === 0 ? "—" : n >= 1000 ? "R$ " + Math.round(n).toLocaleString("pt-BR") : fmtBRL(n);
 const fmtTotal = (price, qty) => price == null ? null : price * (qty || 1);
-const STAR_ON  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+const STAR_ON  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--star)" stroke="var(--star)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
 const STAR_OFF = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
 const DRAG_ICON = `<svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="3" cy="2.5" r="1.3"/><circle cx="3" cy="7" r="1.3"/><circle cx="3" cy="11.5" r="1.3"/><circle cx="7" cy="2.5" r="1.3"/><circle cx="7" cy="7" r="1.3"/><circle cx="7" cy="11.5" r="1.3"/></svg>`;
 
@@ -935,7 +972,6 @@ async function submitForgot() {
     if (!res.ok) { err.textContent = data.erro || "Erro ao enviar."; return; }
     $("gateDesc").textContent = "";
     $("gateForgotForm").innerHTML = `<div style="text-align:center;padding:16px 0">
-      <div style="font-size:36px;margin-bottom:12px">📬</div>
       <p style="font-weight:600;margin:0 0 6px">Email enviado!</p>
       <p style="font-size:13px;color:var(--inkSoft);margin:0 0 20px">Verifique sua caixa de entrada e clique no link.</p>
       <button class="link-toggle" onclick="showLogin()">← Voltar para o login</button>
@@ -980,7 +1016,7 @@ function logout() {
 
 function showApp() {
   $("gate").classList.add("hide"); $("app").classList.remove("hide");
-  $("userLabel").textContent = S.username;
+  markTab("lista");
   initBetaBanner();
   loadAll();
   connectSSE();
@@ -1018,8 +1054,8 @@ async function loadAll() {
     api("GET", "/historico").then(h => { S.historico = h; fillSuggestions(); }).catch(() => {});
     fillSuggestions();
     render();
-    $("houseEyebrow").textContent = `INVENTÁRIO · ${house.name.toLowerCase()}`;
-    $("houseFoot").textContent = `${house.name} · ${house.members.length} membro(s)`;
+    $("houseTitle").textContent = house.name;
+    if (S.tab === "resumo") openResumo();
 
   } catch { toast("Erro ao carregar dados", "err"); }
 }
@@ -1291,7 +1327,7 @@ async function onDrop(e, id, room) {
 // ---- Settings ----
 async function openSettings(view) {
   S.settingsView = view || "menu";
-  $("settingsOverlay").classList.remove("hide");
+  if (S.tab !== "ajustes") { if (S.shopMode) sairModoCompras(); markTab("ajustes"); }
   $("settingsDrawer").classList.add("open");
   renderSettings();
   try {
@@ -1324,7 +1360,7 @@ function openAccountModal(type) {
       <button class="btn-primary" style="width:100%;margin-top:12px" onclick="saveAccountField('password')">Salvar</button>`;
   } else if (type === "email") {
     const cur = S.me?.email ? `<p style="font-size:13px;color:var(--inkSoft);margin:0 0 14px">Email atual: <strong>${esc(S.me.email)}</strong></p>` : "";
-    const pending = S.me?.email_pending ? `<p style="font-size:12px;color:var(--warn);margin:0 0 14px">⏳ Confirmação pendente para: <strong>${esc(S.me.email_pending)}</strong></p>` : "";
+    const pending = S.me?.email_pending ? `<p style="font-size:12px;color:var(--warn);margin:0 0 14px">Confirmação pendente para: <strong>${esc(S.me.email_pending)}</strong></p>` : "";
     $("accountModalBody").innerHTML = `
       ${cur}${pending}
       <input id="amEmail" type="email" placeholder="Novo email" autocomplete="email" onkeydown="if(event.key==='Enter')saveAccountField('email')" />
@@ -1385,9 +1421,44 @@ function clearFotoAdd() {
 
 // ---- FAB "+" ----
 function focusAddItem() {
-  const card = document.querySelector(".add-card");
-  card.scrollIntoView({ behavior: "smooth", block: "center" });
-  setTimeout(() => $("addName").focus(), 350);
+  $("addSheet").classList.remove("hide");
+  setTimeout(() => $("addName").focus(), 80);
+}
+function closeAddSheet() { $("addSheet").classList.add("hide"); }
+
+// ---- Abas ----
+function markTab(t) {
+  S.tab = t;
+  $("viewLista").classList.toggle("hide", t !== "lista");
+  $("viewResumo").classList.toggle("hide", t !== "resumo");
+  $("fabAdd").classList.toggle("hide", t !== "lista");
+  document.querySelectorAll("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.tab === t));
+}
+function setTab(t) {
+  if (t !== "mercado" && S.shopMode) sairModoCompras();
+  if (t !== "ajustes") { $("settingsDrawer").classList.remove("open"); S.settingsView = "menu"; }
+  markTab(t);
+  window.scrollTo(0, 0);
+  if (t === "mercado") entrarModoCompras();
+  if (t === "resumo") openResumo();
+  if (t === "ajustes") openSettings();
+}
+function openResumo() {
+  const spent = S.items.filter(i => i.bought).reduce((a, i) => a + (i.price || 0) * (i.qty || 1), 0);
+  const rem   = S.items.filter(i => !i.bought).reduce((a, i) => a + (i.price || 0) * (i.qty || 1), 0);
+  $("resumoTotals").innerHTML = [["Falta comprar", rem], ["Já comprado", spent], ["Total da lista", rem + spent]]
+    .map(([l, v]) => `<div><div class="l">${l}</div><div class="v">${fmtShort(v)}</div></div>`).join("");
+  setResumo(S.resumo);
+}
+function setResumo(k) {
+  S.resumo = k;
+  document.querySelectorAll("#resumoSeg button").forEach(b => b.classList.toggle("on", b.dataset.s === k));
+  $("statsContent").classList.toggle("hide", k !== "gastos");
+  $("histContent").classList.toggle("hide", k !== "historico");
+  $("activityContent").classList.toggle("hide", k !== "atividade");
+  if (k === "gastos") openStats();
+  if (k === "historico") abrirHistorico();
+  if (k === "atividade") openActivity();
 }
 
 function initBetaBanner() {}
@@ -1422,7 +1493,6 @@ async function saveAccountField(type) {
       await api("PUT", "/me/email", { email });
       S.me = await api("GET", "/me");
       $("accountModalBody").innerHTML = `<div style="text-align:center;padding:12px 0">
-        <div style="font-size:36px;margin-bottom:10px">📬</div>
         <p style="font-weight:600;margin:0 0 6px">Confirmação enviada!</p>
         <p style="font-size:13px;color:var(--inkSoft);margin:0">Verifique sua caixa de entrada e clique no link para confirmar o email.</p>
       </div>`;
@@ -1431,7 +1501,7 @@ async function saveAccountField(type) {
   } catch (e) { err.textContent = e.message; }
 }
 function closeSettings() {
-  $("settingsOverlay").classList.add("hide");
+  if (S.tab === "ajustes") return setTab("lista");
   $("settingsDrawer").classList.remove("open");
   S.settingsView = "menu";
 }
@@ -1441,8 +1511,7 @@ async function saveHouseName() {
   try {
     await api("PUT", "/house", { name });
     S.house.name = name;
-    $("houseEyebrow").textContent = `INVENTÁRIO · ${name.toLowerCase()}`;
-    $("houseFoot").textContent = `${name} · ${S.house.members.length} membro(s)`;
+    $("houseTitle").textContent = name;
     renderSettings(); toast("Nome atualizado");
   } catch (e) { toast(e.message, "err"); }
 }
@@ -1530,10 +1599,7 @@ function _menuHeader(title, backView) {
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
            Voltar
          </button>`
-      : `<span class="menu-header-title">Menu</span>`}
-    <button class="ico" onclick="closeSettings()" style="margin-left:auto">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
+      : `<span class="menu-header-title">Ajustes</span>`}
   </div>`;
 }
 
@@ -1581,25 +1647,11 @@ function renderSettings() {
           <span class="menu-item-desc ${emailWarn ? 'account-row-warn' : ''}">${emailWarn ? 'Sem email — sem recuperação de senha' : esc(S.me?.username || S.username)}</span>
         </div>${CHEVRON_R}
       </div>
-      <div class="menu-item" onclick="openStats()">
-        <div class="menu-item-icon">${ico(I.chart)}</div>
-        <div class="menu-item-text">
-          <span class="menu-item-label">Estatísticas</span>
-          <span class="menu-item-desc">Gastos e itens mais comprados</span>
-        </div>${CHEVRON_R}
-      </div>
       <div class="menu-item" onclick="openSettingsView('backup')">
         <div class="menu-item-icon">${ico('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>')}</div>
         <div class="menu-item-text">
           <span class="menu-item-label">Backup</span>
           <span class="menu-item-desc">Baixar ou restaurar uma cópia da lista</span>
-        </div>${CHEVRON_R}
-      </div>
-      <div class="menu-item" onclick="openActivity()">
-        <div class="menu-item-icon">${ico(I.activity)}</div>
-        <div class="menu-item-text">
-          <span class="menu-item-label">Atividade</span>
-          <span class="menu-item-desc">Histórico de ações da casa</span>
         </div>${CHEVRON_R}
       </div>
       <div style="margin-top:16px">
@@ -1738,14 +1790,13 @@ function renderSettings() {
     html = _menuHeader("Tema", "menu") + `
       <div class="settings-section">
         <div style="display:flex;flex-direction:column;gap:10px">
-          ${[['auto','🌗','Automático','Segue o sistema do dispositivo'],['light','☀️','Claro','Fundo branco'],['dark','🌙','Escuro','Fundo escuro']].map(([t, icon, label, desc]) => {
+          ${[['auto','','Automático','Segue o sistema do dispositivo'],['light','','Claro','Fundo claro'],['dark','','Escuro','Fundo escuro']].map(([t, icon, label, desc]) => {
             const active = currentTheme() === t;
             return `<button onclick="setTheme('${t}');openSettingsView('tema')"
               style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;text-align:left;width:100%;
               background:${active ? 'var(--ink)' : 'var(--surfaceAlt)'};
               color:${active ? 'var(--surface)' : 'var(--ink)'};
               border:1px solid ${active ? 'var(--ink)' : 'var(--line)'}">
-              <span style="font-size:20px">${icon}</span>
               <span style="flex:1"><span style="display:block;font-weight:600;font-size:14px">${label}</span><span style="display:block;font-size:12px;opacity:.7">${desc}</span></span>
               ${active ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
             </button>`;
@@ -1773,7 +1824,7 @@ function renderSettings() {
             <span class="account-row-label">Email</span>
             <span class="account-row-value ${!S.me?.email ? 'account-row-warn' : ''}">
               ${S.me?.email ? esc(S.me.email)
-                : S.me?.email_pending ? `⏳ ${esc(S.me.email_pending)} <span style="font-size:11px">(pendente)</span>`
+                : S.me?.email_pending ? `${esc(S.me.email_pending)} <span style="font-size:11px">(pendente)</span>`
                 : `<span style="display:inline-flex;align-items:center;gap:4px">${ico(I.warn,12)} Nenhum</span>`}
             </span>
           </div>${CHEVRON_R}
@@ -1817,13 +1868,11 @@ async function restoreBackup(input) {
 
 // ---- Estatísticas ----
 async function openStats() {
-  closeSettings();
-  $("statsModal").classList.remove("hide");
   $("statsContent").innerHTML = '<p style="text-align:center;color:var(--inkSoft);padding:24px 0">Carregando...</p>';
   try { renderStats(await api("GET", "/stats")); }
   catch (e) { $("statsContent").innerHTML = `<p style="color:var(--warn);text-align:center;padding:16px">Erro: ${esc(e.message)}</p>`; }
 }
-function closeStats() { $("statsModal").classList.add("hide"); }
+
 
 function renderStats(d) {
   const fmt = v => v > 0 ? fmtBRL(v) : "—";
@@ -1864,8 +1913,6 @@ function renderStats(d) {
 
 // ---- Atividade ----
 async function openActivity() {
-  closeSettings();
-  $("activityModal").classList.remove("hide");
   $("activityContent").innerHTML = '<p style="text-align:center;color:var(--inkSoft);padding:24px 0">Carregando...</p>';
   try {
     const rows = await api("GET", "/activity");
@@ -1886,7 +1933,7 @@ async function openActivity() {
     }).join("");
   } catch (e) { $("activityContent").innerHTML = `<p style="color:var(--warn);padding:16px">${esc(e.message)}</p>`; }
 }
-function closeActivity() { $("activityModal").classList.add("hide"); }
+
 
 function timeAgo(ts) {
   const s = (Date.now() - ts) / 1000;
@@ -1962,14 +2009,11 @@ function render() {
   const spent     = all.filter(i => i.bought).reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
   const remaining = all.filter(i => !i.bought).reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
 
-  // Progress card
-  $("pBought").innerHTML = `${boughtCount} <span style="font-size:20px;color:var(--inkSoft);font-family:'Inter',sans-serif;font-weight:400">de <span id="pTotal">${total}</span></span>`;
-  $("pPct").textContent = pct + "%";
   $("pBar").style.width = pct + "%";
-  $("pRemaining").textContent = fmtShort(remaining);
-  $("pSpent").textContent = fmtShort(spent);
-  $("pTotal2").textContent = fmtShort(remaining + spent);
-  $("clearBtn").classList.toggle("hide", boughtCount === 0);
+  const pend = total - boughtCount;
+  $("houseSub").textContent = total === 0 ? "Nenhum item ainda"
+    : pend === 0 ? "Tudo comprado"
+    : `${pend} a comprar${remaining ? " · falta " + fmtShort(remaining) : ""}`;
   atualizarBadge();
   renderChips();
 
@@ -1981,7 +2025,7 @@ function render() {
     list.innerHTML = `<div class="empty">
       <div class="empty-icon">${ico(I.home,40)}</div>
       <h3>Sua lista está vazia</h3>
-      <p>Adicione o primeiro item acima e comece a organizar sua casa.</p>
+      <p>Toque em + para adicionar o primeiro item.</p>
     </div>`;
     return;
   }
@@ -2010,7 +2054,8 @@ function render() {
     .filter(i => matchesQuery(i, pq));
 
   const aberto = items.filter(i => !i.bought).reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
-  $("listSummary").innerHTML = `${items.length} ${items.length === 1 ? "item" : "itens"}${aberto ? ` · <b style="color:var(--ink)">${fmtShort(aberto)}</b> a comprar` : ""}`;
+  const filtering = searching || S.roomFilter || S.filter !== "todos";
+  $("listSummary").innerHTML = !filtering ? "" : `${items.length} ${items.length === 1 ? "item" : "itens"}${aberto ? ` · <b style="color:var(--ink)">${fmtShort(aberto)}</b> a comprar` : ""}`;
 
   if (items.length === 0) {
     const what = S.search ? `para "<strong>${esc(S.search)}</strong>"` : "com esse filtro";
@@ -2030,7 +2075,7 @@ function render() {
       az:       (a, b) => a.name.localeCompare(b.name, "pt-BR"),
     }[S.sort] || byOrder;
     items.sort((a, b) => (a.bought - b.bought) || cmp(a, b));
-    list.innerHTML = items.map(it => cardHTML(it, it.room, _cardSeq++, true, pq)).join("");
+    list.innerHTML = `<div class="group-body">${items.map(it => cardHTML(it, it.room, _cardSeq++, true, pq)).join("")}</div>`;
     return;
   }
 
@@ -2044,14 +2089,13 @@ function render() {
     const collapsed = !searching && S.collapsed.has(room);
     return `
       <button class="group-head${collapsed ? " collapsed" : ""}" data-room="${esc(room)}" onclick="toggleRoom(this.dataset.room)" aria-expanded="${!collapsed}">
-        <span class="group-emoji">${roomEmoji(room)}</span>
         <h2>${esc(room)}</h2>
         <span class="group-count">${comprados}/${arr.length}</span>
         <div class="rule"></div>
         ${falta ? `<span class="group-sum">${fmtBRL(falta)}</span>` : ""}
         <span class="group-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg></span>
       </button>
-      ${collapsed ? "" : arr.map(it => cardHTML(it, room, _cardSeq++, false, pq)).join("")}
+      ${collapsed ? "" : `<div class="group-body">${arr.map(it => cardHTML(it, room, _cardSeq++, false, pq)).join("")}</div>`}
     `;
   }).join("");
 }
@@ -2101,7 +2145,7 @@ function renderChips() {
     ["todos", "Tudo", all.length],
     ["abertos", "A comprar", cnt(i => !i.bought)],
     ["comprados", "Comprados", cnt(i => i.bought)],
-    ["urgentes", "⭐ Urgentes", cnt(i => i.priority && !i.bought)],
+    ["urgentes", "Urgentes", cnt(i => i.priority && !i.bought)],
   ];
   const roomsWithItems = [...new Set(all.map(i => i.room))].sort((a, b) => roomOrder(a) - roomOrder(b));
   if (S.roomFilter && !roomsWithItems.includes(S.roomFilter)) S.roomFilter = "";
@@ -2215,9 +2259,7 @@ function cardHTML(it, room, idx = 0, showRoom = false, pq = null) {
       </div>
     </div>
     <div class="acts">
-      <button class="ico ${it.priority ? "star-on" : ""}" onclick="togglePriority('${erId}')" aria-label="urgente" title="urgente">
-        ${it.priority ? STAR_ON : STAR_OFF}
-      </button>
+      ${it.priority ? `<button class="ico star-on" onclick="togglePriority('${erId}')" aria-label="tirar urgência" title="urgente">${STAR_ON}</button>` : ""}
       <button class="ico" onclick="openItemMenu('${erId}')" aria-label="mais ações" title="mais ações">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
       </button>
@@ -2250,11 +2292,26 @@ function renderItemMenu() {
     btn(I.edit || '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>', "Editar", "closeItemMenu();openEdit(S._lastSheet)"),
     btn('<path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>', "Buscar preço no Mercado Livre", "sheetPreco()"),
     it.url ? btn('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>', "Abrir na loja", "window.open(S.items.find(i=>i.id===S._lastSheet).url,'_blank','noopener')") : "",
+    btn('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>', it.priority ? "Tirar urgência" : "Marcar como urgente", "sheetPriority()"),
     btn(I.grid, "Mover para outro cômodo", "S.sheetView='move';renderItemMenu()"),
     btn('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>', "Duplicar", "duplicateItem()"),
     btn('<path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>', S.sheetConfirm ? "Toque de novo para excluir" : "Excluir", "sheetDelete()", "danger"),
   ].join("");
   S._lastSheet = it.id;
+}
+function sheetPriority() { const id = S.sheetId; closeItemMenu(); togglePriority(id); }
+function openListMenu() {
+  S.sheetId = null;
+  const n = S.items.filter(i => i.bought).length;
+  const m = S.house?.members.length || 1;
+  $("sheetTitle").textContent = S.house?.name || "Lista";
+  $("sheetSub").textContent = m === 1 ? "Só você nesta casa" : `${m} pessoas nesta casa`;
+  const b = (icon, label, fn, cls = "") => `<button class="${cls}" onclick="closeItemMenu();${fn}">${ico(icon, 17)}${label}</button>`;
+  $("sheetActions").innerHTML =
+    b('<path d="M3 20l1.3-3.9C2.5 14.6 2 12.9 2 11.1 2 6.1 6.5 2 12 2s10 4.1 10 9.1-4.5 9.1-10 9.1c-1.7 0-3.4-.4-4.8-1.2L3 20z"/>', "Enviar lista pelo WhatsApp", "compartilharWhatsApp()") +
+    b('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>', "Baixar lista em texto", "exportList()") +
+    (n ? b('<path d="M20 6 9 17l-5-5"/>', `Limpar ${n} comprado${n > 1 ? "s" : ""} (vão pro histórico)`, "clearBought()") : "");
+  $("itemSheet").classList.remove("hide");
 }
 function sheetPreco() {
   const it = S.items.find(i => i.id === S.sheetId);
@@ -2522,7 +2579,7 @@ function renderModoCompras() {
     : "";
 
   if (shopItems.length === 0) {
-    $("shopList").innerHTML = `<div class="shop-empty"><div class="shop-empty-icon">🛒</div><p>Adicione itens acima<br><span style="font-size:12px">O total aparece na hora</span></p></div>`;
+    $("shopList").innerHTML = `<div class="shop-empty"><p>Adicione itens acima<br><span style="font-size:12px">O total aparece na hora</span></p></div>`;
     return;
   }
 
@@ -2548,13 +2605,12 @@ function renderModoCompras() {
 
 // ---- Histórico ----
 async function abrirHistorico() {
-  $("histModal").classList.remove("hide");
   $("histContent").innerHTML = `<p style="color:var(--inkSoft);text-align:center;padding:16px">Carregando...</p>`;
   try {
     renderHistorico(await api("GET", "/historico"));
   } catch { $("histContent").innerHTML = `<p style="color:var(--warn)">Erro ao carregar</p>`; }
 }
-function closeHistModal() { $("histModal").classList.add("hide"); }
+
 function renderHistorico(data) {
   if (data.length === 0) {
     $("histContent").innerHTML = `<p style="color:var(--inkSoft);text-align:center;padding:24px 0">Nenhum item ainda.<br><span style="font-size:12px">Itens são salvos aqui quando você clica "Limpar comprados".</span></p>`;
