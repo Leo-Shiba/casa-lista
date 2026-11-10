@@ -397,6 +397,52 @@ button{font-family:inherit;cursor:pointer;border:none}
 /* Troca de view no settings */
 @keyframes _viewEnter{from{transform:translateX(14px);opacity:0}to{transform:translateX(0);opacity:1}}
 .settings-view-enter{animation:_viewEnter .22s cubic-bezier(.32,.72,0,1) both}
+
+/* ===== v3: layout mais compacto, busca e filtros ===== */
+.progress-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pstat{padding:9px 10px;min-width:0}
+.pstat-value{font-size:clamp(13px,3.9vw,17px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:480px){h1.title{font-size:34px}.wrap{padding-top:20px}.progress-count{font-size:34px}.progress-pct{font-size:26px}}
+.wrap{padding-bottom:150px}
+.sticky-bar{position:sticky;top:0;z-index:30;background:var(--bg);margin:0 -18px;padding:10px 18px 4px}
+.toolbar{display:flex;gap:8px;align-items:center}
+.toolbar .search{flex:1;margin:0;min-width:0}
+.sort-select{flex:none;width:auto;max-width:40%;font-size:13px;padding-left:10px;padding-right:8px}
+.chips-scroll{display:flex;gap:8px;overflow-x:auto;padding:10px 0 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips-scroll::-webkit-scrollbar{display:none}
+.chips-scroll .chip{flex:none;white-space:nowrap;padding:6px 12px;font-size:13px}
+.chip .n{opacity:.65;margin-left:5px;font-size:12px}
+.chip-sep{flex:none;width:1px;background:var(--line);margin:4px 2px}
+.list-summary{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 2px;font-size:13px;color:var(--inkSoft);min-height:34px}
+.summary-text{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-summary .tools{display:flex;gap:6px;align-items:center;flex:none}
+.list-summary .ico{width:32px;height:32px}
+.list-summary .chip-danger{padding:5px 10px;font-size:12px}
+button.group-head{width:100%;background:none;border:0;padding:0;color:inherit;text-align:left;cursor:pointer;font:inherit}
+.group-count,.group-sum{font-size:12px;color:var(--inkSoft);white-space:nowrap}
+.group-chev{color:var(--inkSoft);display:flex;transition:transform .2s}
+.group-head.collapsed .group-chev{transform:rotate(-90deg)}
+.card{padding:10px 8px 10px 12px;gap:10px;align-items:center;border-radius:16px;margin-bottom:8px}
+.card .thumb{width:48px;height:48px;border-radius:10px}
+.card .body{cursor:pointer;padding:2px 0}
+.card .name{font-size:15px}
+.card .meta{margin-top:3px;font-size:12.5px}
+.card .acts{flex-direction:row;gap:2px;align-items:center}
+.card .acts .ico{width:36px;height:36px;border:0;background:none}
+.card .acts .ico.star-on{background:var(--accentSoft)}
+.room-tag{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:0 7px;line-height:18px}
+mark.hl{background:var(--accentSoft);color:inherit;border-radius:3px;padding:0 1px}
+@media(pointer:coarse){.drag-handle{display:none}}
+.sheet-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin:0 0 6px;word-break:break-word}
+.sheet-sub{font-size:12px;color:var(--inkSoft);margin:0 0 8px}
+.sheet-list{margin-top:4px}
+.sheet-list button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 4px;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);font-size:15px;text-align:left;border-radius:0}
+.sheet-list button:last-child{border-bottom:0}
+.sheet-list button.danger{color:var(--warn)}
+.sheet-list button.on{color:var(--accent);font-weight:600}
+.quick-hint{font-size:11px;color:var(--inkSoft);margin-top:6px;line-height:1.4}
+.empty-search{text-align:center;padding:28px 12px;font-size:14px;color:var(--inkSoft)}
+.empty-search button{margin-top:12px}
 </style>
 </head>
 <body>
@@ -455,10 +501,6 @@ button{font-family:inherit;cursor:pointer;border:none}
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
     Sem internet — você está offline
   </div>
-  <div id="betaBanner" class="beta-banner">
-    <span style="display:flex;align-items:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Versão beta — recursos em desenvolvimento, pode haver instabilidades.</span>
-    <button class="beta-close" onclick="dismissBeta()" aria-label="Fechar">✕</button>
-  </div>
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <div class="eyebrow" id="houseEyebrow">INVENTÁRIO · casa nova</div>
@@ -491,10 +533,12 @@ button{font-family:inherit;cursor:pointer;border:none}
 
   <div class="add-card">
     <div class="row">
-      <input id="addName" placeholder="Adicionar item (ex: mesa de jantar)" onkeydown="if(event.key==='Enter')addItem()" autocomplete="off" />
+      <input id="addName" list="nameSuggest" placeholder="Adicionar item (ex: 2x cadeira R$150)" onkeydown="if(event.key==='Enter')addItem()" oninput="onAddNameInput(this.value)" autocomplete="off" enterkeyhint="done" />
       <button class="btn-primary" style="flex:none" onclick="addItem()">+ Add</button>
     </div>
+    <datalist id="nameSuggest"></datalist>
     <button class="link-toggle" onclick="toggleExtras()" id="extrasBtn">+ cômodo, preço, qtd, notas...</button>
+    <div class="quick-hint" id="quickHint">Dica: escreva <b>2x cadeira R$150</b> que a quantidade e o preço já são preenchidos.</div>
     <div class="extras hide" id="extras">
       <select id="addRoom"></select>
       <input id="addPrice" placeholder="Preço unitário (ex: 299,90)" />
@@ -525,28 +569,34 @@ button{font-family:inherit;cursor:pointer;border:none}
     </div>
   </div>
 
-  <div class="search">
-    <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input id="searchInput" placeholder="Buscar na lista…" autocomplete="off" oninput="setSearch(this.value)" />
-    <button class="search-clear hide" id="searchClear" onclick="clearSearch()">✕</button>
+  <div class="sticky-bar" id="stickyBar">
+    <div class="toolbar">
+      <div class="search">
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="search" enterkeyhint="search" placeholder="Buscar… ex: sofá, &lt;500" autocomplete="off" oninput="setSearch(this.value)" />
+        <button class="search-clear hide" id="searchClear" onclick="clearSearch()" aria-label="limpar busca">✕</button>
+      </div>
+      <select id="sortSelect" class="sort-select" onchange="setSort(this.value)" aria-label="Ordenar">
+        <option value="lista">Por cômodo</option>
+        <option value="menor">Menor preço</option>
+        <option value="maior">Maior preço</option>
+        <option value="recentes">Mais recentes</option>
+        <option value="az">A–Z</option>
+      </select>
+    </div>
+    <div class="chips-scroll" id="chips"></div>
   </div>
-  <div class="filters">
-    <button class="chip on" data-f="todos" onclick="setFilter('todos')">Tudo</button>
-    <button class="chip" data-f="abertos" onclick="setFilter('abertos')">A comprar</button>
-    <button class="chip" data-f="comprados" onclick="setFilter('comprados')">Comprados</button>
-    <button class="chip" data-f="urgentes" onclick="setFilter('urgentes')">⭐ Urgentes</button>
-    <div style="display:flex;gap:8px;margin-left:auto;align-items:center">
-      <button id="clearBtn" class="chip-danger hide" onclick="clearBought()">Limpar comprados</button>
-      <button class="ico" onclick="abrirHistorico()" title="Histórico de compras" style="width:32px;height:32px">
+  <div class="list-summary">
+    <span id="listSummary" class="summary-text"></span>
+    <div class="tools">
+      <button id="clearBtn" class="chip-danger hide" onclick="clearBought()" title="Limpar comprados (vão para o histórico)">Limpar ✓</button>
+      <button class="ico" onclick="abrirHistorico()" title="Histórico de compras" aria-label="histórico">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       </button>
-      <button class="ico" onclick="compartilharWhatsApp()" title="Enviar por WhatsApp" style="width:32px;height:32px;color:#25D366">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 20l1.3-3.9C2.5 14.6 2 12.9 2 11.1 2 6.1 6.5 2 12 2s10 4.1 10 9.1-4.5 9.1-10 9.1c-1.7 0-3.4-.4-4.8-1.2L3 20z"/>
-          <path d="M9 11c0 .6.2 1.1.5 1.5l1.5 1.5c.8.8 2 .8 2.8 0l.7-.7c.2-.2.2-.5 0-.7l-1.5-1.5c-.2-.2-.5-.2-.7 0l-.3.3c-.6-.4-1.2-1-1.6-1.6l.3-.3c.2-.2.2-.5 0-.7L9 7.5c-.2-.2-.5-.2-.7 0l-.7.7C7.2 8.8 7 9.4 7 10"/>
-        </svg>
+      <button class="ico" onclick="compartilharWhatsApp()" title="Enviar por WhatsApp" aria-label="WhatsApp" style="color:#25D366">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l1.3-3.9C2.5 14.6 2 12.9 2 11.1 2 6.1 6.5 2 12 2s10 4.1 10 9.1-4.5 9.1-10 9.1c-1.7 0-3.4-.4-4.8-1.2L3 20z"/></svg>
       </button>
-      <button class="ico" onclick="exportList()" title="Exportar lista" style="width:32px;height:32px">
+      <button class="ico" onclick="exportList()" title="Exportar lista (.txt)" aria-label="exportar">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       </button>
     </div>
@@ -653,6 +703,14 @@ button{font-family:inherit;cursor:pointer;border:none}
 </div>
 
 <!-- MODAL EDITAR -->
+<div id="itemSheet" class="overlay hide" onclick="if(event.target===this)closeItemMenu()">
+  <div class="modal">
+    <div class="sheet-title" id="sheetTitle"></div>
+    <div class="sheet-sub" id="sheetSub"></div>
+    <div class="sheet-list" id="sheetActions"></div>
+  </div>
+</div>
+
 <div id="modal" class="overlay hide" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h3>Editar item</h3>
@@ -725,6 +783,8 @@ button{font-family:inherit;cursor:pointer;border:none}
 
 <script>
 // ---- State ----
+function lsGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function lsSet(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} }
 const S = {
   items: [], rooms: [], house: null,
   token: localStorage.getItem("casaToken") || "",
@@ -734,6 +794,8 @@ const S = {
   filter: "todos", search: "", editId: null, confirmId: null,
   mode: "login", addPriority: false, editPriority: false,
   drag: { id: null, room: null }, shopMode: false, houses: [],
+  sort: lsGet("casaSort") || "lista", roomFilter: "", collapsed: new Set(JSON.parse(lsGet("casaCollapsed") || "[]")),
+  historico: [], sheetId: null, sheetConfirm: false,
 };
 
 // ---- Utils ----
@@ -741,6 +803,7 @@ const $= id => document.getElementById(id);
 const esc = s => (s||"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const parseBRL = s => { if(s==null||s==="")return null; const n=parseFloat(String(s).replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".")); return isNaN(n)?null:n; };
 const fmtBRL = n => n==null?"":n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const fmtShort = n => n == null || n === 0 ? "—" : n >= 1000 ? "R$ " + Math.round(n).toLocaleString("pt-BR") : fmtBRL(n);
 const fmtTotal = (price, qty) => price == null ? null : price * (qty || 1);
 const STAR_ON  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
 const STAR_OFF = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
@@ -951,6 +1014,9 @@ async function loadAll() {
     ]);
     S.items = items; S.rooms = rooms; S.house = house;
     populateRoomSelects();
+    if (S.roomFilter) $("addRoom").value = S.roomFilter;
+    api("GET", "/historico").then(h => { S.historico = h; fillSuggestions(); }).catch(() => {});
+    fillSuggestions();
     render();
     $("houseEyebrow").textContent = `INVENTÁRIO · ${house.name.toLowerCase()}`;
     $("houseFoot").textContent = `${house.name} · ${house.members.length} membro(s)`;
@@ -965,12 +1031,17 @@ function populateRoomSelects() {
 
 // ---- Item actions ----
 async function addItem() {
-  const name = $("addName").value.trim();
-  if (!name) return;
+  const raw = $("addName").value.trim();
+  if (!raw) return;
+  const pq = parseQuick(raw);
+  let name = pq.name || raw;
+  name = name.charAt(0).toLocaleUpperCase("pt-BR") + name.slice(1);
+  const qtyField = parseInt($("addQty").value) || 1;
+  const priceField = parseBRL($("addPrice").value);
   const body = {
-    name, room: $("addRoom").value,
-    qty: parseInt($("addQty").value) || 1,
-    price: parseBRL($("addPrice").value),
+    name, room: $("addRoom").value || S.roomFilter || (S.rooms[0] && S.rooms[0].name) || "Geral",
+    qty: pq.qty && qtyField === 1 ? pq.qty : qtyField,
+    price: priceField != null ? priceField : pq.price,
     url: $("addUrl").value.trim(),
     image: $("addImage").value.trim(),
     notes: $("addNotes").value.trim(),
@@ -979,6 +1050,9 @@ async function addItem() {
   try {
     const item = await api("POST", "/items", body);
     S.items.unshift(item);
+    if (S.roomFilter && item.room !== S.roomFilter) S.roomFilter = "";
+    toast(`"${item.name}" adicionado${item.qty > 1 ? ` (${item.qty}×)` : ""}${item.price != null ? " · " + fmtBRL(item.price) : ""}`);
+    $("addName").focus();
     ["addName","addPrice","addQty","addUrl","addImage","addNotes"].forEach(id => $(id).value = id==="addQty"?"1":"");
     clearFotoAdd();
     $("extras").classList.add("hide");
@@ -1117,7 +1191,6 @@ async function clearBought() {
 
 function setFilter(f) {
   S.filter = f;
-  document.querySelectorAll(".chip[data-f]").forEach(c => c.classList.toggle("on", c.dataset.f === f));
   render();
 }
 
@@ -1317,13 +1390,7 @@ function focusAddItem() {
   setTimeout(() => $("addName").focus(), 350);
 }
 
-function dismissBeta() {
-  $("betaBanner").classList.add("hide");
-  sessionStorage.setItem("betaDismissed", "1");
-}
-function initBetaBanner() {
-  if (sessionStorage.getItem("betaDismissed")) $("betaBanner").classList.add("hide");
-}
+function initBetaBanner() {}
 
 async function saveAccountField(type) {
   const err = $("accountModalErr");
@@ -1521,6 +1588,13 @@ function renderSettings() {
           <span class="menu-item-desc">Gastos e itens mais comprados</span>
         </div>${CHEVRON_R}
       </div>
+      <div class="menu-item" onclick="openSettingsView('backup')">
+        <div class="menu-item-icon">${ico('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>')}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Backup</span>
+          <span class="menu-item-desc">Baixar ou restaurar uma cópia da lista</span>
+        </div>${CHEVRON_R}
+      </div>
       <div class="menu-item" onclick="openActivity()">
         <div class="menu-item-icon">${ico(I.activity)}</div>
         <div class="menu-item-text">
@@ -1644,6 +1718,22 @@ function renderSettings() {
         </div>
       </div>`;
 
+  } else if (v === "backup") {
+    html = _menuHeader("Backup", "menu") + `
+      <div class="settings-section">
+        <p style="font-size:13px;color:var(--inkSoft);margin:0 0 12px;line-height:1.5">
+          O servidor guarda <b>uma cópia automática por dia</b> (últimos 14 dias).
+          Para ter uma cópia sua, fora do servidor, baixe o arquivo abaixo de vez em quando.</p>
+        <button class="btn-primary" style="width:100%" onclick="downloadBackup()">Baixar backup de "${esc(h.name)}" (.json)</button>
+        <p class="section-label" style="margin-top:20px">RESTAURAR</p>
+        <p style="font-size:13px;color:var(--inkSoft);margin:0 0 10px;line-height:1.5">
+          Escolha um arquivo de backup. Os itens são <b>somados</b> à casa atual; nada é apagado e itens repetidos são ignorados.</p>
+        <label class="btn-secondary" style="display:block;text-align:center;cursor:pointer;padding:11px;border:1px solid var(--line);border-radius:12px">
+          Escolher arquivo…
+          <input type="file" accept="application/json,.json" style="display:none" onchange="restoreBackup(this)" />
+        </label>
+      </div>`;
+
   } else if (v === "tema") {
     html = _menuHeader("Tema", "menu") + `
       <div class="settings-section">
@@ -1698,6 +1788,32 @@ function renderSettings() {
   sc.classList.add("settings-view-enter");
 }
 
+
+// ---- Backup ----
+async function downloadBackup() {
+  try {
+    const res = await fetch("/api/backup/export", { headers: { Authorization: "Bearer " + S.token } });
+    if (!res.ok) throw new Error("Erro ao gerar backup");
+    const blob = await res.blob();
+    const name = (res.headers.get("Content-Disposition") || "").match(/filename="([^"]+)"/)?.[1] || "backup-casa-lista.json";
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    toast("Backup baixado ✓");
+  } catch (e) { toast(e.message, "err"); }
+}
+async function restoreBackup(input) {
+  const f = input.files[0]; input.value = "";
+  if (!f) return;
+  let data;
+  try { data = JSON.parse(await f.text()); } catch { toast("Arquivo inválido", "err"); return; }
+  if (!confirm(`Somar ${data.items?.length || 0} item(ns) do backup à casa "${S.house?.name}"?`)) return;
+  try {
+    const r = await api("POST", "/backup/import", data);
+    toast(`Restaurado: ${r.items} item(ns), ${r.rooms} cômodo(s)`);
+    closeSettings(); await loadAll();
+  } catch (e) { toast(e.message, "err"); }
+}
 
 // ---- Estatísticas ----
 async function openStats() {
@@ -1850,15 +1966,17 @@ function render() {
   $("pBought").innerHTML = `${boughtCount} <span style="font-size:20px;color:var(--inkSoft);font-family:'Inter',sans-serif;font-weight:400">de <span id="pTotal">${total}</span></span>`;
   $("pPct").textContent = pct + "%";
   $("pBar").style.width = pct + "%";
-  $("pRemaining").textContent = fmtBRL(remaining) || "—";
-  $("pSpent").textContent = fmtBRL(spent) || "—";
-  $("pTotal2").textContent = fmtBRL(remaining + spent) || "—";
+  $("pRemaining").textContent = fmtShort(remaining);
+  $("pSpent").textContent = fmtShort(spent);
+  $("pTotal2").textContent = fmtShort(remaining + spent);
   $("clearBtn").classList.toggle("hide", boughtCount === 0);
   atualizarBadge();
+  renderChips();
 
   const list = $("list");
 
   // Empty state (novo usuário)
+  if (all.length === 0 || (S.filter === "todos" && !S.search && !S.roomFilter && boughtCount === total)) $("listSummary").textContent = "";
   if (all.length === 0) {
     list.innerHTML = `<div class="empty">
       <div class="empty-icon">${ico(I.home,40)}</div>
@@ -1869,7 +1987,7 @@ function render() {
   }
 
   // All done celebration
-  if (S.filter === "todos" && !q && boughtCount === total && total > 0) {
+  if (S.filter === "todos" && !S.search && !S.roomFilter && boughtCount === total && total > 0) {
     list.innerHTML = `<div class="all-done">
       <span class="all-done-icon">${ico(I.sparkle,52)}</span>
       <h2>Tudo comprado!</h2>
@@ -1879,6 +1997,8 @@ function render() {
     return;
   }
 
+  const pq = parseQuery(S.search);
+  const searching = pq.terms.length > 0 || pq.min != null || pq.max != null;
   let items = all
     .filter(i => {
       if (S.filter === "comprados") return i.bought;
@@ -1886,32 +2006,123 @@ function render() {
       if (S.filter === "urgentes")  return i.priority && !i.bought;
       return true;
     })
-    .filter(i => !q || (i.name + " " + (i.notes || "")).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().includes(q));
+    .filter(i => !S.roomFilter || i.room === S.roomFilter)
+    .filter(i => matchesQuery(i, pq));
+
+  const aberto = items.filter(i => !i.bought).reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+  $("listSummary").innerHTML = `${items.length} ${items.length === 1 ? "item" : "itens"}${aberto ? ` · <b style="color:var(--ink)">${fmtShort(aberto)}</b> a comprar` : ""}`;
 
   if (items.length === 0) {
-    list.innerHTML = q
-      ? `<p style="text-align:center;padding:32px;font-size:14px;color:var(--inkSoft)">Nenhum item encontrado para "<strong>${esc(S.search)}</strong>"</p>`
-      : `<p style="text-align:center;padding:32px;font-size:14px;color:var(--inkSoft)">Nada por aqui com esse filtro.</p>`;
+    const what = S.search ? `para "<strong>${esc(S.search)}</strong>"` : "com esse filtro";
+    list.innerHTML = `<div class="empty-search">Nenhum item encontrado ${what}.<br>
+      <button class="chip" onclick="resetFilters()">Limpar busca e filtros</button></div>`;
+    return;
+  }
+
+  _cardSeq = 0;
+  const byOrder = (a, b) => (a.bought - b.bought) || ((b.priority ? 1 : 0) - (a.priority ? 1 : 0)) || (a.sort_order - b.sort_order);
+
+  if (S.sort !== "lista") {
+    const cmp = {
+      menor:    (a, b) => (a.price == null) - (b.price == null) || (a.price || 0) * (a.qty || 1) - (b.price || 0) * (b.qty || 1),
+      maior:    (a, b) => (a.price == null) - (b.price == null) || (b.price || 0) * (b.qty || 1) - (a.price || 0) * (a.qty || 1),
+      recentes: (a, b) => (b.created_at || 0) - (a.created_at || 0),
+      az:       (a, b) => a.name.localeCompare(b.name, "pt-BR"),
+    }[S.sort] || byOrder;
+    items.sort((a, b) => (a.bought - b.bought) || cmp(a, b));
+    list.innerHTML = items.map(it => cardHTML(it, it.room, _cardSeq++, true, pq)).join("");
     return;
   }
 
   const groups = {};
   items.forEach(i => (groups[i.room] = groups[i.room] || []).push(i));
   const ordered = Object.entries(groups).sort((a, b) => roomOrder(a[0]) - roomOrder(b[0]));
-
-  _cardSeq = 0;
   list.innerHTML = ordered.map(([room, arr]) => {
-    arr.sort((a, b) => (b.priority ? 1 : 0) - (a.priority ? 1 : 0) || a.sort_order - b.sort_order);
+    arr.sort(byOrder);
+    const comprados = arr.filter(i => i.bought).length;
+    const falta = arr.filter(i => !i.bought).reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+    const collapsed = !searching && S.collapsed.has(room);
     return `
-      <div class="group-head">
+      <button class="group-head${collapsed ? " collapsed" : ""}" data-room="${esc(room)}" onclick="toggleRoom(this.dataset.room)" aria-expanded="${!collapsed}">
         <span class="group-emoji">${roomEmoji(room)}</span>
         <h2>${esc(room)}</h2>
-        <span class="muted" style="font-size:12px">${arr.length}</span>
+        <span class="group-count">${comprados}/${arr.length}</span>
         <div class="rule"></div>
-      </div>
-      ${arr.map(it => cardHTML(it, room, _cardSeq++)).join("")}
+        ${falta ? `<span class="group-sum">${fmtBRL(falta)}</span>` : ""}
+        <span class="group-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg></span>
+      </button>
+      ${collapsed ? "" : arr.map(it => cardHTML(it, room, _cardSeq++, false, pq)).join("")}
     `;
   }).join("");
+}
+
+// ---- Busca ----
+const norm = s => (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+function parseQuery(q) {
+  const out = { terms: [], min: null, max: null };
+  norm(q).split(/\s+/).filter(Boolean).forEach(t => {
+    const m = t.match(/^([<>])=?(\d+(?:[.,]\d+)?)$/);
+    if (m) { const v = parseFloat(m[2].replace(",", ".")); if (m[1] === "<") out.max = v; else out.min = v; }
+    else out.terms.push(t);
+  });
+  return out;
+}
+function hostOf(url) { try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return ""; } }
+function matchesQuery(it, pq) {
+  const tot = it.price != null ? it.price * (it.qty || 1) : null;
+  if (pq.min != null && !(tot != null && tot >= pq.min)) return false;
+  if (pq.max != null && !(tot != null && tot <= pq.max)) return false;
+  if (!pq.terms.length) return true;
+  const hay = norm([it.name, it.notes, it.room, hostOf(it.url)].join(" "));
+  return pq.terms.every(t => hay.includes(t));
+}
+// destaca os termos buscados (ignora acentos)
+function hl(text, pq) {
+  const safe = esc(text);
+  if (!pq || !pq.terms.length) return safe;
+  const n = norm(text);
+  if (n.length !== text.length) return safe;
+  const marks = new Array(text.length).fill(false);
+  pq.terms.forEach(t => { let i = n.indexOf(t); while (i !== -1) { for (let k = i; k < i + t.length; k++) marks[k] = true; i = n.indexOf(t, i + 1); } });
+  let out = "", open = false;
+  for (let i = 0; i < text.length; i++) {
+    if (marks[i] && !open) { out += '<mark class="hl">'; open = true; }
+    if (!marks[i] && open) { out += "</mark>"; open = false; }
+    out += esc(text[i]);
+  }
+  return out + (open ? "</mark>" : "");
+}
+
+// ---- Filtros, ordem e cômodos ----
+function renderChips() {
+  const all = S.items;
+  const cnt = f => all.filter(f).length;
+  const st = [
+    ["todos", "Tudo", all.length],
+    ["abertos", "A comprar", cnt(i => !i.bought)],
+    ["comprados", "Comprados", cnt(i => i.bought)],
+    ["urgentes", "⭐ Urgentes", cnt(i => i.priority && !i.bought)],
+  ];
+  const roomsWithItems = [...new Set(all.map(i => i.room))].sort((a, b) => roomOrder(a) - roomOrder(b));
+  if (S.roomFilter && !roomsWithItems.includes(S.roomFilter)) S.roomFilter = "";
+  $("chips").innerHTML =
+    st.map(([f, label, n]) => `<button class="chip${S.filter === f ? " on" : ""}" data-f="${f}" onclick="setFilter('${f}')">${label}<span class="n">${n}</span></button>`).join("") +
+    (roomsWithItems.length > 1 ? `<span class="chip-sep"></span>` + roomsWithItems.map(r =>
+      `<button class="chip${S.roomFilter === r ? " on" : ""}" data-room="${esc(r)}" onclick="setRoomFilter(this.dataset.room)">${esc(r)}<span class="n">${cnt(i => i.room === r && !i.bought)}</span></button>`).join("") : "");
+}
+function setRoomFilter(room) {
+  S.roomFilter = S.roomFilter === room ? "" : room;
+  if (S.roomFilter && $("addRoom")) $("addRoom").value = S.roomFilter; // novo item já cai nesse cômodo
+  render();
+}
+function setSort(v) { S.sort = v; lsSet("casaSort", v); render(); }
+function toggleRoom(room) {
+  S.collapsed.has(room) ? S.collapsed.delete(room) : S.collapsed.add(room);
+  lsSet("casaCollapsed", JSON.stringify([...S.collapsed]));
+  render();
+}
+function resetFilters() {
+  S.filter = "todos"; S.roomFilter = ""; clearSearch();
 }
 
 function mlResultHTML(id) {
@@ -1968,56 +2179,136 @@ function mlResultHTML(id) {
   const hora = new Date().toLocaleString("pt-BR", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" });
   return `<div class="preco-lista">${linhas}
     <div class="preco-data">atualizado ${hora}</div>
-    <div class="preco-aviso" style="display:flex;align-items:center;gap:6px">${ico(I.warn,12)} Preços do Google Shopping podem estar desatualizados. Confirme no site antes de comprar.</div>
+    <div class="preco-aviso" style="display:flex;align-items:center;gap:6px">${ico(I.warn,12)} Preços do Mercado Livre podem mudar. Confirme no site antes de comprar.</div>
   </div>`;
 }
 
-function cardHTML(it, room, idx = 0) {
+function cardHTML(it, room, idx = 0, showRoom = false, pq = null) {
   const thumb = it.image
-    ? `<img class="thumb" src="${esc(it.image)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=&quot;thumb ph&quot;>📦</div>'">`
-    : `<div class="thumb ph">📦</div>`;
+    ? `<img class="thumb" src="${esc(it.image)}" alt="" loading="lazy" onerror="this.remove()">`
+    : "";
   const total = fmtTotal(it.price, it.qty);
-  const isConfirm = S.confirmId === it.id;
   const erId = esc(it.id), erRoom = esc(room);
-  const mlSt = mlPrecos.get(it.id);
-  const mlLoading = mlSt?.status === "loading";
+  const canDrag = S.sort === "lista";
   return `
-  <div class="card ${it.bought ? "done" : ""} ${it.priority ? "priority" : ""}"
-    style="animation-delay:${Math.min(idx,8)*28}ms"
-    draggable="true"
+  <div class="card ${it.bought ? "done" : ""} ${it.priority && !it.bought ? "priority" : ""}"
+    style="animation-delay:${Math.min(idx,8)*24}ms"
+    ${canDrag ? `draggable="true"
     ondragstart="onDragStart(event,'${erId}','${erRoom}')"
     ondragover="onDragOver(event,'${erId}','${erRoom}')"
     ondragleave="onDragLeave(event)"
     ondragend="onDragEnd(event)"
-    ondrop="onDrop(event,'${erId}','${erRoom}')">
-    <div class="drag-handle">${DRAG_ICON}</div>
-    <button class="check ${it.bought ? "on" : ""}" data-item="${erId}" onclick="toggleBought('${erId}')" aria-label="comprado">
+    ondrop="onDrop(event,'${erId}','${erRoom}')"` : ""}>
+    ${canDrag ? `<div class="drag-handle">${DRAG_ICON}</div>` : ""}
+    <button class="check ${it.bought ? "on" : ""}" data-item="${erId}" onclick="toggleBought('${erId}')" aria-label="${it.bought ? "desmarcar" : "marcar como comprado"}">
       ${it.bought ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>' : ""}
     </button>
     ${thumb}
-    <div class="body">
-      <div class="name ${it.bought ? "done" : ""}">${esc(it.name)}</div>
-      ${it.notes ? `<div class="item-notes">${esc(it.notes)}</div>` : ""}
+    <div class="body" onclick="openEdit('${erId}')">
+      <div class="name ${it.bought ? "done" : ""}">${hl(it.name, pq)}</div>
+      ${it.notes ? `<div class="item-notes">${hl(it.notes, pq)}</div>` : ""}
       <div class="meta">
-        ${total != null ? `<span class="price">${fmtBRL(total)}${it.qty > 1 ? ` <span style="font-weight:400;font-size:12px">(${fmtBRL(it.price)} × ${it.qty})</span>` : ""}</span>` : ""}
+        ${total != null ? `<span class="price">${fmtBRL(total)}${it.qty > 1 ? ` <span style="font-weight:400;font-size:12px">(${it.qty} × ${fmtBRL(it.price)})</span>` : ""}</span>` : ""}
         ${it.qty > 1 && total == null ? `<span class="qty">×${it.qty}</span>` : ""}
-        ${it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noreferrer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>loja</a>` : ""}
-        <button class="ml-btn" onclick="verificarPreco('${erId}','${esc(it.name)}')" ${mlLoading ? "disabled" : ""}>🏷️ preço</button>
+        ${showRoom ? `<span class="room-tag">${esc(room)}</span>` : ""}
+        ${it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noreferrer" onclick="event.stopPropagation()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>${esc(hostOf(it.url).split(".")[0] || "loja")}</a>` : ""}
       </div>
     </div>
     <div class="acts">
       <button class="ico ${it.priority ? "star-on" : ""}" onclick="togglePriority('${erId}')" aria-label="urgente" title="urgente">
         ${it.priority ? STAR_ON : STAR_OFF}
       </button>
-      <button class="ico" onclick="openEdit('${erId}')" aria-label="editar">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-      </button>
-      <button class="ico ${isConfirm ? "confirm" : "danger"}" onclick="initiateDelete('${erId}')" aria-label="${isConfirm ? "confirmar" : "excluir"}" title="${isConfirm ? "clique para confirmar" : "excluir"}">
-        ${isConfirm ? "Sim?" : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>'}
+      <button class="ico" onclick="openItemMenu('${erId}')" aria-label="mais ações" title="mais ações">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
       </button>
     </div>
     ${mlResultHTML(it.id)}
   </div>`;
+}
+
+// ---- Menu de ações do item ----
+function openItemMenu(id) {
+  S.sheetId = id; S.sheetConfirm = false; S.sheetView = "main";
+  renderItemMenu();
+  $("itemSheet").classList.remove("hide");
+}
+function closeItemMenu() { $("itemSheet").classList.add("hide"); S.sheetId = null; }
+function renderItemMenu() {
+  const it = S.items.find(i => i.id === S.sheetId);
+  if (!it) return closeItemMenu();
+  $("sheetTitle").textContent = it.name;
+  const tot = fmtTotal(it.price, it.qty);
+  $("sheetSub").textContent = [it.room, tot != null ? fmtBRL(tot) : null, it.bought ? "comprado" : null].filter(Boolean).join(" · ");
+  const btn = (icon, label, fn, cls = "") => `<button class="${cls}" onclick="${fn}">${icon ? ico(icon, 17) : ""}${label}</button>`;
+  if (S.sheetView === "move") {
+    $("sheetActions").innerHTML = S.rooms.map(r =>
+      `<button class="${r.name === it.room ? "on" : ""}" data-room="${esc(r.name)}" onclick="moveItem(this.dataset.room)">${ico(ROOM_ICON[r.name.toLowerCase()] || I.box, 17)}${esc(r.name)}</button>`).join("") +
+      btn(null, "← Voltar", "S.sheetView='main';renderItemMenu()");
+    return;
+  }
+  $("sheetActions").innerHTML = [
+    btn(I.edit || '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>', "Editar", "closeItemMenu();openEdit(S._lastSheet)"),
+    btn('<path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>', "Buscar preço no Mercado Livre", "sheetPreco()"),
+    it.url ? btn('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>', "Abrir na loja", "window.open(S.items.find(i=>i.id===S._lastSheet).url,'_blank','noopener')") : "",
+    btn(I.grid, "Mover para outro cômodo", "S.sheetView='move';renderItemMenu()"),
+    btn('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>', "Duplicar", "duplicateItem()"),
+    btn('<path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>', S.sheetConfirm ? "Toque de novo para excluir" : "Excluir", "sheetDelete()", "danger"),
+  ].join("");
+  S._lastSheet = it.id;
+}
+function sheetPreco() {
+  const it = S.items.find(i => i.id === S.sheetId);
+  closeItemMenu();
+  if (it) verificarPreco(it.id, it.name);
+}
+function sheetDelete() {
+  if (!S.sheetConfirm) { S.sheetConfirm = true; renderItemMenu(); return; }
+  const id = S.sheetId; closeItemMenu(); removeItem(id);
+}
+async function moveItem(room) {
+  const it = S.items.find(i => i.id === S.sheetId);
+  closeItemMenu();
+  if (!it || it.room === room) return;
+  const old = it.room; it.room = room; render();
+  try { await api("PUT", "/items/" + it.id, { room }); toast(`Movido para ${room}`); }
+  catch { it.room = old; render(); toast("Erro ao mover", "err"); }
+}
+async function duplicateItem() {
+  const it = S.items.find(i => i.id === S.sheetId);
+  closeItemMenu();
+  if (!it) return;
+  try {
+    const { name, room, qty, price, url, image, notes, priority } = it;
+    const novo = await api("POST", "/items", { name, room, qty, price, url, image, notes, priority });
+    S.items.unshift(novo); render(); toast("Item duplicado");
+  } catch (e) { toast(e.message, "err"); }
+}
+
+// ---- Adicionar rápido: "2x cadeira R$150" ----
+function parseQuick(text) {
+  let name = " " + text + " ", qty = null, price = null, m;
+  if ((m = name.match(/\s(\d{1,3})\s*(?:x|×|un|unid|unidades?)\s/i)) || (m = name.match(/\s(?:x|×)\s*(\d{1,3})\s/i))) {
+    qty = parseInt(m[1]); name = name.replace(m[0], " ");
+  }
+  if ((m = name.match(/\s(?:r\$|\$)\s*(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:[.,]\d{1,2})?)\s/i)) ||
+      (m = name.match(/\s(\d{1,3}(?:\.\d{3})*,\d{2})\s/))) {
+    price = parseBRL(m[1]); name = name.replace(m[0], " ");
+  }
+  return { name: name.replace(/\s+/g, " ").trim(), qty, price };
+}
+function onAddNameInput(v) {
+  // se já comprou/cadastrou esse item antes, sugere cômodo e preço
+  const n = norm(v.trim());
+  if (!n) return;
+  const prev = S.items.find(i => norm(i.name) === n) || S.historico.find(h => norm(h.nome) === n);
+  if (!prev) return;
+  const room = prev.room, price = prev.price ?? prev.preco;
+  if (room && S.rooms.some(r => r.name === room)) $("addRoom").value = room;
+  if (price != null && !$("addPrice").value) $("addPrice").value = String(price).replace(".", ",");
+}
+function fillSuggestions() {
+  const names = new Set([...S.items.map(i => i.name), ...S.historico.map(h => h.nome)]);
+  $("nameSuggest").innerHTML = [...names].slice(0, 300).map(n => `<option value="${esc(n)}">`).join("");
 }
 
 // ---- Tema ----

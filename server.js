@@ -193,7 +193,9 @@ const validEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e || "");
 // Middlewares
 // =====================================================================
 app.set("trust proxy", 1);
-app.use(express.json({ limit: "3mb" })); // fotos em base64
+const jsonSmall = express.json({ limit: "3mb" });  // fotos em base64
+const jsonBig = express.json({ limit: "25mb" });   // importação de backup
+app.use((req, res, next) => (req.path === "/api/backup/import" ? jsonBig : jsonSmall)(req, res, next)); // fotos em base64
 
 const sign = (user, houseId) =>
   jwt.sign({ id: user.id, username: user.username, houseId }, JWT_SECRET, { expiresIn: "90d" });
@@ -683,9 +685,91 @@ app.get("/api/preco", auth, wrap(async (req, res) => {
     db.transaction(() => ofertas.forEach((o) => ins.run(itemId, o.loja, o.preco, now())))();
   }
   const historico = itemId
-    ? db.prepare("SELECT loja, preco, created_at FROM price_history WHERE item_id=? ORDER BY created_at DESC LIMIT 60").all(itemId)
+    ? db.prepare("SELECT loja, preco, created_at AS data FROM price_history WHERE item_id=? ORDER BY created_at DESC LIMIT 60").all(itemId)
     : [];
   res.json({ ofertas, historico });
+}));
+
+
+// =====================================================================
+// Backup
+// =====================================================================
+const fs = require("fs");
+const DB_FILE = process.env.DB_PATH || path.join(__dirname, "casa.sqlite");
+const BACKUP_DIR = process.env.BACKUP_DIR || path.join(path.dirname(DB_FILE), "backups");
+const BACKUP_KEEP = Number(process.env.BACKUP_KEEP) || 14;
+
+// cópia diária do banco inteiro em backups/casa-AAAA-MM-DD.sqlite (guarda as últimas 14)
+function dailyBackup() {
+  try {
+    fs.mkdirSync(BACKUP_DIR, { recursive: true });
+    const file = path.join(BACKUP_DIR, `casa-${new Date().toISOString().slice(0, 10)}.sqlite`);
+    if (!fs.existsSync(file)) {
+      db.exec(`VACUUM INTO '${file.replace(/'/g, "''")}'`);
+      console.log("[backup] salvo", path.basename(file));
+    }
+    const old = fs.readdirSync(BACKUP_DIR).filter((f) => /^casa-\d{4}-\d{2}-\d{2}\.sqlite$/.test(f)).sort().reverse().slice(BACKUP_KEEP);
+    old.forEach((f) => fs.unlinkSync(path.join(BACKUP_DIR, f)));
+  } catch (e) { console.error("[backup] falhou:", e.message); }
+}
+setTimeout(dailyBackup, 10_000);
+setInterval(dailyBackup, 60 * 60 * 1000); // confere de hora em hora; grava 1 por dia
+
+// exportar a casa ativa em JSON (pra guardar fora do servidor)
+app.get("/api/backup/export", auth, (req, res) => {
+  const house = db.prepare("SELECT name FROM houses WHERE id=?").get(req.houseId);
+  const data = {
+    app: "casa-lista", version: 1, exported_at: new Date().toISOString(),
+    house: { name: house.name },
+    rooms: db.prepare("SELECT name, sort_order FROM rooms WHERE house_id=? ORDER BY sort_order").all(req.houseId),
+    items: db.prepare(`SELECT name, room, qty, price, url, image, notes, priority, bought, bought_at, sort_order, created_at
+      FROM items WHERE house_id=? ORDER BY sort_order`).all(req.houseId),
+    historico: db.prepare("SELECT nome, room, qty, preco, data_compra FROM historico WHERE house_id=?").all(req.houseId),
+  };
+  const nome = house.name.normalize("NFD").replace(/[^\w]+/g, "-").replace(/^-|-$/g, "").toLowerCase() || "casa";
+  res.set("Content-Disposition", `attachment; filename="backup-${nome}-${data.exported_at.slice(0, 10)}.json"`);
+  res.json(data);
+});
+
+// importar um JSON exportado: soma à casa ativa (não apaga nada; pula itens idênticos)
+app.post("/api/backup/import", auth, wrap(async (req, res) => {
+  const d = req.body || {};
+  if (d.app !== "casa-lista" || !Array.isArray(d.items)) throw bad("Arquivo de backup inválido.");
+  let rooms = 0, items = 0, hist = 0;
+  db.transaction(() => {
+    const hasRoom = db.prepare("SELECT 1 FROM rooms WHERE house_id=? AND name=? COLLATE NOCASE");
+    let order = db.prepare("SELECT COALESCE(MAX(sort_order),-1) m FROM rooms WHERE house_id=?").get(req.houseId).m;
+    const addRoom = db.prepare("INSERT INTO rooms (id,house_id,name,sort_order) VALUES (?,?,?,?)");
+    const roomNames = [...(d.rooms || []).map((r) => r.name), ...d.items.map((i) => i.room)];
+    for (const n of roomNames) {
+      const name = String(n || "").trim().slice(0, 40);
+      if (name && !hasRoom.get(req.houseId, name)) { addRoom.run(uid(), req.houseId, name, ++order); rooms++; }
+    }
+    const dup = db.prepare("SELECT 1 FROM items WHERE house_id=? AND name=? AND room=? AND bought=?");
+    const addItem = db.prepare(`INSERT INTO items (id,house_id,name,room,qty,price,url,image,notes,priority,bought,bought_at,sort_order,created_by,created_at)
+      VALUES (@id,@house_id,@name,@room,@qty,@price,@url,@image,@notes,@priority,@bought,@bought_at,@sort_order,@created_by,@created_at)`);
+    for (const raw of d.items) {
+      const o = cleanItem(raw, false);
+      const bought = raw.bought ? 1 : 0;
+      if (dup.get(req.houseId, o.name, o.room, bought)) continue;
+      addItem.run({ ...o, id: uid(), house_id: req.houseId, bought, bought_at: bought ? Number(raw.bought_at) || now() : null,
+        sort_order: Number(raw.sort_order) || 0, created_by: req.userId, created_at: Number(raw.created_at) || now() });
+      items++;
+    }
+    const addHist = db.prepare("INSERT INTO historico (id,house_id,nome,room,qty,preco,data_compra) VALUES (?,?,?,?,?,?,?)");
+    const dupHist = db.prepare("SELECT 1 FROM historico WHERE house_id=? AND nome=? AND data_compra=?");
+    for (const h of d.historico || []) {
+      const nome = String(h.nome || "").trim().slice(0, 120);
+      const data = Number(h.data_compra) || now();
+      if (!nome || dupHist.get(req.houseId, nome, data)) continue;
+      const preco = Number(h.preco);
+      addHist.run(uid(), req.houseId, nome, String(h.room || "Geral").slice(0, 40), Math.max(1, parseInt(h.qty) || 1), Number.isFinite(preco) ? preco : null, data);
+      hist++;
+    }
+  })();
+  logActivity(req, "importou backup", `${items} item(ns)`);
+  broadcast(req.houseId);
+  res.json({ ok: true, rooms, items, historico: hist });
 }));
 
 // =====================================================================
