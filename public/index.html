@@ -496,6 +496,14 @@ button.group-head{margin:18px 0 6px;padding:4px 2px;gap:8px}
 .sheet-title{font-weight:700}
 .sheet-head{display:flex;justify-content:space-between;align-items:center}
 .sheet-head h3{margin:0}
+.fld{display:block}
+.fld>span{display:block;font-size:12px;font-weight:500;color:var(--inkSoft);margin:0 0 4px 2px}
+.grid3e{display:grid;grid-template-columns:1.3fr 1fr .6fr;gap:8px}
+.snack{position:fixed;left:16px;right:88px;width:max-content;max-width:calc(100vw - 104px);bottom:calc(var(--tabH) + 20px + env(safe-area-inset-bottom));
+  background:var(--ink);color:var(--bg);border-radius:10px;padding:6px 6px 6px 16px;display:flex;align-items:center;gap:12px;
+  font-size:14px;z-index:72;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:calc(100vw - 32px)}
+.snack span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.snack button{background:none;color:var(--accent);font-weight:700;font-size:14px;padding:8px 10px;flex:none;filter:brightness(1.15)}
 .text-btn{background:none;color:var(--accent);font-size:15px;font-weight:600;padding:4px 0}
 .add-fields{display:grid;grid-template-columns:1.3fr 1fr .7fr;gap:8px}
 .add-fields .full{grid-column:1/-1}
@@ -778,35 +786,35 @@ button.group-head{margin:18px 0 6px;padding:4px 2px;gap:8px}
 
 <div id="modal" class="overlay hide" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <h3>Editar item</h3>
-    <input id="eName" placeholder="Nome" />
-    <div class="grid2">
-      <select id="eRoom"></select>
-      <input id="eQty" type="number" min="1" placeholder="Qtd" />
+    <div class="sheet-head"><h3>Editar item</h3><button class="text-btn" onclick="closeModal()">Fechar</button></div>
+    <label class="fld"><span>Nome</span><input id="eName" placeholder="Nome do item" /></label>
+    <div class="grid3e">
+      <label class="fld"><span>Cômodo</span><select id="eRoom"></select></label>
+      <label class="fld"><span>Preço (unid.)</span><input id="ePrice" placeholder="0,00" inputmode="decimal" /></label>
+      <label class="fld"><span>Qtd</span><input id="eQty" type="number" min="1" placeholder="1" /></label>
     </div>
-    <input id="ePrice" placeholder="Preço unitário" />
-    <input id="eUrl" placeholder="Link da loja" />
-    <div style="display:flex;align-items:center;gap:8px">
-      <input id="eImage" style="flex:1" placeholder="URL da imagem" onblur="atualizarPreviewImagem()" />
-      <label class="btn-foto" title="Câmera">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <input type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFotoEdit(this)" />
-      </label>
-      <label class="btn-foto" title="Escolher da galeria">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <input type="file" accept="image/*" style="display:none" onchange="handleFotoEdit(this)" />
-      </label>
+    <label class="fld"><span>Link da loja</span><input id="eUrl" placeholder="https://…" inputmode="url" /></label>
+    <div class="fld"><span>Foto</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input id="eImage" style="flex:1" placeholder="Link da imagem" onblur="atualizarPreviewImagem()" />
+        <label class="btn-foto" title="Câmera">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <input type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFotoEdit(this)" />
+        </label>
+        <label class="btn-foto" title="Escolher da galeria">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <input type="file" accept="image/*" style="display:none" onchange="handleFotoEdit(this)" />
+        </label>
+      </div>
+      <div id="eImagePreview" style="display:none;margin-top:8px">
+        <img id="eImagePreviewImg" style="width:72px;height:72px;object-fit:contain;background:#fff;border-radius:10px;border:1px solid var(--line)" alt=""
+          onerror="this.parentElement.style.display='none'">
+      </div>
     </div>
-    <div id="eImagePreview" style="display:none;margin-top:-4px">
-      <img id="eImagePreviewImg" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--line)" alt=""
-        onerror="this.parentElement.style.display='none'">
-    </div>
-    <textarea id="eNotes" rows="2" placeholder="Notas"></textarea>
+    <label class="fld"><span>Notas</span><textarea id="eNotes" rows="2" placeholder="Cor, tamanho, observações…"></textarea></label>
     <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
-      <label style="font-size:13px;color:var(--inkSoft)">Urgente:</label>
-      <button id="ePriorityBtn" class="ico" onclick="toggleEditPriority()" style="width:32px;height:32px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      </button>
+      <span style="font-size:13px;color:var(--inkSoft)">Urgente</span>
+      <button id="ePriorityBtn" class="ico" onclick="toggleEditPriority()" style="width:32px;height:32px"></button>
     </div>
     <button class="btn-primary" style="width:100%;margin-top:6px" onclick="saveEdit()">Salvar</button>
   </div>
@@ -869,6 +877,21 @@ function toast(m, type = "ok") {
   t.textContent = m;
   t.className = `toast show${type === "err" ? " err" : ""}`;
   toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+// aviso com botão "Desfazer" (some sozinho em 5 s)
+let _snackTimer;
+function snack(msg, onUndo) {
+  document.querySelector(".snack")?.remove();
+  clearTimeout(_snackTimer);
+  const el = document.createElement("div");
+  el.className = "snack";
+  el.innerHTML = `<span></span><button>Desfazer</button>`;
+  el.firstChild.textContent = msg;
+  el.lastChild.onclick = () => { el.remove(); clearTimeout(_snackTimer); onUndo(); };
+  document.body.appendChild(el);
+  $("toast").classList.remove("show");
+  _snackTimer = setTimeout(() => el.remove(), 5000);
 }
 
 // ---- API ----
@@ -1018,6 +1041,7 @@ function logout() {
 function showApp() {
   $("gate").classList.add("hide"); $("app").classList.remove("hide");
   markTab("lista");
+  refreshPushState();
   initBetaBanner();
   loadAll();
   connectSSE();
@@ -1112,7 +1136,8 @@ async function toggleBought(id) {
     if (btn) { btn.classList.add('popping'); btn.addEventListener('animationend', () => btn.classList.remove('popping'), {once:true}); }
   });
   try { await api("PUT", "/items/" + id, { bought: it.bought }); }
-  catch { it.bought = !it.bought; render(); toast("Erro ao salvar", "err"); }
+  catch { it.bought = !it.bought; render(); toast("Erro ao salvar", "err"); return; }
+  if (it.bought) snack(`"${it.name}" comprado`, () => toggleBought(id));
 }
 
 async function togglePriority(id) {
@@ -1131,9 +1156,16 @@ function initiateDelete(id) {
 
 async function removeItem(id) {
   S.confirmId = null;
+  const it = S.items.find(i => i.id === id);
+  if (!it) return;
+  const copia = { ...it };
   S.items = S.items.filter(i => i.id !== id); render();
   try { await api("DELETE", "/items/" + id); }
-  catch { toast("Erro ao excluir", "err"); await loadAll(); }
+  catch { toast("Erro ao excluir", "err"); await loadAll(); return; }
+  snack(`"${copia.name}" excluído`, async () => {
+    try { const volta = await api("POST", `/items/${copia.id}/restore`, copia); S.items.push(volta); render(); toast("Item restaurado"); }
+    catch (e) { toast(e.message, "err"); await loadAll(); }
+  });
 }
 
 function openEdit(id) {
@@ -1142,7 +1174,7 @@ function openEdit(id) {
   $("eName").value = it.name;
   $("eRoom").value = it.room;
   $("eQty").value = it.qty || 1;
-  $("ePrice").value = it.price != null ? String(it.price).replace(".", ",") : "";
+  $("ePrice").value = it.price != null ? it.price.toFixed(2).replace(".", ",") : "";
   $("eUrl").value = it.url || "";
   $("eImage").value = it.image || "";
   $("eNotes").value = it.notes || "";
@@ -1331,6 +1363,7 @@ async function onDrop(e, id, room) {
 async function openSettings(view) {
   S.settingsView = view || "menu";
   if (S.tab !== "ajustes") { if (S.shopMode) sairModoCompras(); markTab("ajustes"); }
+  refreshPushState().then(() => renderSettings());
   $("settingsDrawer").classList.add("open");
   renderSettings();
   try {
@@ -1690,6 +1723,13 @@ function renderSettings() {
           <span class="menu-item-desc ${emailWarn ? 'account-row-warn' : ''}">${emailWarn ? 'Sem email — sem recuperação de senha' : esc(S.me?.username || S.username)}</span>
         </div>${CHEVRON_R}
       </div>
+      <div class="menu-item" onclick="openSettingsView('avisos')">
+        <div class="menu-item-icon">${ico('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>')}</div>
+        <div class="menu-item-text">
+          <span class="menu-item-label">Avisos no celular</span>
+          <span class="menu-item-desc">${pushStatusText()}</span>
+        </div>${CHEVRON_R}
+      </div>
       <div class="menu-item" onclick="openSettingsView('backup')">
         <div class="menu-item-icon">${ico('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>')}</div>
         <div class="menu-item-text">
@@ -1847,6 +1887,19 @@ function renderSettings() {
         </div>
       </div>`;
 
+  } else if (v === "avisos") {
+    const st = S.pushState;
+    html = _menuHeader("Avisos no celular", "menu") + `
+      <div class="settings-section">
+        <p style="font-size:14px;color:var(--inkSoft);margin:0 0 16px;line-height:1.5">
+          Receba um aviso quando alguém da casa adicionar ou comprar um item. Vale só para este aparelho.</p>
+        ${st === "unsupported" ? `<p style="font-size:14px;line-height:1.5">Este navegador não aceita avisos. No Android, abra pelo Chrome e instale o app na tela inicial; no iPhone, instale na tela inicial (iOS 16.4 ou mais novo).</p>`
+        : st === "denied" ? `<p style="font-size:14px;line-height:1.5">Os avisos estão bloqueados para este site. Libere em <b>Configurações do Android → Apps → Casa Lista → Notificações</b> (ou nas permissões do site no Chrome) e volte aqui.</p>`
+        : st === "on" ? `<button class="btn-primary" style="width:100%" onclick="testPush()">Enviar aviso de teste</button>
+            <button class="btn-danger" style="width:100%;margin-top:10px" onclick="disablePush()">Desligar avisos</button>`
+        : `<button class="btn-primary" style="width:100%" onclick="enablePush()">Ligar avisos</button>`}
+      </div>`;
+
   } else if (v === "conta") {
     html = _menuHeader("Minha conta", "menu") + `
       <div class="settings-section">
@@ -1882,6 +1935,50 @@ function renderSettings() {
   sc.classList.add("settings-view-enter");
 }
 
+
+// ---- Avisos (Web Push) ----
+function pushSupported() { return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window; }
+function pushStatusText() {
+  return { on: "Ligados neste aparelho", off: "Desligados", denied: "Bloqueados", unsupported: "Indisponível neste navegador" }[S.pushState] || "…";
+}
+async function refreshPushState() {
+  if (!pushSupported()) { S.pushState = "unsupported"; return; }
+  if (Notification.permission === "denied") { S.pushState = "denied"; return; }
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    S.pushState = sub && Notification.permission === "granted" ? "on" : "off";
+    if (sub && S.pushState === "on") api("POST", "/push/subscribe", sub.toJSON()).catch(() => {}); // mantém vinculado à conta atual
+  } catch { S.pushState = "off"; }
+}
+function b64ToBytes(b64) {
+  const s = atob((b64 + "=".repeat((4 - b64.length % 4) % 4)).replace(/-/g, "+").replace(/_/g, "/"));
+  return Uint8Array.from(s, c => c.charCodeAt(0));
+}
+async function enablePush() {
+  try {
+    const perm = await Notification.requestPermission();
+    if (perm !== "granted") { await refreshPushState(); renderSettings(); toast("Permissão não concedida", "err"); return; }
+    const reg = await navigator.serviceWorker.ready;
+    const { key } = await api("GET", "/push/key");
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(key) });
+    await api("POST", "/push/subscribe", sub.toJSON());
+    S.pushState = "on"; renderSettings(); toast("Avisos ligados ✓");
+  } catch (e) { toast("Não consegui ligar os avisos", "err"); await refreshPushState(); renderSettings(); }
+}
+async function disablePush() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if (sub) { await api("POST", "/push/unsubscribe", { endpoint: sub.endpoint }).catch(() => {}); await sub.unsubscribe(); }
+  } catch {}
+  S.pushState = "off"; renderSettings(); toast("Avisos desligados");
+}
+async function testPush() {
+  try { await api("POST", "/push/test"); toast("Aviso enviado — confira a barra de notificações"); }
+  catch (e) { toast(e.message, "err"); }
+}
 
 // ---- Backup ----
 async function downloadBackup() {

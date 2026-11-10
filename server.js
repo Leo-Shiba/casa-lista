@@ -151,6 +151,57 @@ function itemOut(r) {
 function logActivity(req, action, itemName) {
   db.prepare("INSERT INTO activity (house_id,user_id,username,action,item_name,created_at) VALUES (?,?,?,?,?,?)")
     .run(req.houseId, req.userId, req.username, action, itemName || null, now());
+  const frase = { add: `adicionou ${itemName}`, bought: `comprou ${itemName}`, clear: "limpou os itens comprados",
+    "entrou na casa": "entrou na casa" }[action];
+  if (frase) notifyHouse(req.houseId, req.userId, `${req.username} ${frase}`);
+}
+
+// ---- Avisos no celular (Web Push) ----
+const webpush = require("web-push");
+db.exec(`
+  CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+  CREATE TABLE IF NOT EXISTS push_subs (
+    endpoint   TEXT PRIMARY KEY,
+    user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    p256dh     TEXT NOT NULL,
+    auth       TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+  );
+`);
+// chaves VAPID geradas uma vez e guardadas no banco
+let vapid = db.prepare("SELECT value FROM settings WHERE key='vapid'").get();
+vapid = vapid ? JSON.parse(vapid.value) : null;
+if (!vapid) {
+  vapid = webpush.generateVAPIDKeys();
+  db.prepare("INSERT INTO settings (key,value) VALUES ('vapid',?)").run(JSON.stringify(vapid));
+}
+webpush.setVapidDetails(process.env.VAPID_SUBJECT || "mailto:avisos@casalista.app", vapid.publicKey, vapid.privateKey);
+
+// junta avisos seguidos da mesma casa (ex.: 5 itens adicionados em sequência viram 1 aviso)
+const pendingPush = new Map(); // houseId:userId -> { msgs, timer }
+function notifyHouse(houseId, actorId, msg) {
+  const key = houseId + ":" + actorId;
+  const cur = pendingPush.get(key) || { msgs: [] };
+  cur.msgs.push(msg);
+  clearTimeout(cur.timer);
+  cur.timer = setTimeout(() => { pendingPush.delete(key); sendPush(houseId, actorId, cur.msgs); }, 4000);
+  pendingPush.set(key, cur);
+}
+async function sendPush(houseId, actorId, msgs) {
+  const subs = db.prepare(`SELECT s.* FROM push_subs s JOIN house_members m ON m.user_id=s.user_id
+    WHERE m.house_id=? AND s.user_id<>?`).all(houseId, actorId);
+  if (!subs.length) return;
+  const house = db.prepare("SELECT name FROM houses WHERE id=?").get(houseId);
+  const body = msgs.length === 1 ? msgs[0] : `${msgs[0]} e mais ${msgs.length - 1} alteraç${msgs.length - 1 > 1 ? "ões" : "ão"}`;
+  const payload = JSON.stringify({ title: house?.name || "Casa Lista", body, tag: "casa-" + houseId, url: "/" });
+  for (const s of subs) {
+    try {
+      await webpush.sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload, { TTL: 3600 });
+    } catch (e) {
+      if (e.statusCode === 404 || e.statusCode === 410) db.prepare("DELETE FROM push_subs WHERE endpoint=?").run(s.endpoint);
+      else console.log("[push] falhou:", e.statusCode || e.message);
+    }
+  }
 }
 
 // =====================================================================
@@ -513,6 +564,23 @@ app.delete("/api/items/bought", auth, (req, res) => {
   res.json({ ok: true, removed: rows.length });
 });
 
+// desfazer exclusão: recria o item com o mesmo id e estado
+app.post("/api/items/:id/restore", auth, wrap(async (req, res) => {
+  const id = String(req.params.id);
+  if (db.prepare("SELECT 1 FROM items WHERE id=?").get(id)) throw bad("Item já existe.", 409);
+  const b = req.body || {};
+  const o = cleanItem(b, false);
+  const bought = b.bought ? 1 : 0;
+  db.prepare(`INSERT INTO items (id,house_id,name,room,qty,price,url,image,notes,priority,bought,bought_at,sort_order,created_by,created_at)
+    VALUES (@id,@house_id,@name,@room,@qty,@price,@url,@image,@notes,@priority,@bought,@bought_at,@sort_order,@created_by,@created_at)`)
+    .run({ ...o, id, house_id: req.houseId, bought, bought_at: bought ? Number(b.bought_at) || now() : null,
+      sort_order: Number(b.sort_order) || 0, created_by: req.userId, created_at: Number(b.created_at) || now() });
+  db.prepare("DELETE FROM activity WHERE id = (SELECT id FROM activity WHERE house_id=? AND action='delete' AND item_name=? ORDER BY created_at DESC LIMIT 1)")
+    .run(req.houseId, o.name);
+  broadcast(req.houseId, req.get("X-Client-Id"));
+  res.json(itemOut(db.prepare("SELECT * FROM items WHERE id=?").get(id)));
+}));
+
 app.put("/api/items/:id", auth, wrap(async (req, res) => {
   const cur = db.prepare("SELECT * FROM items WHERE id=? AND house_id=?").get(req.params.id, req.houseId);
   if (!cur) throw bad("Item não encontrado.", 404);
@@ -582,6 +650,35 @@ app.get("/api/stats", auth, (req, res) => {
 app.get("/api/activity", auth, (req, res) => {
   res.json(db.prepare("SELECT username, action, item_name, created_at FROM activity WHERE house_id=? ORDER BY created_at DESC LIMIT 80").all(req.houseId));
 });
+
+// =====================================================================
+// Avisos: inscrição do aparelho
+// =====================================================================
+app.get("/api/push/key", auth, (req, res) => res.json({ key: vapid.publicKey }));
+app.post("/api/push/subscribe", auth, wrap(async (req, res) => {
+  const { endpoint, keys } = req.body || {};
+  if (!/^https:\/\//.test(endpoint || "") || !keys?.p256dh || !keys?.auth) throw bad("Inscrição inválida.");
+  db.prepare(`INSERT INTO push_subs (endpoint,user_id,p256dh,auth,created_at) VALUES (?,?,?,?,?)
+    ON CONFLICT(endpoint) DO UPDATE SET user_id=excluded.user_id, p256dh=excluded.p256dh, auth=excluded.auth`)
+    .run(endpoint, req.userId, keys.p256dh, keys.auth, now());
+  res.json({ ok: true });
+}));
+app.post("/api/push/unsubscribe", auth, (req, res) => {
+  db.prepare("DELETE FROM push_subs WHERE endpoint=? AND user_id=?").run(String(req.body?.endpoint || ""), req.userId);
+  res.json({ ok: true });
+});
+app.post("/api/push/test", auth, wrap(async (req, res) => {
+  const subs = db.prepare("SELECT * FROM push_subs WHERE user_id=?").all(req.userId);
+  if (!subs.length) throw bad("Este aparelho não está inscrito.");
+  const payload = JSON.stringify({ title: "Casa Lista", body: "Avisos ligados ✓", tag: "teste", url: "/" });
+  let ok = 0;
+  for (const s of subs) {
+    try { await webpush.sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload); ok++; }
+    catch (e) { if (e.statusCode === 404 || e.statusCode === 410) db.prepare("DELETE FROM push_subs WHERE endpoint=?").run(s.endpoint); }
+  }
+  if (!ok) throw bad("Não consegui enviar. Desligue e ligue os avisos de novo.", 502);
+  res.json({ ok: true });
+}));
 
 // =====================================================================
 // Tempo real
@@ -778,30 +875,50 @@ async function getMlToken() {
   return mlToken.value;
 }
 
+// Ofertas no catálogo do Mercado Livre (a busca geral de anúncios é bloqueada para apps)
+async function mlCatalogOffers(q, url) {
+  const brl = (n) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const ids = [];
+  const hint = url ? mlFromUrls([url]) : {};
+  if (hint.catalog) ids.push(hint.catalog);
+  const res = await mlApi(`/products/search?status=active&site_id=MLB&limit=6&q=${encodeURIComponent(q)}`).catch(() => null);
+  for (const c of res?.results || []) if (c.id && !ids.includes(c.id)) ids.push(c.id);
+  const prods = await Promise.all(ids.slice(0, 6).map(async (id) => {
+    const p = await mlApi(`/products/${id}`).catch(() => null);
+    if (!p || !p.name) return null;
+    let preco = p.buy_box_winner?.price ?? null;
+    if (preco == null) {
+      const its = await mlApi(`/products/${id}/items?limit=10`).catch(() => null);
+      const ps = (its?.results || []).map((x) => x.price).filter((x) => typeof x === "number" && x > 0);
+      if (ps.length) preco = Math.min(...ps);
+    }
+    if (preco == null) return null;
+    return {
+      loja: p.name.length > 70 ? p.name.slice(0, 68).trim() + "…" : p.name,
+      titulo: p.name, preco, precoTexto: brl(preco),
+      link: p.permalink || `https://www.mercadolivre.com.br/p/${id}`,
+      imagem: httpsImg(p.pictures?.[0]?.url),
+      mesmo: id === hint.catalog,
+    };
+  }));
+  // o produto do próprio link primeiro; o resto do mais barato pro mais caro
+  return prods.filter(Boolean).sort((a, b) => (b.mesmo - a.mesmo) || (a.preco - b.preco)).slice(0, 5);
+}
+
+// autoteste opcional: PRECO_SELFTEST="nome do item" escreve no log as ofertas encontradas
+if (process.env.PRECO_SELFTEST) setTimeout(() => mlCatalogOffers(process.env.PRECO_SELFTEST)
+  .then((o) => console.log("[preco] autoteste:", JSON.stringify(o.map((x) => [x.loja.slice(0, 40), x.preco, !!x.imagem]))))
+  .catch((e) => console.log("[preco] autoteste falhou:", e.message)), 4000);
+
 app.get("/api/preco", auth, wrap(async (req, res) => {
   const q = String(req.query.q || "").trim().slice(0, 120);
   const itemId = String(req.query.item_id || "");
   if (!q) throw bad("Busca vazia.");
-  if (itemId && !db.prepare("SELECT 1 FROM items WHERE id=? AND house_id=?").get(itemId, req.houseId)) throw bad("Item não encontrado.", 404);
-  const token = await getMlToken();
-  if (!token) throw bad("Busca de preço ainda não configurada (Mercado Livre).", 503);
-  const r = await fetch(`https://api.mercadolibre.com/sites/MLB/search?limit=8&q=${encodeURIComponent(q)}`,
-    { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
-  if (!r.ok) throw bad("Mercado Livre não respondeu.", 502);
-  const j = await r.json();
-  const ofertas = (j.results || [])
-    .filter((x) => x.price)
-    .sort((a, b) => a.price - b.price)
-    .slice(0, 5)
-    .map((x) => ({
-      loja: x.official_store_name || x.seller?.nickname || "Mercado Livre",
-      titulo: x.title,
-      preco: x.price,
-      precoTexto: x.price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
-      link: x.permalink,
-      imagem: (x.thumbnail || "").replace(/^http:/, "https:").replace(/-I\.jpg$/, "-O.jpg"),
-    }));
-  if (itemId) {
+  const item = itemId ? db.prepare("SELECT url FROM items WHERE id=? AND house_id=?").get(itemId, req.houseId) : null;
+  if (itemId && !item) throw bad("Item não encontrado.", 404);
+  if (!(await getMlToken())) throw bad("Busca de preço ainda não configurada (Mercado Livre).", 503);
+  const ofertas = await mlCatalogOffers(q, item?.url);
+  if (itemId && ofertas.length) {
     const ins = db.prepare("INSERT INTO price_history (item_id,loja,preco,created_at) VALUES (?,?,?,?)");
     db.transaction(() => ofertas.forEach((o) => ins.run(itemId, o.loja, o.preco, now())))();
   }
