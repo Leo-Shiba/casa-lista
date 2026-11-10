@@ -3,8 +3,8 @@
   "short_name": "Casa Nova",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#101211",
-  "theme_color": "#101211",
+  "background_color": "#161C18",
+  "theme_color": "#161C18",
   "icons": [
     { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]

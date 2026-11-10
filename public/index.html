@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-<meta name="theme-color" content="#F5F5F2" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#101211" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#E9EDE5" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#161C18" media="(prefers-color-scheme: dark)" />
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icon.svg" />
 <link rel="manifest" href="/manifest.json" />
@@ -14,21 +14,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F5F5F2;--surface:#FFFFFF;--surfaceAlt:#EEEEEA;--ink:#191A19;
-  --inkSoft:#6B6F6A;--line:#E3E4DF;--accent:#1F7A52;--accentSoft:#E1F0E8;--onAccent:#FFFFFF;
-  --done:#1F7A52;--doneBg:#E1F0E8;--warn:#C23B2E;--star:#D99A00;
+  --bg:#E9EDE5;--surface:#FBFAF5;--surfaceAlt:#F1F0E8;--ink:#1E3A2B;
+  --inkSoft:#5C6B5E;--line:#D6DBCF;--accent:#BC6A38;--accentSoft:#EBD7C6;--onAccent:#FFFFFF;
+  --done:#3E7A4F;--doneBg:#E2EDE2;--warn:#9A4A2E;--star:#BC6A38;
 }
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#101211;--surface:#191C1A;--surfaceAlt:#232725;--ink:#ECEEEB;
-    --inkSoft:#959A95;--line:#2A2F2C;--accent:#4CC38A;--accentSoft:rgba(76,195,138,.16);--onAccent:#06281A;
-    --done:#4CC38A;--doneBg:rgba(76,195,138,.12);--warn:#F0736A;--star:#F2B93B;
+    --bg:#161C18;--surface:#1E2820;--surfaceAlt:#273029;--ink:#E8EDE5;
+    --inkSoft:#8A9E8C;--line:#2E3D31;--accent:#D4845A;--accentSoft:rgba(212,132,90,.18);--onAccent:#FFFFFF;
+    --done:#5CB87A;--doneBg:#1C3024;--warn:#E07070;--star:#D4845A;
   }
 }
 [data-theme="dark"]{
-  --bg:#101211;--surface:#191C1A;--surfaceAlt:#232725;--ink:#ECEEEB;
-  --inkSoft:#959A95;--line:#2A2F2C;--accent:#4CC38A;--accentSoft:rgba(76,195,138,.16);--onAccent:#06281A;
-  --done:#4CC38A;--doneBg:rgba(76,195,138,.12);--warn:#F0736A;--star:#F2B93B;
+  --bg:#161C18;--surface:#1E2820;--surfaceAlt:#273029;--ink:#E8EDE5;
+  --inkSoft:#8A9E8C;--line:#2E3D31;--accent:#D4845A;--accentSoft:rgba(212,132,90,.18);--onAccent:#FFFFFF;
+  --done:#5CB87A;--doneBg:#1C3024;--warn:#E07070;--star:#D4845A;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--ink);
@@ -454,7 +454,7 @@ body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-w
 .icon-btn{width:40px;height:40px;border-radius:50%;background:none;color:var(--ink);display:flex;align-items:center;justify-content:center;flex:none}
 .icon-btn:active{background:var(--surfaceAlt)}
 .bar{height:4px;margin-bottom:6px;background:var(--line)}
-.bar>div{background:var(--accent)}
+.bar>div{background:var(--done)}
 input,select,textarea{background:var(--surface);border-radius:10px}
 .btn-primary{background:var(--accent);color:var(--onAccent);border-radius:10px}
 .btn-danger{background:none;color:var(--warn);border:1px solid var(--line);border-radius:10px}
@@ -478,8 +478,7 @@ button.group-head{margin:18px 0 6px;padding:4px 2px;gap:8px}
 .card.done .body,.card.done .thumb{opacity:.5}
 .card.priority{border-color:var(--line)}
 .check{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--inkSoft);background:none;flex:none;display:flex;align-items:center;justify-content:center;padding:0}
-.check.on{background:var(--accent);border-color:var(--accent)}
-.check.on svg{stroke:var(--onAccent)}
+.check.on{background:var(--done);border-color:var(--done)}
 .card .thumb{width:40px;height:40px;border-radius:8px}
 .card .name{font-weight:500;font-size:15.5px}
 .name.done{color:var(--ink)}
