@@ -848,7 +848,7 @@ if (process.env.PREVIEW_SELFTEST) setTimeout(async () => {
   try {
     const trail = [];
     const o = await linkPreview(process.env.PREVIEW_SELFTEST, trail).catch((e) => ({ erro: e.message }));
-    console.log("[preview] caminho:", trail.map((u) => u.split("?")[0]).join(" > "));
+    console.log("[preview] caminho:", trail.map((u) => u.replace(/([?&](?:token|access_token|sid|user|uid)=)[^&]*/gi, "$1…")).join(" > "));
     console.log("[preview] página:", JSON.stringify({ nome: o.nome, foto: !!o.imagem, preco: o.preco, erro: o.erro }));
     const ml = await mlLookup([process.env.PREVIEW_SELFTEST, ...trail], true);
     console.log("[preview] mercado livre:", ml ? JSON.stringify({ nome: ml.nome, foto: !!ml.imagem, preco: ml.preco, url: ml.url }) : "sem dados");
