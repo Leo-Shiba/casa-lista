@@ -855,6 +855,21 @@ if (process.env.PREVIEW_SELFTEST) setTimeout(async () => {
   } catch (e) { console.log("[preview] autoteste falhou:", e.message); }
 }, 4000);
 
+// diagnóstico temporário: ML_PROBE=MLB123 lista quais rotas públicas da API respondem para um anúncio
+if (process.env.ML_PROBE) setTimeout(async () => {
+  const id = process.env.ML_PROBE;
+  for (const path of [`/items/${id}`, `/items/${id}/description`, `/items/${id}/prices`, `/items/${id}/sale_price`,
+    `/reviews/item/${id}`, `/items/${id}/shipping_options`, `/questions/search?item=${id}&limit=1`, `/visits/items?ids=${id}`]) {
+    try {
+      const token = await getMlToken();
+      const r = await fetch("https://api.mercadolibre.com" + path, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) });
+      const t = await r.text();
+      const keys = (() => { try { const j = JSON.parse(t); return Object.keys(Array.isArray(j) ? (j[0] || {}) : j).slice(0, 14).join(","); } catch { return ""; } })();
+      console.log(`[probe] ${path.split("?")[0]} -> ${r.status} ${keys}`);
+    } catch (e) { console.log(`[probe] ${path} erro ${e.message}`); }
+  }
+}, 4000);
+
 app.get("/api/link-preview", auth, wrap(async (req, res) => {
   const raw = String(req.query.url || "");
   const trail = [];
