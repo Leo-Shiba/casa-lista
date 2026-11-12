@@ -2325,10 +2325,11 @@ function mlResultHTML(id) {
     histLoja[h.loja].push(h);
   }
 
+  const menorPreco = Math.min(...ofertas.map(o => o.preco || Infinity));
   const linhas = ofertas.map((o, i) => {
-    const melhor = i === 0 && o.preco;
+    const melhor = o.preco && o.preco === menorPreco;
     let tend = "";
-    const hL = histLoja[o.loja] || [];
+    const hL = histLoja[o.chave || o.loja] || [];
     if (hL.length >= 2 && hL[0].preco && hL[1].preco) {
       const diff = hL[0].preco - hL[1].preco;
       const dia  = new Date(hL[1].data).toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" });
@@ -2349,7 +2350,7 @@ function mlResultHTML(id) {
           ${o.preco
             ? `<span class="preco-valor${melhor ? " preco-valor-ok" : ""}">${esc(o.precoTexto)}</span>`
             : `<span class="preco-tend">sem preço</span>`}
-          ${melhor ? `<span class="preco-selo">menor</span>` : ""}
+          ${melhor ? `<span class="preco-selo">menor</span>` : o.mesmo ? `<span class="preco-selo" style="background:var(--inkSoft)">este</span>` : ""}
         </div>
         <div class="preco-row2">
           ${tend}

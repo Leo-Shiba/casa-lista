@@ -770,7 +770,7 @@ function mlFromUrls(urls) {
     all.push(u);
     try { for (const v of new URL(u).searchParams.values()) if (/^https?:\/\//.test(v)) all.push(v); } catch {}
   }
-  let catalog = null, slug = null, link = null;
+  let catalog = null, slug = null, link = null, up = null;
   for (const u of all) {
     let U; try { U = new URL(u); } catch { continue; }
     if (!/mercadoli[vb]re\./i.test(U.hostname)) continue;
@@ -779,11 +779,11 @@ function mlFromUrls(urls) {
     if ((m = path.match(/^\/([^/]+)\/p\/(MLB\d+)/i))) { catalog = catalog || m[2].toUpperCase(); slug = slug || m[1]; link = link || U.origin + U.pathname; }
     else if ((m = path.match(/^\/p\/(MLB\d+)/i))) { catalog = catalog || m[1].toUpperCase(); link = link || U.origin + U.pathname; }
     else if ((m = path.match(/^\/MLB-?\d+-(.+?)(?:-?_JM)?\/?$/i))) { slug = slug || m[1]; link = link || U.origin + U.pathname; }
-    else if ((m = path.match(/^\/([^/]+)\/up\/MLBU\d+/i))) { slug = slug || m[1]; link = link || U.origin + U.pathname; }
+    else if ((m = path.match(/^\/(?:([^/]+)\/)?up\/(MLBU\d+)/i))) { if (m[1]) slug = slug || m[1]; up = up || m[2].toUpperCase(); link = link || U.origin + U.pathname; }
   }
   let nome = slug ? slug.replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim() : null;
   if (nome) nome = nome.charAt(0).toUpperCase() + nome.slice(1);
-  return { catalog, nome, link };
+  return { catalog, nome, link, up };
 }
 
 async function mlApi(path, log) {
@@ -797,8 +797,22 @@ async function mlApi(path, log) {
 async function mlLookup(urls, log) {
   const hint = mlFromUrls(urls);
   if (log) console.log("[ml] pista:", JSON.stringify(hint));
-  if (!hint.catalog && !hint.nome) return null;
+  if (!hint.catalog && !hint.nome && !hint.up) return null;
   let out = { nome: hint.nome, imagem: null, preco: null, url: hint.link };
+  // página "/up/MLBU…": produto de vendedor; a API diz o nome, a foto e, às vezes, o produto de catálogo
+  if (hint.up) {
+    const up = await mlApi(`/user-products/${hint.up}`, log).catch(() => null);
+    if (up) {
+      if (!out.nome && up.name) out.nome = up.name;
+      out.imagem = httpsImg(up.pictures?.[0]?.secure_url || up.pictures?.[0]?.url) || out.imagem;
+      if (!hint.catalog && up.catalog_product_id) hint.catalog = up.catalog_product_id;
+    }
+    if (out.preco == null) {
+      const its = await mlApi(`/user-products/${hint.up}/items`, log).catch(() => null);
+      const ps = (Array.isArray(its) ? its : its?.results || []).map((x) => x.price).filter((x) => typeof x === "number" && x > 0);
+      if (ps.length) out.preco = Math.min(...ps);
+    }
+  }
   let prod = hint.catalog ? await mlApi(`/products/${hint.catalog}`, log).catch(() => null) : null;
   if (!prod && hint.nome) {
     // procura no catálogo um produto com nome bem parecido
@@ -815,8 +829,8 @@ async function mlLookup(urls, log) {
     if (best && bestScore >= 0.6) prod = (await mlApi(`/products/${best.id}`, log).catch(() => null)) || best;
   }
   if (prod) {
-    out.imagem = httpsImg(prod.pictures?.[0]?.url);
-    out.preco = prod.buy_box_winner?.price ?? null;
+    out.imagem = out.imagem || httpsImg(prod.pictures?.[0]?.url);
+    out.preco = out.preco ?? prod.buy_box_winner?.price ?? null;
     if (!out.nome) out.nome = prod.name || null;
     if (!out.url) out.url = prod.permalink || null;
     if (out.preco == null && prod.id) {
@@ -898,6 +912,7 @@ async function mlCatalogOffers(q, url) {
       titulo: p.name, preco, precoTexto: brl(preco),
       link: p.permalink || `https://www.mercadolivre.com.br/p/${id}`,
       imagem: httpsImg(p.pictures?.[0]?.url),
+      chave: id,
       mesmo: id === hint.catalog,
     };
   }));
@@ -920,7 +935,7 @@ app.get("/api/preco", auth, wrap(async (req, res) => {
   const ofertas = await mlCatalogOffers(q, item?.url);
   if (itemId && ofertas.length) {
     const ins = db.prepare("INSERT INTO price_history (item_id,loja,preco,created_at) VALUES (?,?,?,?)");
-    db.transaction(() => ofertas.forEach((o) => ins.run(itemId, o.loja, o.preco, now())))();
+    db.transaction(() => ofertas.forEach((o) => ins.run(itemId, o.chave || o.loja, o.preco, now())))();
   }
   const historico = itemId
     ? db.prepare("SELECT loja, preco, created_at AS data FROM price_history WHERE item_id=? ORDER BY created_at DESC LIMIT 60").all(itemId)
