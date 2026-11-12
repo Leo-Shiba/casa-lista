@@ -496,6 +496,13 @@ button.group-head{margin:18px 0 6px;padding:4px 2px;gap:8px}
 .sheet-title{font-weight:700}
 .sheet-head{display:flex;justify-content:space-between;align-items:center}
 .sheet-head h3{margin:0}
+.suggest{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.suggest-head{font-size:12px;color:var(--inkSoft);padding:8px 12px 4px}
+.suggest-row{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-top:1px solid var(--line);padding:8px 12px;color:var(--ink);text-align:left}
+.suggest-row:first-of-type{border-top:0}
+.suggest-row img{width:44px;height:44px;object-fit:contain;background:#fff;border-radius:8px;flex:none}
+.suggest-row .t{flex:1;min-width:0;font-size:13px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.suggest-row .p{font-weight:600;font-size:14px;flex:none}
 .fld{display:block}
 .fld>span{display:block;font-size:12px;font-weight:500;color:var(--inkSoft);margin:0 0 4px 2px}
 .grid3e{display:grid;grid-template-columns:1.3fr 1fr .6fr;gap:8px}
@@ -680,7 +687,9 @@ button.group-head{margin:18px 0 6px;padding:4px 2px;gap:8px}
         </button>
       </div>
     </div>
-    <button class="link-toggle" onclick="toggleExtras()" id="extrasBtn">Link, foto e notas</button>
+    <div id="addSuggest" class="suggest hide"></div>
+    <button class="link-toggle" onclick="lookupByName()" id="lookupBtn">Buscar foto e preço pelo nome</button>
+    <button class="link-toggle" onclick="toggleExtras()" id="extrasBtn" style="margin-left:16px">Link, foto e notas</button>
     <div class="extras hide" id="extras">
       <input id="addUrl" class="full" placeholder="Link da loja" />
       <div class="full" style="display:flex;align-items:center;gap:8px">
@@ -1112,6 +1121,7 @@ async function addItem() {
   try {
     const item = await api("POST", "/items", body);
     S.items.unshift(item);
+    clearSuggest();
     if (S.fromLink) { S.fromLink = false; closeAddSheet(); }
     if (S.roomFilter && item.room !== S.roomFilter) S.roomFilter = "";
     toast(`"${item.name}" adicionado${item.qty > 1 ? ` (${item.qty}×)` : ""}${item.price != null ? " · " + fmtBRL(item.price) : ""}`);
@@ -1460,7 +1470,35 @@ function focusAddItem() {
   $("addSheet").classList.remove("hide");
   setTimeout(() => $("addName").focus(), 80);
 }
-function closeAddSheet() { $("addSheet").classList.add("hide"); S.fromLink = false; }
+function closeAddSheet() { $("addSheet").classList.add("hide"); S.fromLink = false; clearSuggest(); }
+
+// ---- Buscar foto e preço pelo nome (catálogo do Mercado Livre) ----
+let _sugg = [];
+function clearSuggest() { _sugg = []; $("addSuggest").classList.add("hide"); $("addSuggest").innerHTML = ""; }
+async function lookupByName() {
+  const q = $("addName").value.trim();
+  if (q.length < 3) { toast("Escreva o nome do item primeiro", "err"); $("addName").focus(); return; }
+  const box = $("addSuggest");
+  box.classList.remove("hide");
+  box.innerHTML = `<div class="suggest-head">Buscando “${esc(q)}”…</div>`;
+  try {
+    const { ofertas } = await api("GET", "/preco?q=" + encodeURIComponent(q));
+    _sugg = (ofertas || []).slice(0, 3);
+    if (!_sugg.length) { box.innerHTML = `<div class="suggest-head">Nada parecido no catálogo. Pode adicionar assim mesmo.</div>`; return; }
+    box.innerHTML = `<div class="suggest-head">Toque no produto certo para usar foto e preço</div>` +
+      _sugg.map((o, i) => `<button class="suggest-row" onclick="useSuggest(${i})">
+        ${o.imagem ? `<img src="${esc(o.imagem)}" alt="">` : ""}<span class="t">${esc(o.titulo || o.loja)}</span><span class="p">${esc(o.precoTexto)}</span></button>`).join("");
+  } catch (e) { box.innerHTML = `<div class="suggest-head">${esc(e.message)}</div>`; }
+}
+function useSuggest(i) {
+  const o = _sugg[i]; if (!o) return;
+  if (o.imagem) setAddImage(o.imagem);
+  $("addPrice").value = o.preco.toFixed(2).replace(".", ",");
+  if (!$("addUrl").value.trim()) $("addUrl").value = o.link;
+  $("extras").classList.remove("hide");
+  clearSuggest();
+  toast("Foto e preço preenchidos — confira e toque em Adicionar");
+}
 
 // ---- Link de loja: compartilhado de outro app ou colado no campo ----
 const URL_RE = /https?:\/\/[^\s<>"']+/i;
@@ -1482,7 +1520,9 @@ async function fillFromLink(url, fallbackName) {
     if (d.imagem) setAddImage(d.imagem);
     if (d.preco != null && !$("addPrice").value) $("addPrice").value = d.preco.toFixed(2).replace(".", ",");
     if (d.url && /^https?:/.test(d.url)) $("addUrl").value = d.url.split("#")[0];
-    toast(d.nome || d.imagem ? "Confira os dados e toque em Adicionar" : "Não consegui ler a loja. Escreva o nome do item.", d.nome || d.imagem ? "ok" : "err");
+    if (d.nome || d.imagem) toast("Confira os dados e toque em Adicionar");
+    else if ($("addName").value.trim().length >= 3) { toast("Loja bloqueou o link. Buscando pelo nome…"); lookupByName(); }
+    else toast("Loja bloqueou o link. Digite o nome e busque.", "err");
   } catch (e) { toast("Não consegui ler o link. Escreva o nome do item.", "err"); }
   $("addName").placeholder = "Nome ou link da loja";
   $("addName").focus();
